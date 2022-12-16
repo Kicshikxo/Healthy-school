@@ -1,0 +1,19 @@
+{
+    "private": true,
+    "scripts": {
+        "build": "nuxt build",
+        "dev": "nuxt dev",
+        "generate": "nuxt generate",
+        "preview": "nuxt preview",
+        "postinstall": "nuxt prepare"
+    },
+    "dependencies": {
+        "primeflex": "^3.3.0",
+        "primeicons": "^6.0.1",
+        "primevue": "^3.21.0"
+    },
+    "devDependencies": {
+        "nuxt": "3.0.0",
+        "prisma": "^4.7.1"
+    }
+}
