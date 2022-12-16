@@ -8,7 +8,9 @@
         "postinstall": "nuxt prepare"
     },
     "dependencies": {
+        "@pinia/nuxt": "^0.4.6",
         "@prisma/client": "^4.7.1",
+        "pinia": "^2.0.28",
         "primeflex": "^3.3.0",
         "primeicons": "^6.0.1",
         "primevue": "^3.21.0"

@@ -35,7 +35,7 @@ export default defineNuxtConfig({
         '~/assets/css/main.css'
     ],
 
-    modules: ['@nuxt/image-edge'],
+    modules: ['@nuxt/image-edge', '@pinia/nuxt'],
 
     build: {
         transpile: ['primevue']
