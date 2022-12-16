@@ -1,9 +1,6 @@
-export default defineEventHandler((event) => {
-    return {
-        firstName: 'Иван',
-        lastName: 'Иванов',
-        middleName: 'Иванович',
-        age: 15,
-        class: '6Б'
-    }
+import { PrismaClient } from '@prisma/client'
+const prisma = new PrismaClient()
+
+export default defineEventHandler(async (event) => {
+    return await prisma.user.findMany()
 })
