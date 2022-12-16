@@ -42,6 +42,7 @@
                     >
                         <nuxt-img
                             src="images/avatars/persona 0-0.png"
+                            alt="avatar"
                             width="48"
                             height="48"
                             class="border-circle"
