@@ -15,19 +15,19 @@
                     <nuxt-link
                         class="flex px-3 py-2 text-indigo-100 hover:text-indigo-50 hover:bg-indigo-600 font-medium border-round cursor-pointer transition-colors transition-duration-150"
                     >
-                        <i class="pi pi-home mr-2"></i>
+                        <i class="pi pi-home w-1rem mr-2"></i>
                         <span>Home</span>
                     </nuxt-link>
                     <nuxt-link
                         class="flex align-items-center px-3 py-2 text-indigo-100 hover:text-indigo-50 hover:bg-indigo-600 font-medium border-round cursor-pointer transition-colors transition-duration-150"
                     >
-                        <i class="pi pi-calendar mr-2"></i>
+                        <i class="pi pi-calendar w-1rem mr-2"></i>
                         <span>Calendar</span>
                     </nuxt-link>
                     <nuxt-link
                         class="flex align-items-center px-3 py-2 text-indigo-100 hover:text-indigo-50 hover:bg-indigo-600 font-medium border-round cursor-pointer transition-colors transition-duration-150"
                     >
-                        <i class="pi pi-chart-line mr-2"></i>
+                        <i class="pi pi-chart-line w-1rem mr-2"></i>
                         <span>Stats</span>
                     </nuxt-link>
                 </div>
@@ -35,7 +35,7 @@
                     <nuxt-link
                         class="flex p-2 mr-2 align-items-center text-indigo-100 hover:text-indigo-50 hover:bg-indigo-600 font-medium border-round cursor-pointer transition-colors transition-duration-150"
                     >
-                        <i class="pi pi-bell text-xl" />
+                        <i class="pi pi-bell w-1rem text-xl" />
                     </nuxt-link>
                     <nuxt-link
                         class="flex px-3 py-1 align-items-center hover:bg-indigo-600 font-medium border-round cursor-pointer transition-colors transition-duration-150 p-ripple"
@@ -59,29 +59,38 @@
                 </div>
             </header>
             <nav
-                class="flex align-items-center gap-3 h-4rem py-3 px-5 font-medium overflow-x-auto border-top-1 border-indigo-600"
+                class="flex align-items-center gap-3 h-4rem py-3 px-5 font-medium overflow-x-auto overflow-y-hidden border-top-1 border-indigo-600"
             >
-                <a class="cursor-pointer">
-                    <i class="pi pi-home text-indigo-200"></i>
-                </a>
-                <i class="pi pi-angle-right text-indigo-200"></i>
+                <nuxt-link class="cursor-pointer text-indigo-200">
+                    <i class="pi pi-home w-1rem"></i>
+                </nuxt-link>
+                <i class="pi pi-angle-right w-1rem text-indigo-200"></i>
 
-                <a class="cursor-pointer text-indigo-200 white-space-nowrap">
+                <nuxt-link
+                    class="cursor-pointer text-indigo-200 white-space-nowrap"
+                >
                     Level 3
-                </a>
-                <i class="pi pi-angle-right text-indigo-200"></i>
+                </nuxt-link>
+                <i class="pi pi-angle-right w-1rem text-indigo-200"></i>
 
-                <a class="cursor-pointer text-indigo-200 white-space-nowrap">
+                <nuxt-link
+                    class="cursor-pointer text-indigo-200 white-space-nowrap"
+                >
                     Level 2
-                </a>
-                <i class="pi pi-angle-right text-indigo-200"></i>
+                </nuxt-link>
+                <i class="pi pi-angle-right w-1rem text-indigo-200"></i>
 
-                <a class="cursor-pointer text-indigo-100 white-space-nowrap">
+                <nuxt-link
+                    class="cursor-pointer text-indigo-100 white-space-nowrap"
+                >
                     Level 1
-                </a>
+                </nuxt-link>
             </nav>
         </div>
-        <main class="flex flex-column flex-auto p-5" style="margin-top: -10rem">
+        <main
+            class="flex flex-column flex-auto px-5 pb-5"
+            style="margin-top: -8rem"
+        >
             <div
                 class="flex-auto p-2 border-2 surface-border border-round surface-section"
             >
