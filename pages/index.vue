@@ -13,32 +13,32 @@
                         class="mr-4"
                     />
                     <nuxt-link
-                        class="flex px-3 py-2 text-indigo-100 hover:text-indigo-50 hover:bg-indigo-600 font-medium border-round cursor-pointer transition-colors transition-duration-150"
+                        class="flex px-3 py-2 text-indigo-100 hover:text-indigo-50 hover:bg-indigo-600 font-medium border-round transition-colors transition-duration-150 cursor-pointer"
                     >
-                        <i class="pi pi-home w-1rem mr-2"></i>
-                        <span>Home</span>
+                        <i class="pi pi-user w-1rem mr-2"></i>
+                        <span>Учащиеся</span>
                     </nuxt-link>
                     <nuxt-link
-                        class="flex align-items-center px-3 py-2 text-indigo-100 hover:text-indigo-50 hover:bg-indigo-600 font-medium border-round cursor-pointer transition-colors transition-duration-150"
+                        class="flex align-items-center px-3 py-2 text-indigo-100 hover:text-indigo-50 hover:bg-indigo-600 font-medium border-round transition-colors transition-duration-150 cursor-pointer"
                     >
-                        <i class="pi pi-calendar w-1rem mr-2"></i>
-                        <span>Calendar</span>
+                        <i class="pi pi-users w-1rem mr-2"></i>
+                        <span>Классы</span>
                     </nuxt-link>
                     <nuxt-link
-                        class="flex align-items-center px-3 py-2 text-indigo-100 hover:text-indigo-50 hover:bg-indigo-600 font-medium border-round cursor-pointer transition-colors transition-duration-150"
+                        class="flex align-items-center px-3 py-2 text-indigo-100 hover:text-indigo-50 hover:bg-indigo-600 font-medium border-round transition-colors transition-duration-150 cursor-pointer"
                     >
                         <i class="pi pi-chart-line w-1rem mr-2"></i>
-                        <span>Stats</span>
+                        <span>Статистика</span>
                     </nuxt-link>
                 </div>
                 <div class="flex align-items-center">
                     <nuxt-link
-                        class="flex p-2 mr-2 align-items-center text-indigo-100 hover:text-indigo-50 hover:bg-indigo-600 font-medium border-round cursor-pointer transition-colors transition-duration-150"
+                        class="flex p-2 mr-2 align-items-center text-indigo-100 hover:text-indigo-50 hover:bg-indigo-600 font-medium border-round transition-colors transition-duration-150 cursor-pointer"
                     >
-                        <i class="pi pi-bell w-1rem text-xl" />
+                        <i class="pi pi-bell text-xl" />
                     </nuxt-link>
                     <nuxt-link
-                        class="flex px-3 py-1 align-items-center hover:bg-indigo-600 font-medium border-round cursor-pointer transition-colors transition-duration-150 p-ripple"
+                        class="flex px-3 py-1 align-items-center hover:bg-indigo-600 font-medium border-round transition-colors transition-duration-150 cursor-pointer"
                     >
                         <nuxt-img
                             src="images/avatars/persona 0-0.png"
@@ -52,7 +52,7 @@
                                 Иванов Иван Иванович
                             </div>
                             <span class="text-indigo-100 font-medium text-sm">
-                                Психолог
+                                Педагог-психолог
                             </span>
                         </div>
                     </nuxt-link>
@@ -61,29 +61,31 @@
             <nav
                 class="flex align-items-center gap-3 h-4rem py-3 px-5 font-medium overflow-x-auto overflow-y-hidden border-top-1 border-indigo-600"
             >
-                <nuxt-link class="cursor-pointer text-indigo-200">
+                <nuxt-link
+                    class="text-indigo-200 hover:text-indigo-100 cursor-pointer"
+                >
                     <i class="pi pi-home w-1rem"></i>
                 </nuxt-link>
                 <i class="pi pi-angle-right w-1rem text-indigo-200"></i>
 
                 <nuxt-link
-                    class="cursor-pointer text-indigo-200 white-space-nowrap"
+                    class="text-indigo-200 hover:text-indigo-100 white-space-nowrap cursor-pointer"
                 >
-                    Level 3
+                    Учащиеся
                 </nuxt-link>
                 <i class="pi pi-angle-right w-1rem text-indigo-200"></i>
 
                 <nuxt-link
-                    class="cursor-pointer text-indigo-200 white-space-nowrap"
+                    class="text-indigo-200 hover:text-indigo-100 white-space-nowrap cursor-pointer"
                 >
-                    Level 2
+                    Иванов Иван Иванович
                 </nuxt-link>
                 <i class="pi pi-angle-right w-1rem text-indigo-200"></i>
 
                 <nuxt-link
-                    class="cursor-pointer text-indigo-100 white-space-nowrap"
+                    class="text-indigo-50 white-space-nowrap cursor-pointer"
                 >
-                    Level 1
+                    Сведения
                 </nuxt-link>
             </nav>
         </div>
