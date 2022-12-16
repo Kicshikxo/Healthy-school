@@ -41,7 +41,9 @@
                         class="flex px-3 py-1 align-items-center hover:bg-indigo-600 font-medium border-round transition-colors transition-duration-150 cursor-pointer"
                     >
                         <nuxt-img
-                            src="images/avatars/persona 0-0.png"
+                            :src="`images/avatars/persona ${~~(
+                                Math.random() * 4
+                            )}-${~~(Math.random() * 3)}.png`"
                             alt="avatar"
                             width="48"
                             height="48"
