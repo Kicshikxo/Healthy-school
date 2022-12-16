@@ -1,8 +1,8 @@
 <template>
-    <div class="min-h-screen flex flex-column">
+    <div class="min-h-screen max-h-screen flex flex-column">
         <div class="h-16rem bg-indigo-500">
             <header
-                class="flex justify-content-between w-full h-4rem py-3 px-5 static"
+                class="flex justify-content-between w-full h-4rem py-3 px-5 bg-indigo-500 border-bottom-1 border-indigo-600 shadow-1"
             >
                 <div class="flex align-items-center">
                     <nuxt-img
@@ -59,12 +59,12 @@
                 </div>
             </header>
             <nav
-                class="flex align-items-center gap-3 h-4rem py-3 px-5 font-medium overflow-x-auto overflow-y-hidden border-top-1 border-indigo-600"
+                class="flex align-items-center gap-3 h-4rem py-3 px-5 font-medium overflow-x-auto overflow-y-hidden"
             >
                 <nuxt-link
                     class="text-indigo-200 hover:text-indigo-100 cursor-pointer"
                 >
-                    <i class="pi pi-home w-1rem"></i>
+                    <i class="pi pi-home w-1rem text-xl"></i>
                 </nuxt-link>
                 <i class="pi pi-angle-right w-1rem text-indigo-200"></i>
 
@@ -89,14 +89,16 @@
                 </nuxt-link>
             </nav>
         </div>
-        <main
-            class="flex flex-column flex-auto px-5 pb-5"
-            style="margin-top: -8rem"
-        >
+
+        <main class="flex flex-auto px-5 mb-5" style="margin-top: -8rem">
             <div
-                class="flex-auto p-2 border-2 surface-border border-round surface-section"
+                class="flex-auto relative p-2 border-2 surface-border border-round surface-section shadow-2 overflow-x-hidden overflow-y-auto"
             >
-                <pre>{{ JSON.stringify(data, null, 2) }}</pre>
+                <div class="absolute">
+                    <pre style="height: 100vh">{{
+                        JSON.stringify(data, null, 2)
+                    }}</pre>
+                </div>
             </div>
         </main>
     </div>
