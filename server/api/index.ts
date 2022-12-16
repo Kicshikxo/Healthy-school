@@ -1,5 +1,9 @@
 export default defineEventHandler((event) => {
     return {
-        api: 'works'
+        firstName: 'Иван',
+        lastName: 'Иванов',
+        middleName: 'Иванович',
+        age: 15,
+        class: '6Б'
     }
 })
