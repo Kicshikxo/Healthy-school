@@ -7,8 +7,12 @@ datasource db {
     url      = env("DATABASE_URL")
 }
 
-model User {
-    id    Int     @id @default(autoincrement())
-    email String  @unique
-    name  String?
+model Child {
+    id         Int    @id @default(autoincrement()) @map("child_id")
+    secondName String @map("second_name") @db.VarChar(64)
+    firstName  String @map("first_name") @db.VarChar(64)
+    middleName String @map("middle_name") @db.VarChar(64)
+    age        Int    @map("age")
+
+    @@map("children")
 }
