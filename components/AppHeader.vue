@@ -1,29 +1,30 @@
 <template>
     <header
-        class="flex justify-content-between w-full h-4rem py-3 px-5 bg-indigo-500 border-bottom-1 border-indigo-600 shadow-1"
+        class="flex justify-content-between w-full h-4rem py-3 px-5 border-bottom-1 border-indigo-600 shadow-1"
     >
         <div class="flex align-items-center">
             <nuxt-img
-                src="images/logo.webp"
+                src="images/logo.png"
                 alt="logo"
                 width="48"
                 height="48"
-                class="mr-4"
+                class="mr-5"
             />
             <nuxt-link
-                class="flex p-3 text-indigo-100 hover:text-indigo-50 hover:bg-indigo-600 font-medium border-round transition-colors transition-duration-150 cursor-pointer"
+                to="/children"
+                class="flex p-3 text-indigo-100 hover:text-indigo-50 hover:bg-indigo-600 font-medium border-round transition-colors transition-duration-150 cursor-pointer no-underline"
             >
                 <i class="pi pi-user w-1rem mr-2"></i>
                 <span>Учащиеся</span>
             </nuxt-link>
             <nuxt-link
-                class="flex p-3 text-indigo-100 hover:text-indigo-50 hover:bg-indigo-600 font-medium border-round transition-colors transition-duration-150 cursor-pointer"
+                class="flex p-3 text-indigo-100 hover:text-indigo-50 hover:bg-indigo-600 font-medium border-round transition-colors transition-duration-150 cursor-pointer no-underline"
             >
                 <i class="pi pi-users w-1rem mr-2"></i>
                 <span>Классы</span>
             </nuxt-link>
             <nuxt-link
-                class="flex p-3 text-indigo-100 hover:text-indigo-50 hover:bg-indigo-600 font-medium border-round transition-colors transition-duration-150 cursor-pointer"
+                class="flex p-3 text-indigo-100 hover:text-indigo-50 hover:bg-indigo-600 font-medium border-round transition-colors transition-duration-150 cursor-pointer no-underline"
             >
                 <i class="pi pi-chart-line w-1rem mr-2"></i>
                 <span>Статистика</span>
@@ -31,12 +32,13 @@
         </div>
         <div class="flex align-items-center">
             <nuxt-link
-                class="flex p-3 mr-2 align-items-center text-indigo-100 hover:text-indigo-50 hover:bg-indigo-600 font-medium border-round transition-colors transition-duration-150 cursor-pointer"
+                class="flex p-3 mr-2 align-items-center text-indigo-100 hover:text-indigo-50 hover:bg-indigo-600 font-medium border-round transition-colors transition-duration-150 cursor-pointer no-underline"
             >
                 <i class="pi pi-bell text-xl" />
             </nuxt-link>
             <nuxt-link
-                class="flex px-3 py-1 align-items-center hover:bg-indigo-600 font-medium border-round transition-colors transition-duration-150 cursor-pointer"
+                to="/profile"
+                class="flex px-3 py-1 align-items-center hover:bg-indigo-600 font-medium border-round transition-colors transition-duration-150 cursor-pointer no-underline"
             >
                 <nuxt-img
                     :src="avatarSrc"
