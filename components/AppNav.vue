@@ -14,7 +14,11 @@
             <i class="pi pi-home w-1rem text-xl"></i>
         </nuxt-link>
 
-        <div v-for="route in breadcrumbs" class="flex align-items-center gap-3">
+        <div
+            v-for="route in breadcrumbs"
+            :key="route.path"
+            class="flex align-items-center gap-3"
+        >
             <i class="pi pi-angle-right w-1rem text-indigo-200"></i>
             <nuxt-link
                 :to="route.path"
