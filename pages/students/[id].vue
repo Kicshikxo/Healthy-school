@@ -53,14 +53,10 @@
                     </div>
                 </div>
                 <div>
-                    <button
-                        class="p-button p-component p-button-icon-only p-button-rounded p-button-help"
-                        type="button"
-                    >
-                        <span class="pi pi-list p-button-icon"></span>
-                        <span class="p-button-label">&nbsp;</span>
-                        <span class="p-ink" role="presentation"></span>
-                    </button>
+                    <p-button
+                        icon="pi pi-bars"
+                        class="p-button-rounded p-button-secondary"
+                    />
                 </div>
             </div>
         </section>
