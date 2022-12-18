@@ -29,7 +29,7 @@
                 "
                 class="no-underline"
             >
-                {{ $router.resolve({ path }).meta.name ?? $route.path }}
+                {{ $router.resolve({ path }).meta.title ?? $route.path }}
             </nuxt-link>
         </div>
     </nav>
