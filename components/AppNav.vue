@@ -15,32 +15,27 @@
         </nuxt-link>
 
         <div
-            v-for="route in breadcrumbs"
-            :key="route.path"
+            v-for="path in breadcrumbs"
+            :key="path"
             class="flex align-items-center gap-3"
         >
             <i class="pi pi-angle-right w-1rem text-indigo-200"></i>
             <nuxt-link
-                :to="route.path"
+                :to="path"
                 :class="
-                    $route.path == route.path
+                    $route.path == path
                         ? 'text-indigo-50'
                         : 'text-indigo-200 hover:text-indigo-100'
                 "
                 class="no-underline"
             >
-                {{ route.name }}
+                {{ $router.resolve({ path }).meta.name ?? $route.path }}
             </nuxt-link>
         </div>
     </nav>
 </template>
 
 <script setup lang="ts">
-const shortcuts = new Map<string, string>()
-shortcuts.set('login', 'Логин')
-shortcuts.set('profile', 'Профиль')
-shortcuts.set('children', 'Учащиеся')
-
 const route = useRoute()
 
 const breadcrumbs = computed(() =>
@@ -49,11 +44,8 @@ const breadcrumbs = computed(() =>
         .slice(1)
         .reduce(
             (acc, path, index, paths) =>
-                acc.concat({
-                    name: shortcuts.get(path) ?? path,
-                    path: `/${paths.slice(0, index + 1).join('/')}`
-                }),
-            [] as { name: string; path: string }[]
+                acc.concat(`/${paths.slice(0, index + 1).join('/')}`),
+            [] as string[]
         )
 )
 </script>
