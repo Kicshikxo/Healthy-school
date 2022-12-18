@@ -6,4 +6,8 @@
 
 <script setup lang="ts">
 const { data } = useFetch('/api/children')
+
+definePageMeta({
+    name: 'Домашняя страница'
+})
 </script>
