@@ -4,26 +4,38 @@
             class="flex flex-column justify-content-center align-items-center mb-3"
         >
             <nuxt-img
-                src="images/logo.webp"
+                src="images/logo.png"
                 alt="logo"
-                height="50"
+                width="64"
+                height="64"
                 class="mb-3"
             />
             <div class="text-900 text-3xl font-bold mb-3">Добро пожаловать</div>
         </div>
 
         <div class="flex flex-column justify-content-center align-items-center">
-            <!-- <label class="block text-900 font-medium mb-2">Введите логин</label> -->
             <p-input-text type="text" placeholder="Логин" class="w-full mb-3" />
 
-            <!-- <label class="block text-900 font-medium mb-2">Введите пароль</label> -->
             <p-input-text
                 type="password"
                 placeholder="Пароль"
                 class="w-full mb-3"
             />
 
-            <p-button label="Войти" icon="pi pi-user" class="w-5"></p-button>
+            <p-button
+                label="Войти"
+                icon="pi pi-user"
+                class="w-5"
+                @click="login"
+            ></p-button>
         </div>
     </div>
 </template>
+
+<script setup lang="ts">
+const router = useRouter()
+
+function login() {
+    router.push('/')
+}
+</script>
