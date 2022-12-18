@@ -1,23 +1,23 @@
 <template>
     <div class="flex flex-column gap-2 p-2">
-        <Dropdown
+        <p-dropdown
             v-model="selectedRegion"
             :options="regions"
             placeholder="Муниципальное образование"
         />
-        <Dropdown
+        <p-dropdown
             v-model="selectedOrganization"
             :disabled="!selectedRegion"
             :options="organizations"
             placeholder="Выберите образовательную организацию"
         />
-        <Dropdown
+        <p-dropdown
             v-model="selectedClass"
             :disabled="!selectedOrganization"
             :options="classes"
             placeholder="Выберите класс"
         />
-        <Dropdown
+        <p-dropdown
             v-model="selectedStudent"
             :disabled="!selectedClass"
             :options="(students as any[])"
@@ -91,7 +91,7 @@
                             Проблемная наследственность, риск заболеваний
                         </div>
                         <div v-if="selectedHealthGroup.value == 3">
-                            <Dropdown
+                            <p-dropdown
                                 :options="['Да', 'Нет']"
                                 placeholder="Да"
                             />
@@ -109,7 +109,7 @@
                     </div>
                     <div class="col-6 text-center">
                         <div v-if="selectedHealthGroup.value == 2">
-                            <Dropdown
+                            <p-dropdown
                                 :options="[
                                     'общие офтальмо-гигиенические мероприятия',
                                     'очковая или контактная коррекция зрения',
@@ -119,7 +119,7 @@
                             />
                         </div>
                         <div v-if="selectedHealthGroup.value == 3">
-                            <Dropdown
+                            <p-dropdown
                                 :options="[
                                     'диспансерное наблюдение врача-офтальмолога',
                                     'офтальмо-гигиенические мероприятия',
@@ -143,7 +143,7 @@
                 >
                     <div class="col-6 text-center">Иное</div>
                     <div class="col-6 text-center">
-                        <InputText />
+                        <p-input-text />
                     </div>
                 </div>
             </div>
@@ -207,9 +207,7 @@
 </template>
 
 <script setup lang="ts">
-import Dropdown from 'primevue/dropdown'
 import SelectButton from 'primevue/selectbutton'
-import InputText from 'primevue/inputtext'
 import { Student } from '@prisma/client'
 
 definePageMeta({
