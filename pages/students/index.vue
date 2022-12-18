@@ -3,7 +3,6 @@
         <p-data-table
             :value="(students as any[])"
             :rowHover="true"
-            :loading="false"
             :scrollable="true"
             scrollHeight="flex"
             dataKey="id"
