@@ -50,6 +50,10 @@
 <script setup lang="ts">
 import DataTable from 'primevue/datatable'
 
+definePageMeta({
+    name: 'Учащиеся'
+})
+
 const {
     data: children,
     refresh: refreshChildren,
