@@ -1,7 +1,7 @@
 <template>
     <div class="absolute w-full h-full">
-        <data-table
-            :value="(children as any[])"
+        <p-data-table
+            :value="(students as any[])"
             :rowHover="true"
             :loading="false"
             :scrollable="true"
@@ -25,8 +25,8 @@
                         <p-button
                             label="Обновить"
                             icon="pi pi-refresh"
-                            :loading="loadingChildren"
-                            @click="refreshChildren"
+                            :loading="loadingStudents"
+                            @click="refreshStudents"
                         />
                     </div>
                 </div>
@@ -35,30 +35,27 @@
             <p-column field="firstName" header="Имя"></p-column>
             <p-column field="middleName" header="Отчество"></p-column>
             <p-column field="age" header="Возраст"></p-column>
-        </data-table>
+        </p-data-table>
 
         <p-dialog
             header="Добавить ученика"
             v-model:visible="showDialog"
             :modal="true"
         >
-            Content
         </p-dialog>
     </div>
 </template>
 
 <script setup lang="ts">
-import DataTable from 'primevue/datatable'
-
 definePageMeta({
-    name: 'Учащиеся'
+    title: 'Учащиеся'
 })
 
-const {
-    data: children,
-    refresh: refreshChildren,
-    pending: loadingChildren
-} = useFetch('/api/children')
-
 let showDialog = ref(false)
+
+const {
+    data: students,
+    refresh: refreshStudents,
+    pending: loadingStudents
+} = useFetch('/api/students')
 </script>
