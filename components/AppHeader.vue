@@ -20,12 +20,6 @@
             <nuxt-link
                 class="flex p-3 text-indigo-100 hover:text-indigo-50 hover:bg-indigo-600 font-medium border-round transition-colors transition-duration-150 cursor-pointer no-underline"
             >
-                <i class="pi pi-users w-1rem mr-2"></i>
-                <span>Классы</span>
-            </nuxt-link>
-            <nuxt-link
-                class="flex p-3 text-indigo-100 hover:text-indigo-50 hover:bg-indigo-600 font-medium border-round transition-colors transition-duration-150 cursor-pointer no-underline"
-            >
                 <i class="pi pi-chart-line w-1rem mr-2"></i>
                 <span>Статистика</span>
             </nuxt-link>
