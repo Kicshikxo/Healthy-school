@@ -58,7 +58,7 @@
 <script setup lang="ts">
 const route = useRoute()
 
-const { data: info, pending: loadingInfo } = useFetch('/api/children/info', {
+const { data: info, pending: loadingInfo } = useFetch('/api/students/info', {
     query: { id: route.params.id }
 })
 
