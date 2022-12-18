@@ -148,7 +148,10 @@
                 </div>
             </div>
             <div v-if="selectedHealthGroup" class="text-xl mt-4">
-                <div v-if="selectedHealthGroup.value == 1" class="bg-green-200">
+                <div
+                    v-if="selectedHealthGroup.value == 1"
+                    class="bg-green-200 p-2 border-round"
+                >
                     <div>Выводы: нет ограничений по здоровью.</div>
                     <div>
                         Профилактические и здоровьесберегающие мероприятия:
@@ -163,7 +166,7 @@
                 </div>
                 <div
                     v-if="selectedHealthGroup.value == 2"
-                    class="bg-yellow-200"
+                    class="bg-yellow-200 p-2 border-round"
                 >
                     <div>
                         Выводы: подвержен риску развития частых/хронических
@@ -181,7 +184,10 @@
                         воздействии вредных привычек на здоровье.
                     </div>
                 </div>
-                <div v-if="selectedHealthGroup.value == 3" class="bg-red-200">
+                <div
+                    v-if="selectedHealthGroup.value == 3"
+                    class="bg-red-200 p-2 border-round"
+                >
                     <div>
                         Выводы: наблюдается значительное ухудшение здоровья,
                         нарушение функционирования некоторых органов и систем;
