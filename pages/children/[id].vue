@@ -24,7 +24,7 @@
                                 {{ info?.middleName }}
                             </div>
                         </div>
-                        <div class="flex flex-wrap">
+                        <div class="flex flex-wrap gap-5">
                             <div class="flex flex-column">
                                 <div class="text-500">Возраст</div>
                                 <div
@@ -35,6 +35,18 @@
                                         class="max-w-30rem"
                                     />
                                     <div v-else>{{ info?.age }} лет</div>
+                                </div>
+                            </div>
+                            <div class="flex flex-column">
+                                <div class="text-500">Класс</div>
+                                <div
+                                    class="flex align-items-end h-1rem mt-2 text-700"
+                                >
+                                    <p-skeleton
+                                        v-if="loadingInfo"
+                                        class="max-w-30rem"
+                                    />
+                                    <div v-else>{{ info?.class }}</div>
                                 </div>
                             </div>
                         </div>
