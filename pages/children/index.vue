@@ -18,13 +18,13 @@
                     <div class="flex gap-2">
                         <p-button
                             label="Добавить"
-                            icon="pi pi-plus"
+                            icon="pi pi-plus w-1rem"
                             class="p-button-success"
                             @click="showDialog = true"
                         />
                         <p-button
                             label="Обновить"
-                            icon="pi pi-refresh"
+                            icon="pi pi-refresh w-1rem"
                             :loading="loadingStudents"
                             @click="refreshStudents"
                         />

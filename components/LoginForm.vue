@@ -24,7 +24,7 @@
 
             <p-button
                 label="Войти"
-                icon="pi pi-user"
+                icon="pi pi-user w-1rem"
                 class="w-5"
                 @click="login"
             ></p-button>
