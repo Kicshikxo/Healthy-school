@@ -2,6 +2,11 @@
     <div class="flex flex-column min-h-screen surface-ground">
         <div class="h-16rem bg-indigo-500">
             <app-header />
+            <nuxt-loading-indicator
+                class="mt-7 shadow-2"
+                color="var(--indigo-600)"
+                :height="2"
+            />
             <app-nav />
         </div>
 
