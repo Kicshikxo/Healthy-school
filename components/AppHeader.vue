@@ -11,7 +11,7 @@
                 class="mr-5"
             />
             <nuxt-link
-                to="/children"
+                to="/students"
                 class="flex p-3 text-indigo-100 hover:text-indigo-50 hover:bg-indigo-600 font-medium border-round transition-colors transition-duration-150 cursor-pointer no-underline"
             >
                 <i class="pi pi-user w-1rem mr-2"></i>
