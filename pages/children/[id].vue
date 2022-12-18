@@ -63,6 +63,6 @@ const { data: info, pending: loadingInfo } = useFetch('/api/children/info', {
 })
 
 definePageMeta({
-    name: `Информация по обучающемуся`
+    title: `Информация по обучающемуся`
 })
 </script>

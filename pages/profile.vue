@@ -4,6 +4,6 @@
 
 <script setup lang="ts">
 definePageMeta({
-    name: 'Профиль'
+    title: 'Профиль'
 })
 </script>
