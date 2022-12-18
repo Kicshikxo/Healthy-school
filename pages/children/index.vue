@@ -7,8 +7,6 @@
             :scrollable="true"
             scrollHeight="flex"
             dataKey="id"
-            tableClass="w-full"
-            tableStyle="border-collapse: collapse"
             responsiveLayout="scroll"
             @row-click="$router.push(`${$route.path}/${$event.data.id}`)"
         >
