@@ -1,6 +1,6 @@
 <template>
     <div class="absolute w-full h-full">
-        <data-table
+        <p-data-table
             :value="(students as any[])"
             :rowHover="true"
             :scrollable="true"
@@ -29,12 +29,22 @@
                     </div>
                 </div>
             </template>
+            <template #empty>
+                <div class="flex justify-content-center w-full">
+                    <p-progress-bar
+                        v-if="loadingStudents"
+                        mode="indeterminate"
+                        class="w-full h-1rem"
+                    />
+                    <div v-else>Данных нет...</div>
+                </div>
+            </template>
             <p-column field="secondName" header="Фамилия"></p-column>
             <p-column field="firstName" header="Имя"></p-column>
             <p-column field="middleName" header="Отчество"></p-column>
             <p-column field="age" header="Возраст"></p-column>
             <p-column field="class" header="Класс"></p-column>
-        </data-table>
+        </p-data-table>
 
         <p-dialog
             header="Добавить ученика"
@@ -46,7 +56,6 @@
 </template>
 
 <script setup lang="ts">
-import DataTable from 'primevue/datatable/DataTable.vue'
 definePageMeta({
     title: 'Учащиеся'
 })
