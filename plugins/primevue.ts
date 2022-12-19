@@ -7,6 +7,7 @@ import Column from 'primevue/column/Column.vue'
 import Dialog from 'primevue/dialog/Dialog.vue'
 import Skeleton from 'primevue/skeleton/Skeleton.vue'
 import Dropdown from 'primevue/dropdown/Dropdown.vue'
+import ProgressBar from 'primevue/progressbar/ProgressBar.vue'
 
 export default defineNuxtPlugin((nuxtApp) => {
     nuxtApp.vueApp.use(PrimeVue, { ripple: false })
@@ -17,4 +18,5 @@ export default defineNuxtPlugin((nuxtApp) => {
     nuxtApp.vueApp.component('PDialog', Dialog)
     nuxtApp.vueApp.component('PSkeleton', Skeleton)
     nuxtApp.vueApp.component('PDropdown', Dropdown)
+    nuxtApp.vueApp.component('PProgressBar', ProgressBar)
 })
