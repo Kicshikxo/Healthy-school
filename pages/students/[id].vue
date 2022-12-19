@@ -55,8 +55,9 @@
                 </div>
                 <div>
                     <p-button
-                        icon="pi pi-bars"
-                        class="p-button-rounded p-button-secondary"
+                        icon="pi pi-trash"
+                        class="p-button-rounded p-button-danger"
+                        @click="deleteStudent"
                     />
                 </div>
             </div>
@@ -66,6 +67,17 @@
 
 <script setup lang="ts">
 const route = useRoute()
+const router = useRouter()
+
+async function deleteStudent() {
+    const { error } = await useFetch('/api/students/remove', {
+        method: 'DELETE',
+        body: { studentId: info.value?.id }
+    })
+    if (error.value) return
+
+    router.back()
+}
 
 const { data: info, pending: loadingInfo } = useFetch('/api/students/info', {
     query: { id: route.params.id }

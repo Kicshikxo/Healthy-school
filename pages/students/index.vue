@@ -47,24 +47,102 @@
         </p-data-table>
 
         <p-dialog
-            header="Добавить ученика"
-            v-model:visible="showDialog"
             :modal="true"
+            v-model:visible="showDialog"
+            header="Добавить ученика"
+            class="p-fluid"
         >
+            <div class="field">
+                <label for="secondName">Фамилия</label>
+                <p-input-text
+                    id="secondName"
+                    v-model="newStudent.secondName"
+                    required="true"
+                    autofocus
+                />
+            </div>
+            <div class="field">
+                <label for="firstName">Имя</label>
+                <p-input-text
+                    id="firstName"
+                    v-model="newStudent.firstName"
+                    required="true"
+                />
+            </div>
+            <div class="field">
+                <label for="middleName">Отчество</label>
+                <p-input-text
+                    id="middleName"
+                    v-model="newStudent.middleName"
+                    required="true"
+                />
+            </div>
+            <div class="formgrid grid">
+                <div class="field col">
+                    <label for="class">Класс</label>
+                    <p-input-text
+                        id="class"
+                        v-model="newStudent.class"
+                        required="true"
+                    />
+                </div>
+                <div class="field col">
+                    <label for="quantity">Возраст</label>
+                    <p-input-number
+                        id="quantity"
+                        v-model="newStudent.age"
+                        :min="6"
+                        :max="20"
+                        suffix=" лет"
+                        integeronly
+                    />
+                </div>
+            </div>
+            <template #footer>
+                <p-button
+                    label="Отмена"
+                    icon="pi pi-times"
+                    class="p-button-text"
+                    @click="showDialog = false"
+                />
+                <p-button
+                    label="Добавить"
+                    icon="pi pi-check"
+                    class="p-button-text"
+                    @click="addStudent"
+                />
+            </template>
         </p-dialog>
     </div>
 </template>
 
 <script setup lang="ts">
+import { Student } from '@prisma/client'
+
 definePageMeta({
     title: 'Учащиеся'
 })
 
-let showDialog = ref(false)
+const newStudent = ref<Student>({} as Student)
+
+async function addStudent() {
+    const { error } = await useFetch('/api/students/add', {
+        method: 'POST',
+        body: {
+            studentData: newStudent.value
+        }
+    })
+    if (error.value) return
+
+    showDialog.value = false
+    await refreshStudents()
+}
 
 const {
     data: students,
     refresh: refreshStudents,
     pending: loadingStudents
 } = useFetch('/api/students')
+
+let showDialog = ref(false)
 </script>
