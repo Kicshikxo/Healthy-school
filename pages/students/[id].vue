@@ -5,6 +5,7 @@
                 <div class="flex flex-auto gap-5">
                     <nuxt-img
                         src="images/avatars/persona 0-1.png"
+                        alt="student avatar"
                         width="96"
                         height="96"
                     />
