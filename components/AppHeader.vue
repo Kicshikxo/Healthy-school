@@ -2,7 +2,7 @@
     <header
         class="flex justify-content-between w-full h-4rem py-3 px-5 border-bottom-1 border-indigo-600 shadow-1"
     >
-        <div class="flex align-items-center">
+        <nav class="flex align-items-center">
             <nuxt-img
                 src="images/logo.png"
                 alt="logo"
@@ -24,8 +24,8 @@
                 <i class="pi pi-chart-line w-1rem mr-2"></i>
                 <span>Статистика</span>
             </nuxt-link>
-        </div>
-        <div class="flex align-items-center">
+        </nav>
+        <nav class="flex align-items-center">
             <nuxt-link
                 class="flex p-3 mr-2 align-items-center text-indigo-100 hover:text-indigo-50 hover:bg-indigo-600 font-medium border-round transition-colors transition-duration-150 cursor-pointer no-underline"
             >
@@ -51,7 +51,7 @@
                     </span>
                 </div>
             </nuxt-link>
-        </div>
+        </nav>
     </header>
 </template>
 
