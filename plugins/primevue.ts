@@ -2,6 +2,7 @@ import { defineNuxtPlugin } from '#app'
 import PrimeVue from 'primevue/config'
 import Button from 'primevue/button/Button.vue'
 import InputText from 'primevue/inputtext/InputText.vue'
+import InputNumber from 'primevue/inputnumber/InputNumber.vue'
 import DataTable from 'primevue/datatable/DataTable.vue'
 import Column from 'primevue/column/Column.vue'
 import Dialog from 'primevue/dialog/Dialog.vue'
@@ -13,6 +14,7 @@ export default defineNuxtPlugin((nuxtApp) => {
     nuxtApp.vueApp.use(PrimeVue, { ripple: false })
     nuxtApp.vueApp.component('PButton', Button)
     nuxtApp.vueApp.component('PInputText', InputText)
+    nuxtApp.vueApp.component('PInputNumber', InputNumber)
     nuxtApp.vueApp.component('PDataTable', DataTable)
     nuxtApp.vueApp.component('PColumn', Column)
     nuxtApp.vueApp.component('PDialog', Dialog)
