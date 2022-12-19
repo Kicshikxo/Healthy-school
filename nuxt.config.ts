@@ -4,7 +4,7 @@ export default defineNuxtConfig({
             htmlAttrs: {
                 lang: 'ru'
             },
-            title: 'Школьное здоровье',
+            title: 'Здоровье в школе',
             meta: [
                 {
                     hid: 'description',
