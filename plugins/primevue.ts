@@ -9,7 +9,7 @@ import Skeleton from 'primevue/skeleton/Skeleton.vue'
 import Dropdown from 'primevue/dropdown/Dropdown.vue'
 
 export default defineNuxtPlugin((nuxtApp) => {
-    nuxtApp.vueApp.use(PrimeVue, { ripple: true })
+    nuxtApp.vueApp.use(PrimeVue, { ripple: false })
     nuxtApp.vueApp.component('PButton', Button)
     nuxtApp.vueApp.component('PInputText', InputText)
     nuxtApp.vueApp.component('PDataTable', DataTable)
