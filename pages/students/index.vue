@@ -1,12 +1,13 @@
 <template>
     <div class="absolute w-full h-full">
-        <p-data-table
+        <data-table
             :value="(students as any[])"
             :rowHover="true"
             :scrollable="true"
             scrollHeight="flex"
             dataKey="id"
             responsiveLayout="scroll"
+            row-style="cursor: pointer"
             @row-click="$router.push(`${$route.path}/${$event.data.id}`)"
         >
             <template #header>
@@ -33,7 +34,7 @@
             <p-column field="middleName" header="Отчество"></p-column>
             <p-column field="age" header="Возраст"></p-column>
             <p-column field="class" header="Класс"></p-column>
-        </p-data-table>
+        </data-table>
 
         <p-dialog
             header="Добавить ученика"
@@ -45,6 +46,7 @@
 </template>
 
 <script setup lang="ts">
+import DataTable from 'primevue/datatable/DataTable.vue'
 definePageMeta({
     title: 'Учащиеся'
 })
