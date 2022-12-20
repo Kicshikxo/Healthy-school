@@ -1,6 +1,6 @@
 <template>
     <header
-        class="flex justify-content-between w-full h-4rem py-3 px-5 border-bottom-1 border-indigo-600 shadow-1"
+        class="flex justify-content-between w-full h-4rem py-3 px-5 border-bottom-1 border-primary-600 shadow-1"
     >
         <nav class="flex align-items-center">
             <nuxt-img
@@ -12,14 +12,14 @@
             />
             <nuxt-link
                 to="/students"
-                class="flex p-3 text-indigo-100 hover:text-indigo-50 hover:bg-indigo-600 font-medium border-round transition-colors transition-duration-150 cursor-pointer no-underline"
+                class="flex p-3 text-primary-100 hover:text-primary-50 hover:bg-primary-600 font-medium border-round transition-colors transition-duration-150 cursor-pointer no-underline"
             >
                 <i class="pi pi-user w-1rem mr-2"></i>
                 <span>Учащиеся</span>
             </nuxt-link>
             <nuxt-link
                 to="/statistics"
-                class="flex p-3 text-indigo-100 hover:text-indigo-50 hover:bg-indigo-600 font-medium border-round transition-colors transition-duration-150 cursor-pointer no-underline"
+                class="flex p-3 text-primary-100 hover:text-primary-50 hover:bg-primary-600 font-medium border-round transition-colors transition-duration-150 cursor-pointer no-underline"
             >
                 <i class="pi pi-chart-line w-1rem mr-2"></i>
                 <span>Статистика</span>
@@ -27,13 +27,13 @@
         </nav>
         <nav class="flex align-items-center">
             <nuxt-link
-                class="flex p-3 mr-2 align-items-center text-indigo-100 hover:text-indigo-50 hover:bg-indigo-600 font-medium border-round transition-colors transition-duration-150 cursor-pointer no-underline"
+                class="flex p-3 mr-2 align-items-center text-primary-100 hover:text-primary-50 hover:bg-primary-600 font-medium border-round transition-colors transition-duration-150 cursor-pointer no-underline"
             >
                 <i class="pi pi-bell text-xl" />
             </nuxt-link>
             <nuxt-link
                 to="/profile"
-                class="flex px-3 py-1 align-items-center hover:bg-indigo-600 font-medium border-round transition-colors transition-duration-150 cursor-pointer no-underline"
+                class="flex px-3 py-1 align-items-center hover:bg-primary-600 font-medium border-round transition-colors transition-duration-150 cursor-pointer no-underline"
             >
                 <nuxt-img
                     :src="avatarSrc"
@@ -43,10 +43,10 @@
                     class="border-circle"
                 />
                 <div class="block ml-2">
-                    <div class="text-indigo-50 font-medium">
+                    <div class="text-primary-50 font-medium">
                         Иванов Иван Иванович
                     </div>
-                    <span class="text-indigo-100 font-medium text-sm">
+                    <span class="text-primary-100 font-medium text-sm">
                         Педагог-психолог
                     </span>
                 </div>

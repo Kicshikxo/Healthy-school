@@ -6,8 +6,8 @@
             to="/"
             :class="
                 $route.path == '/'
-                    ? 'text-indigo-50'
-                    : 'text-indigo-200 hover:text-indigo-100'
+                    ? 'text-primary-50'
+                    : 'text-primary-200 hover:text-primary-100'
             "
             class="no-underline"
         >
@@ -19,13 +19,13 @@
             :key="path"
             class="flex align-items-center gap-3"
         >
-            <i class="pi pi-angle-right w-1rem text-indigo-200"></i>
+            <i class="pi pi-angle-right w-1rem text-primary-200"></i>
             <nuxt-link
                 :to="path"
                 :class="
                     $route.path == path
-                        ? 'text-indigo-50'
-                        : 'text-indigo-200 hover:text-indigo-100'
+                        ? 'text-primary-50'
+                        : 'text-primary-200 hover:text-primary-100'
                 "
                 class="no-underline"
             >
