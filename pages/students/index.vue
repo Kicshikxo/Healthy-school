@@ -102,7 +102,7 @@
                 <p-button
                     label="Отмена"
                     icon="pi pi-times"
-                    class="p-button-text"
+                    class="p-button-text p-button-danger"
                     @click="showDialog = false"
                 />
                 <p-button
