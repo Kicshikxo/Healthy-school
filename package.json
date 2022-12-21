@@ -1,6 +1,5 @@
 {
     "private": true,
-    "type": "module",
     "scripts": {
         "build": "nuxt build",
         "dev": "nuxt dev",
@@ -9,7 +8,7 @@
         "postinstall": "nuxt prepare"
     },
     "prisma": {
-        "seed": "ts-node prisma/seed.ts"
+        "seed": "ts-node --compiler-options {\"module\":\"CommonJS\"} prisma/seed.ts"
     },
     "dependencies": {
         "@pinia/nuxt": "^0.4.6",
