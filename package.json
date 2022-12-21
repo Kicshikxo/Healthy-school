@@ -7,6 +7,9 @@
         "preview": "nuxt preview",
         "postinstall": "nuxt prepare"
     },
+    "prisma": {
+        "seed": "node prisma/seed.ts"
+    },
     "dependencies": {
         "@pinia/nuxt": "^0.4.6",
         "@prisma/client": "^4.7.1",
