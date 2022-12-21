@@ -21,6 +21,7 @@
     },
     "devDependencies": {
         "@nuxt/image-edge": "^1.0.0-27840416.dc1ed65",
+        "@types/bcrypt": "^5.0.0",
         "nuxt": "3.0.0",
         "prisma": "^4.7.1"
     }
