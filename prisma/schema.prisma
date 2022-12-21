@@ -7,6 +7,18 @@ datasource db {
     url      = env("DATABASE_URL")
 }
 
+model User {
+    id         Int    @id(map: "user_pkey") @default(autoincrement()) @map("user_id")
+    login      String @map("login") @db.VarChar(64)
+    password   String @map("password") @db.Char(60)
+    secondName String @map("second_name") @db.VarChar(64)
+    firstName  String @map("first_name") @db.VarChar(64)
+    middleName String @map("middle_name") @db.VarChar(64)
+    role       Role
+
+    @@map("users")
+}
+
 model Student {
     id         Int    @id(map: "children_pkey") @default(autoincrement()) @map("student_id")
     secondName String @map("second_name") @db.VarChar(64)
@@ -16,4 +28,13 @@ model Student {
     class      String @map("class") @db.VarChar(64)
 
     @@map("students")
+}
+
+enum Role {
+    OPERATOR // Оператор системы
+    CLASS_TEACHER // Классный руководитель
+    HEALTH_WORKER // Медицинский работник
+    SOCIAL_PEDAGOGUE // Социальный педагог
+    PSYCHOLOGIST // Психолог
+    PHYSICAL_EDUCATION_TEACHER // Учитель физкультуры
 }
