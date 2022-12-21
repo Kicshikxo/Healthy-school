@@ -9,7 +9,7 @@
         "postinstall": "nuxt prepare"
     },
     "prisma": {
-        "seed": "node prisma/seed.ts"
+        "seed": "ts-node prisma/seed.ts"
     },
     "dependencies": {
         "@pinia/nuxt": "^0.4.6",
@@ -24,6 +24,7 @@
         "@nuxt/image-edge": "^1.0.0-27840416.dc1ed65",
         "@types/bcrypt": "^5.0.0",
         "nuxt": "3.0.0",
-        "prisma": "^4.7.1"
+        "prisma": "^4.7.1",
+        "ts-node": "^10.9.1"
     }
 }
