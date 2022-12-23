@@ -5,6 +5,7 @@ import InputText from 'primevue/inputtext/InputText.vue'
 import InputNumber from 'primevue/inputnumber/InputNumber.vue'
 import DataTable from 'primevue/datatable/DataTable.vue'
 import Column from 'primevue/column/Column.vue'
+import Toast from 'primevue/toast/Toast.vue'
 import Dialog from 'primevue/dialog/Dialog.vue'
 import Skeleton from 'primevue/skeleton/Skeleton.vue'
 import Dropdown from 'primevue/dropdown/Dropdown.vue'
@@ -17,6 +18,7 @@ export default defineNuxtPlugin((nuxtApp) => {
     nuxtApp.vueApp.component('PInputNumber', InputNumber)
     nuxtApp.vueApp.component('PDataTable', DataTable)
     nuxtApp.vueApp.component('PColumn', Column)
+    nuxtApp.vueApp.component('PToast', Toast)
     nuxtApp.vueApp.component('PDialog', Dialog)
     nuxtApp.vueApp.component('PSkeleton', Skeleton)
     nuxtApp.vueApp.component('PDropdown', Dropdown)
