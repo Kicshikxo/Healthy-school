@@ -35,6 +35,11 @@ export default defineNuxtConfig({
         'assets/css/main.css'
     ],
 
+    auth: {
+        origin: process.env.ORIGIN,
+        basePath: '/api/auth'
+    },
+
     modules: ['@nuxt/image-edge', '@sidebase/nuxt-auth', '@pinia/nuxt'],
 
     build: {
