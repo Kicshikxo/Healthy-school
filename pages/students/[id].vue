@@ -50,6 +50,18 @@
                                     <div v-else>{{ info?.class }}</div>
                                 </div>
                             </div>
+                            <div class="flex flex-column w-8rem">
+                                <div class="text-500">СНИЛС</div>
+                                <div
+                                    class="flex align-items-end h-1rem mt-2 text-700"
+                                >
+                                    <p-skeleton
+                                        v-if="loadingInfo"
+                                        class="max-w-30rem"
+                                    />
+                                    <div v-else>{{ info?.snils }}</div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
