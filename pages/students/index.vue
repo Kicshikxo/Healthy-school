@@ -49,9 +49,19 @@
         <p-dialog
             :modal="true"
             v-model:visible="showDialog"
-            header="Добавить ученика"
+            header="Добавить учащегося"
             class="p-fluid"
         >
+            <div class="field">
+                <label for="snils">СНИЛС</label>
+                <p-input-mask
+                    id="snils"
+                    v-model="newStudent.snils"
+                    mask="999-999-999 99"
+                    required="true"
+                    autofocus
+                />
+            </div>
             <div class="field">
                 <label for="secondName">Фамилия</label>
                 <p-input-text

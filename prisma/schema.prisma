@@ -20,7 +20,8 @@ model User {
 }
 
 model Student {
-    id         Int    @id(map: "children_pkey") @default(autoincrement()) @map("student_id")
+    id         String @id(map: "children_pkey") @map("student_id") @db.Char(8)
+    snils      String @map("snils") @db.Char(14)
     secondName String @map("second_name") @db.VarChar(64)
     firstName  String @map("first_name") @db.VarChar(64)
     middleName String @map("middle_name") @db.VarChar(64)
