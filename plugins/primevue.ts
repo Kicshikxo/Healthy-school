@@ -4,6 +4,7 @@ import ToastService from 'primevue/toastservice'
 import Button from 'primevue/button/Button.vue'
 import InputText from 'primevue/inputtext/InputText.vue'
 import InputNumber from 'primevue/inputnumber/InputNumber.vue'
+import InputMask from 'primevue/inputmask/InputMask.vue'
 import DataTable from 'primevue/datatable/DataTable.vue'
 import Column from 'primevue/column/Column.vue'
 import Toast from 'primevue/toast/Toast.vue'
@@ -18,6 +19,7 @@ export default defineNuxtPlugin((nuxtApp) => {
     nuxtApp.vueApp.component('PButton', Button)
     nuxtApp.vueApp.component('PInputText', InputText)
     nuxtApp.vueApp.component('PInputNumber', InputNumber)
+    nuxtApp.vueApp.component('PInputMask', InputMask)
     nuxtApp.vueApp.component('PDataTable', DataTable)
     nuxtApp.vueApp.component('PColumn', Column)
     nuxtApp.vueApp.component('PToast', Toast)
