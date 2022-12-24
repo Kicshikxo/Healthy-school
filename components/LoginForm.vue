@@ -14,9 +14,15 @@
         </div>
 
         <div class="flex flex-column justify-content-center align-items-center">
-            <p-input-text type="text" placeholder="Логин" class="w-full mb-3" />
+            <p-input-text
+                v-model="login"
+                type="text"
+                placeholder="Логин"
+                class="w-full mb-3"
+            />
 
             <p-input-text
+                v-model="password"
                 type="password"
                 placeholder="Пароль"
                 class="w-full mb-3"
@@ -26,16 +32,42 @@
                 label="Войти"
                 icon="pi pi-user w-1rem"
                 class="w-5"
-                @click="login"
+                @click="tryLogin"
             ></p-button>
         </div>
+
+        <p-toast error-icon="" />
     </div>
 </template>
 
 <script setup lang="ts">
-const router = useRouter()
+import { useToast } from 'primevue/usetoast'
 
-function login() {
-    router.push('/')
+const { signIn } = useSession()
+const router = useRouter()
+const toast = useToast()
+
+const login = ref<string>()
+const password = ref<string>()
+
+async function tryLogin() {
+    const { error, url } = await signIn('credentials', {
+        login: login.value,
+        password: password.value,
+        redirect: false
+    })
+
+    if (error) {
+        toast.add({
+            severity: 'error',
+            summary: 'Ошибка авторизации',
+            detail: 'Неверный логин или пароль',
+            life: 3000
+        })
+    } else if (url) {
+        console.log(url)
+        router.push('/')
+        // navigateTo(url, { external: true })
+    }
 }
 </script>
