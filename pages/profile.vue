@@ -4,6 +4,7 @@
 
 <script setup lang="ts">
 definePageMeta({
-    title: 'Профиль'
+    title: 'Профиль',
+    middleware: 'auth'
 })
 </script>
