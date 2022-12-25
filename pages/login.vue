@@ -9,6 +9,7 @@
 <script setup lang="ts">
 definePageMeta({
     title: 'Логин',
-    layout: false
+    layout: false,
+    auth: false
 })
 </script>
