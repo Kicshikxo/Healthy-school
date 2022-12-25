@@ -15,7 +15,7 @@
 
         <div class="flex flex-column justify-content-center align-items-center">
             <p-input-text
-                v-model="login"
+                v-model="username"
                 type="text"
                 placeholder="Логин"
                 class="w-full mb-3"
@@ -44,19 +44,22 @@
 import { useToast } from 'primevue/usetoast'
 
 const { signIn } = useSession()
+
 const router = useRouter()
 const toast = useToast()
 
-const login = ref<string>()
+const username = ref<string>()
 const password = ref<string>()
 
 async function tryLogin() {
-    const { error, url } = await signIn('credentials', {
-        login: login.value,
-        password: password.value,
-        redirect: false
+    const { user, error } = await signIn({
+        username: username.value,
+        password: password.value
     })
 
+    if (user) {
+        router.push('/')
+    }
     if (error) {
         toast.add({
             severity: 'error',
@@ -64,10 +67,6 @@ async function tryLogin() {
             detail: 'Неверный логин или пароль',
             life: 3000
         })
-    } else if (url) {
-        console.log(url)
-        router.push('/')
-        // navigateTo(url, { external: true })
     }
 }
 </script>
