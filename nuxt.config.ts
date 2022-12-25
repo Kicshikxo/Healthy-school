@@ -35,12 +35,7 @@ export default defineNuxtConfig({
         'assets/css/main.css'
     ],
 
-    auth: {
-        origin: process.env.ORIGIN,
-        basePath: '/api/auth'
-    },
-
-    modules: ['@nuxt/image-edge', '@sidebase/nuxt-auth', '@pinia/nuxt'],
+    modules: ['@nuxt/image-edge', '@pinia/nuxt'],
 
     build: {
         transpile: ['primevue']
