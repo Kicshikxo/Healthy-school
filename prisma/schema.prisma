@@ -8,25 +8,29 @@ datasource db {
 }
 
 model User {
-    id         Int    @id(map: "user_pkey") @default(autoincrement()) @map("user_id")
-    login      String @map("login") @db.VarChar(64)
-    password   String @map("password") @db.Char(60)
-    secondName String @map("second_name") @db.VarChar(64)
-    firstName  String @map("first_name") @db.VarChar(64)
-    middleName String @map("middle_name") @db.VarChar(64)
+    id         Int      @id(map: "user_pkey") @default(autoincrement()) @map("user_id")
+    username   String   @map("username") @db.VarChar(64)
+    password   String   @map("password") @db.Char(60)
+    secondName String   @map("second_name") @db.VarChar(64)
+    firstName  String   @map("first_name") @db.VarChar(64)
+    middleName String   @map("middle_name") @db.VarChar(64)
     role       Role
+    createdAt  DateTime @default(now()) @map("created-at")
+    updatedAt  DateTime @updatedAt @map("updated-at")
 
     @@map("users")
 }
 
 model Student {
-    id         String @id(map: "children_pkey") @map("student_id") @db.Char(8)
-    snils      String @map("snils") @db.Char(14)
-    secondName String @map("second_name") @db.VarChar(64)
-    firstName  String @map("first_name") @db.VarChar(64)
-    middleName String @map("middle_name") @db.VarChar(64)
-    age        Int    @map("age")
-    class      String @map("class") @db.VarChar(64)
+    id         String   @id(map: "children_pkey") @map("student_id") @db.Char(8)
+    snils      String   @map("snils") @db.Char(14)
+    secondName String   @map("second_name") @db.VarChar(64)
+    firstName  String   @map("first_name") @db.VarChar(64)
+    middleName String   @map("middle_name") @db.VarChar(64)
+    age        Int      @map("age")
+    class      String   @map("class") @db.VarChar(64)
+    createdAt  DateTime @default(now()) @map("created-at")
+    updatedAt  DateTime @updatedAt @map("updated-at")
 
     @@map("students")
 }

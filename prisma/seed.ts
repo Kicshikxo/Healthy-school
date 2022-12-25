@@ -4,14 +4,14 @@ const prisma = new PrismaClient()
 
 async function main() {
     const userData = {
-        login: 'admin',
+        username: 'admin',
         password: 'admin',
         role: Role.OPERATOR
     }
 
     const operator = await prisma.user.create({
         data: {
-            login: userData.login,
+            username: userData.username,
             password: hashSync(userData.password, 8),
             role: userData.role,
 
@@ -22,7 +22,7 @@ async function main() {
     })
 
     console.log(
-        `Создан базовый пользователь для работы с системой:\n\tЛогин: ${userData.login}\n\tПароль: ${userData.password}\n\tРоль: ${userData.role}`
+        `Создан базовый пользователь для работы с системой:\n\tЛогин: ${userData.username}\n\tПароль: ${userData.password}\n\tРоль: ${userData.role}`
     )
 }
 
