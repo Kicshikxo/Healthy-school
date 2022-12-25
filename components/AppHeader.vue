@@ -44,10 +44,11 @@
                 />
                 <div class="block ml-2">
                     <div class="text-primary-50 font-medium">
-                        Иванов Иван Иванович
+                        {{ session?.secondName }} {{ session?.firstName }}
+                        {{ session?.middleName }}
                     </div>
                     <span class="text-primary-100 font-medium text-sm">
-                        Педагог-психолог
+                        {{ session?.role }}
                     </span>
                 </div>
             </nuxt-link>
@@ -56,6 +57,13 @@
 </template>
 
 <script setup lang="ts">
+const props = defineProps({
+    session: {
+        required: true,
+        type: Object
+    }
+})
+
 const avatarSrc = `images/avatars/persona ${~~(Math.random() * 4)}-${~~(
     Math.random() * 3
 )}.png`
