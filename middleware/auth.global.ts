@@ -1,9 +1,9 @@
 export default defineNuxtRouteMiddleware(async (to) => {
     if (to.meta.auth === false) return
 
-    const { getSession } = useSession()
-    const { error } = await getSession()
-    if (!error) return
+    const { state } = useSession()
+
+    if (state.status.value === 'authenticated') return
 
     return navigateTo('/login')
 })

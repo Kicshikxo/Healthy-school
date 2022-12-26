@@ -30,6 +30,9 @@ const signIn = async (options: SingInOptions): Promise<SignInResult> => {
         method: 'POST',
         body: { username: options.username, password: options.password }
     })
+
+    await getSession()
+
     return {
         error: error.value?.message ?? null,
         user: data.value,
@@ -39,22 +42,35 @@ const signIn = async (options: SingInOptions): Promise<SignInResult> => {
 
 const signOut = async () => {
     await useFetch('/api/auth/logout')
+    await getSession()
 }
 
 const getSession = async (): Promise<SessionResult> => {
     const { cookie } = useRequestHeaders()
-    const { data, error } = await useFetch('/api/auth/session', {
+    const { data: session, error } = await useFetch('/api/auth/session', {
         headers: { cookie: cookie! }
     })
+
+    const { data } = useSessionState()
+    data.value = session
+
     return {
         error: error.value?.message ?? null,
-        data: data.value as Session | null,
+        data: session.value as Session | null,
         status: error.value?.status ?? 200
     }
 }
 
-export default () => ({
-    signIn,
-    signOut,
-    getSession
-})
+export default () => {
+    const { data, status } = useSessionState()
+
+    return {
+        signIn,
+        signOut,
+        getSession,
+        state: {
+            data,
+            status
+        }
+    }
+}
