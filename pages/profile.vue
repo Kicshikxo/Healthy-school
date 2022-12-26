@@ -2,7 +2,10 @@
     <div>
         <div>Профиль</div>
         <div>
-            {{ data }}
+            {{ state.data }}
+        </div>
+        <div>
+            {{ state.status }}
         </div>
         <div>
             <p-button label="Выйти" @click="signOut" />
@@ -11,8 +14,7 @@
 </template>
 
 <script setup lang="ts">
-const { getSession, signOut } = useSession()
-const { data } = await getSession()
+const { signOut, state } = useSession()
 
 definePageMeta({
     title: 'Профиль'
