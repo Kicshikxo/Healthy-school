@@ -1,5 +1,5 @@
 export default () => {
-    const data = useState('session:data')
+    const data = useState<SessionData | null>('session:data', () => null)
     const status = computed(() =>
         data.value ? 'authenticated' : 'unauthenticated'
     )
