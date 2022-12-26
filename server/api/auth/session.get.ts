@@ -1,16 +1,10 @@
-import { PrismaClient, Role } from '@prisma/client'
+import crc32 from 'crc/crc32'
 import jwt from 'jsonwebtoken'
+import { PrismaClient } from '@prisma/client'
 const prisma = new PrismaClient()
-
-interface TokenData {
-    id: number
-    role: Role
-    password: string
-}
 
 export default defineEventHandler(async (event) => {
     const authToken = getCookie(event, 'auth-token')
-
     if (!authToken) {
         return sendError(
             event,
@@ -21,31 +15,13 @@ export default defineEventHandler(async (event) => {
         )
     }
 
+    let tokenData: AuthTokenData
+
     try {
-        const tokenData = jwt.verify(
+        tokenData = jwt.verify(
             authToken!,
             process.env.SECRET_KEY!
-        ) as TokenData
-        const user = prisma.user.findUnique({
-            where: { id: tokenData.id },
-            select: {
-                id: true,
-                role: true,
-                firstName: true,
-                secondName: true,
-                middleName: true
-            }
-        })
-        if (!user) {
-            return sendError(
-                event,
-                createError({
-                    statusCode: 401,
-                    statusMessage: 'User not found'
-                })
-            )
-        }
-        return user
+        ) as AuthTokenData
     } catch (e) {
         return sendError(
             event,
@@ -54,5 +30,37 @@ export default defineEventHandler(async (event) => {
                 statusMessage: 'Invalid auth token'
             })
         )
+    }
+
+    const user = await prisma.user.findUnique({
+        where: { id: tokenData.id }
+    })
+
+    if (!user) {
+        return sendError(
+            event,
+            createError({
+                statusCode: 401,
+                statusMessage: 'User not found'
+            })
+        )
+    }
+
+    if (tokenData.password != crc32(user.password).toString(16)) {
+        return sendError(
+            event,
+            createError({
+                statusCode: 401,
+                statusMessage: 'Invalid token credentials'
+            })
+        )
+    }
+
+    return {
+        id: user.id,
+        role: user.role,
+        firstName: user.firstName,
+        secondName: user.secondName,
+        middleName: user.middleName
     }
 })
