@@ -44,11 +44,12 @@
                 />
                 <div class="block ml-2">
                     <div class="text-primary-50 font-medium">
-                        {{ session?.secondName }} {{ session?.firstName }}
-                        {{ session?.middleName }}
+                        {{ data?.secondName }}
+                        {{ data?.firstName }}
+                        {{ data?.middleName }}
                     </div>
                     <span class="text-primary-100 font-medium text-sm">
-                        {{ session?.role }}
+                        {{ data?.role }}
                     </span>
                 </div>
             </nuxt-link>
@@ -57,7 +58,7 @@
 </template>
 
 <script setup lang="ts">
-const props = defineProps(['session'])
+const { data } = useSessionState()
 
 const avatarSrc = `images/avatars/persona ${~~(Math.random() * 4)}-${~~(
     Math.random() * 3

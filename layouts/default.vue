@@ -1,7 +1,7 @@
 <template>
     <div class="flex flex-column min-h-screen surface-ground">
         <div class="h-16rem bg-primary-500">
-            <app-header :session="session!" />
+            <app-header />
             <nuxt-loading-indicator
                 color="var(--primary-600)"
                 class="mt-7 shadow-2"
@@ -21,8 +21,3 @@
         </main>
     </div>
 </template>
-
-<script setup lang="ts">
-const { getSession } = useSession()
-const { data: session, error } = await getSession()
-</script>
