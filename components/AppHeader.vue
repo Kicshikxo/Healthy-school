@@ -57,12 +57,7 @@
 </template>
 
 <script setup lang="ts">
-const props = defineProps({
-    session: {
-        required: true,
-        type: Object
-    }
-})
+const props = defineProps(['session'])
 
 const avatarSrc = `images/avatars/persona ${~~(Math.random() * 4)}-${~~(
     Math.random() * 3
