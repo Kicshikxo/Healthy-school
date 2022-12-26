@@ -1,30 +1,3 @@
-import { Role, User } from '@prisma/client'
-
-interface SingInOptions {
-    username?: string
-    password?: string
-}
-
-interface SignInResult {
-    error: string | null
-    user: User | null
-    status: number
-}
-
-interface Session {
-    id: number
-    role: Role
-    firstName: string
-    secondName: string
-    middleName: string
-}
-
-interface SessionResult {
-    error: string | null
-    data: Session | null
-    status: number
-}
-
 const signIn = async (options: SingInOptions): Promise<SignInResult> => {
     const { data, error } = await useFetch('/api/auth/login', {
         method: 'POST',
@@ -34,9 +7,9 @@ const signIn = async (options: SingInOptions): Promise<SignInResult> => {
     await getSession()
 
     return {
-        error: error.value?.message ?? null,
-        user: data.value,
-        status: error.value?.status ?? 200
+        status: error.value?.status ?? 200,
+        error: error.value?.statusMessage ?? null,
+        user: data.value
     }
 }
 
@@ -45,19 +18,33 @@ const signOut = async () => {
     await getSession()
 }
 
-const getSession = async (): Promise<SessionResult> => {
+const getSession = async (): Promise<GetSessionResult> => {
     const { cookie } = useRequestHeaders()
-    const { data: session, error } = await useFetch('/api/auth/session', {
-        headers: { cookie: cookie! }
-    })
-
     const { data } = useSessionState()
-    data.value = session
+
+    const status = ref<number>(200)
+    const error = ref<string | null>(null)
+    const session = ref<SessionData | null>(null)
+
+    try {
+        session.value = await $fetch('/api/auth/session', {
+            headers: { cookie: cookie! },
+            onResponse(context) {
+                status.value = context.response.status
+            },
+            onResponseError(context) {
+                status.value = context.response.status
+                error.value = context.response.statusText
+            }
+        })
+    } catch (e) {}
+
+    data.value = session.value
 
     return {
-        error: error.value?.message ?? null,
-        data: session.value as Session | null,
-        status: error.value?.status ?? 200
+        status: status.value,
+        error: error.value,
+        data: data.value
     }
 }
 
