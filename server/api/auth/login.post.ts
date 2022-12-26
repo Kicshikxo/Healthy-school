@@ -1,12 +1,8 @@
-import { PrismaClient } from '@prisma/client'
-import { compare } from 'bcrypt'
+import crc32 from 'crc/crc32'
 import jwt from 'jsonwebtoken'
+import { compare } from 'bcrypt'
+import { PrismaClient } from '@prisma/client'
 const prisma = new PrismaClient()
-
-interface LoginData {
-    username?: string
-    password?: string
-}
 
 export default defineEventHandler(async (event) => {
     const loginData: LoginData = await readBody(event)
@@ -33,7 +29,7 @@ export default defineEventHandler(async (event) => {
             jwt.sign(
                 {
                     id: user.id,
-                    password: user.password,
+                    password: crc32(user.password).toString(16),
                     role: user.role
                 },
                 process.env.SECRET_KEY ?? ' '
