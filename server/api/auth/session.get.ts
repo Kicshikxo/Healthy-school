@@ -26,7 +26,7 @@ export default defineEventHandler(async (event) => {
             authToken!,
             process.env.SECRET_KEY!
         ) as TokenData
-        return prisma.user.findUnique({
+        const user = prisma.user.findUnique({
             where: { id: tokenData.id },
             select: {
                 id: true,
@@ -36,6 +36,16 @@ export default defineEventHandler(async (event) => {
                 middleName: true
             }
         })
+        if (!user) {
+            return sendError(
+                event,
+                createError({
+                    statusCode: 401,
+                    statusMessage: 'User not found'
+                })
+            )
+        }
+        return user
     } catch (e) {
         return sendError(
             event,
