@@ -14,12 +14,14 @@
                 <div class="flex justify-content-between align-items-center">
                     Список учащихся
                     <div class="flex gap-2">
-                        <p-button
-                            label="Добавить"
-                            icon="pi pi-plus w-1rem"
-                            class="p-button-success"
-                            @click="showDialog = true"
-                        />
+                        <role-access role="CLASS_TEACHER">
+                            <p-button
+                                label="Добавить"
+                                icon="pi pi-plus w-1rem"
+                                class="p-button-success"
+                                @click="showDialog = true"
+                            />
+                        </role-access>
                         <p-button
                             label="Обновить"
                             icon="pi pi-refresh w-1rem"
@@ -31,11 +33,7 @@
             </template>
             <template #empty>
                 <div class="flex justify-content-center w-full">
-                    <p-progress-bar
-                        v-if="loadingStudents"
-                        mode="indeterminate"
-                        class="w-full h-1rem"
-                    />
+                    <p-progress-bar v-if="loadingStudents" mode="indeterminate" class="w-full h-1rem" />
                     <div v-else>Данных нет...</div>
                 </div>
             </template>
@@ -46,81 +44,36 @@
             <p-column field="class" header="Класс"></p-column>
         </p-data-table>
 
-        <p-dialog
-            :modal="true"
-            v-model:visible="showDialog"
-            header="Добавить учащегося"
-            class="p-fluid"
-        >
+        <p-dialog :modal="true" v-model:visible="showDialog" header="Добавить учащегося" class="p-fluid">
             <div class="field">
                 <label for="snils">СНИЛС</label>
-                <p-input-mask
-                    id="snils"
-                    v-model="newStudent.snils"
-                    mask="999-999-999 99"
-                    required="true"
-                    autofocus
-                />
+                <p-input-mask id="snils" v-model="newStudent.snils" mask="999-999-999 99" required="true" autofocus />
             </div>
             <div class="field">
                 <label for="secondName">Фамилия</label>
-                <p-input-text
-                    id="secondName"
-                    v-model="newStudent.secondName"
-                    required="true"
-                    autofocus
-                />
+                <p-input-text id="secondName" v-model="newStudent.secondName" required="true" autofocus />
             </div>
             <div class="field">
                 <label for="firstName">Имя</label>
-                <p-input-text
-                    id="firstName"
-                    v-model="newStudent.firstName"
-                    required="true"
-                />
+                <p-input-text id="firstName" v-model="newStudent.firstName" required="true" />
             </div>
             <div class="field">
                 <label for="middleName">Отчество</label>
-                <p-input-text
-                    id="middleName"
-                    v-model="newStudent.middleName"
-                    required="true"
-                />
+                <p-input-text id="middleName" v-model="newStudent.middleName" required="true" />
             </div>
             <div class="formgrid grid">
                 <div class="field col">
                     <label for="class">Класс</label>
-                    <p-input-text
-                        id="class"
-                        v-model="newStudent.class"
-                        required="true"
-                    />
+                    <p-input-text id="class" v-model="newStudent.class" required="true" />
                 </div>
                 <div class="field col">
                     <label for="quantity">Возраст</label>
-                    <p-input-number
-                        id="quantity"
-                        v-model="newStudent.age"
-                        :min="6"
-                        :max="20"
-                        suffix=" лет"
-                        integeronly
-                    />
+                    <p-input-number id="quantity" v-model="newStudent.age" :min="6" :max="20" suffix=" лет" integeronly />
                 </div>
             </div>
             <template #footer>
-                <p-button
-                    label="Отмена"
-                    icon="pi pi-times"
-                    class="p-button-text p-button-danger"
-                    @click="showDialog = false"
-                />
-                <p-button
-                    label="Добавить"
-                    icon="pi pi-check"
-                    class="p-button-text"
-                    @click="addStudent"
-                />
+                <p-button label="Отмена" icon="pi pi-times" class="p-button-text p-button-danger" @click="showDialog = false" />
+                <p-button label="Добавить" icon="pi pi-check" class="p-button-text" @click="addStudent" />
             </template>
         </p-dialog>
     </div>
@@ -145,14 +98,11 @@ async function addStudent() {
     if (error.value) return
 
     showDialog.value = false
+    newStudent.value = {} as Student
     await refreshStudents()
 }
 
-const {
-    data: students,
-    refresh: refreshStudents,
-    pending: loadingStudents
-} = useFetch('/api/students')
+const { data: students, refresh: refreshStudents, pending: loadingStudents } = useFetch('/api/students')
 
 let showDialog = ref(false)
 </script>
