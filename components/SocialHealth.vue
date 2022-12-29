@@ -154,7 +154,7 @@ const showIndividualRecommendations = computed(() =>
     selectedHealthIndicators.value.some((indicator) => indicator.healthZone === 'YELLOW' || indicator.healthZone === 'RED')
 )
 
-const { data: info, refresh: refreshInfo } = useFetch('/api/students/info', {
+const { data: info, refresh: refreshInfo } = await useFetch('/api/students/info', {
     query: { id: props.studentId }
 })
 
@@ -167,7 +167,9 @@ const studentHealthIndicators = computed(
 
 const studentIndividualRecommendations = computed(() => [...(info.value?.socialHealth?.individualRecommendations ?? [])])
 
-const { data: socialHealthIndicators } = useFetch<SocialHealthIndicator[] | null>('/api/students/components/social-health')
+const { data: socialHealthIndicators } = await useFetch<SocialHealthIndicator[] | null>(
+    '/api/students/components/social-health'
+)
 
 const selectedHealthIndicators = ref<SocialHealthIndicator[]>([...(studentHealthIndicators.value || [])])
 
