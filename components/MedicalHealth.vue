@@ -397,7 +397,7 @@
                             <p-textarea
                                 :disabled="!enableEditing"
                                 :autoResize="true"
-                                :rows="4"
+                                :rows="6"
                                 placeholder="Заполняется вручную медицинской сестрой"
                                 class="w-full"
                             />
@@ -540,8 +540,7 @@ const currentHealthZone = computed<HealthZone>(() => {
             ...(selectedGastrointestinal.value ?? []),
             ...(selectedNeurologyAndPsychiatry.value ?? [])
         ]
-        if (medicalOptions.some(option => option.healthZone === 'RED'))
-            return 'RED'
+        if (medicalOptions.some((option) => option.healthZone === 'RED')) return 'RED'
         return 'YELLOW'
     }
     return 'GREEN'
