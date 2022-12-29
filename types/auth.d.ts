@@ -18,13 +18,13 @@ declare global {
     }
 
     interface AuthTokenData {
-        id: number
+        id: string
         role: Role
         password: string
     }
 
     interface SessionData {
-        id: number
+        id: string
         role: Role
         firstName: string
         secondName: string
