@@ -1,6 +1,6 @@
 export default defineNuxtPlugin(async (nuxtApp) => {
     const { state, getSession } = useSession()
-    if (!state.data.value) {
+    if (state.status.value === 'unauthenticated') {
         await getSession()
     }
 })
