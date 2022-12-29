@@ -18,10 +18,7 @@ export default defineEventHandler(async (event) => {
     let tokenData: AuthTokenData
 
     try {
-        tokenData = jwt.verify(
-            authToken!,
-            process.env.SECRET_KEY!
-        ) as AuthTokenData
+        tokenData = jwt.verify(authToken!, process.env.SECRET_KEY!) as AuthTokenData
     } catch (e) {
         return sendError(
             event,
@@ -46,7 +43,7 @@ export default defineEventHandler(async (event) => {
         )
     }
 
-    if (tokenData.password != crc32(user.password).toString(16)) {
+    if (tokenData.password !== crc32(user.password).toString(16)) {
         return sendError(
             event,
             createError({
