@@ -2,3 +2,24 @@
     padding: 0;
     margin: 0;
 }
+
+.p-card.p-card-content-pb-0 .p-card-content {
+    padding-bottom: 0 !important;
+}
+.p-card.p-card-content-pt-0 .p-card-content {
+    padding-top: 0 !important;
+}
+
+.p-multiselect-item,
+.p-multiselect-label {
+    white-space: normal !important;
+}
+
+.p-multiselect-token {
+    margin: 0.2rem;
+    margin-left: 0;
+}
+
+.p-multiselect-panel .p-multiselect-items {
+    padding: 0;
+}
