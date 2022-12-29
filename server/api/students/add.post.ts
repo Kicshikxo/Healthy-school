@@ -1,4 +1,4 @@
-import { PrismaClient, Student } from '@prisma/client'
+import { HealthGroup, PrismaClient, Student } from '@prisma/client'
 const prisma = new PrismaClient()
 import crc32 from 'crc/crc32'
 
@@ -7,7 +7,10 @@ export default defineEventHandler(async (event) => {
     return await prisma.student.create({
         data: {
             ...studentData,
-            id: crc32(studentData.snils).toString(16)
+            id: crc32(studentData.snils).toString(16),
+            physicalHealth: { create: { healthGroup: HealthGroup.BASIC } },
+            medicalHealth: { create: {} },
+            socialHealth: { create: {} }
         }
     })
 })
