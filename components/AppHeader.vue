@@ -1,15 +1,7 @@
 <template>
-    <header
-        class="flex justify-content-between w-full h-4rem py-3 px-5 border-bottom-1 border-primary-600 shadow-1"
-    >
+    <header class="flex justify-content-between w-full h-4rem py-3 px-5 border-bottom-1 border-primary-600 shadow-1">
         <nav class="flex align-items-center">
-            <nuxt-img
-                src="images/logo.png"
-                alt="logo"
-                width="48"
-                height="48"
-                class="mr-5"
-            />
+            <nuxt-img src="images/logo.png" alt="logo" width="48" height="48" class="mr-5" />
             <nuxt-link
                 to="/students"
                 class="flex p-3 text-primary-100 hover:text-primary-50 hover:bg-primary-600 font-medium border-round transition-colors transition-duration-150 cursor-pointer no-underline"
@@ -35,13 +27,7 @@
                 to="/profile"
                 class="flex px-3 py-1 align-items-center hover:bg-primary-600 font-medium border-round transition-colors transition-duration-150 cursor-pointer no-underline"
             >
-                <nuxt-img
-                    :src="avatarSrc"
-                    alt="avatar"
-                    width="48"
-                    height="48"
-                    class="border-circle"
-                />
+                <nuxt-img :src="avatarSrc" alt="avatar" width="48" height="48" class="border-circle" />
                 <div class="block ml-2">
                     <div class="text-primary-50 font-medium">
                         {{ data?.secondName }}
@@ -60,7 +46,5 @@
 <script setup lang="ts">
 const { data } = useSessionState()
 
-const avatarSrc = `images/avatars/persona ${~~(Math.random() * 4)}-${~~(
-    Math.random() * 3
-)}.png`
+const avatarSrc = `images/avatars/persona ${~~(Math.random() * 4)}-${~~(Math.random() * 3)}.png`
 </script>
