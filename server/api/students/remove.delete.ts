@@ -6,6 +6,11 @@ export default defineEventHandler(async (event) => {
     return await prisma.student.delete({
         where: {
             id: body.studentId
+        },
+        include: {
+            physicalHealth: true,
+            medicalHealth: true,
+            socialHealth: true
         }
     })
 })
