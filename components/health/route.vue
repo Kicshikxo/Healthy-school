@@ -5,7 +5,7 @@
             <template #content>
                 <div class="grid grid-nogutter gap-2">
                     <p-card
-                        class="col"
+                        class="col shadow-none"
                         :class="{
                             'bg-green-300': true,
                             'bg-yellow-300': false,
@@ -20,11 +20,11 @@
                         </template>
                     </p-card>
                     <p-card
-                        class="col"
+                        class="col shadow-none"
                         :class="{
-                            'bg-green-300': info?.physicalHealth?.healthGroup === 'BASIC',
-                            'bg-yellow-300': info?.physicalHealth?.healthGroup === 'PREPARATORY',
-                            'bg-red-300': info?.physicalHealth?.healthGroup === 'SPECIAL'
+                            'bg-green-300': props.studentData?.physicalHealth?.healthGroup === 'BASIC',
+                            'bg-yellow-300': props.studentData?.physicalHealth?.healthGroup === 'PREPARATORY',
+                            'bg-red-300': props.studentData?.physicalHealth?.healthGroup === 'SPECIAL'
                         }"
                     >
                         <template #title>
@@ -37,7 +37,7 @@
                         </template>
                     </p-card>
                     <p-card
-                        class="col"
+                        class="col shadow-none"
                         :class="{
                             'bg-green-300': false,
                             'bg-yellow-300': false,
@@ -52,7 +52,7 @@
                         </template>
                     </p-card>
                     <p-card
-                        class="col"
+                        class="col shadow-none"
                         :class="{
                             'bg-green-300': false,
                             'bg-yellow-300': true,
@@ -67,7 +67,7 @@
                         </template>
                     </p-card>
                     <p-card
-                        class="col"
+                        class="col shadow-none"
                         :class="{
                             'bg-green-300': false,
                             'bg-yellow-300': false,
@@ -88,9 +88,17 @@
 </template>
 
 <script setup lang="ts">
-const props = defineProps<{ studentId: string }>()
+import { MedicalHealth, PhysicalHealth, SocialHealth, Student } from '@prisma/client'
 
-const { data: info } = await useFetch('/api/students/info', {
-    query: { id: props.studentId }
-})
+const props = defineProps<{
+    studentData:
+        | (Student & {
+              physicalHealth: PhysicalHealth | null
+              medicalHealth: MedicalHealth | null
+              socialHealth: SocialHealth | null
+          })
+        | null
+    loadingData: boolean
+    refreshData: () => Promise<void>
+}>()
 </script>

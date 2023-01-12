@@ -34,7 +34,7 @@
             </template>
             <template #content>
                 <p-card
-                    class="p-card-content-pb-0 border-1 border-300"
+                    class="p-card-content-pb-0 border-1 border-300 shadow-none"
                     :class="{
                         'border-noround-bottom': showIndividualRecommendations
                     }"
@@ -86,7 +86,10 @@
                         </span>
                     </template>
                 </p-card>
-                <p-card v-if="showIndividualRecommendations" class="border-1 border-top-none border-300 border-noround-top">
+                <p-card
+                    v-if="showIndividualRecommendations"
+                    class="border-1 border-top-none border-300 border-noround-top shadow-none"
+                >
                     <template #title> Индивидуальные рекомендации и назначения </template>
                     <template #content>
                         <p-multi-select
@@ -118,22 +121,32 @@
 </template>
 
 <script setup lang="ts">
-import { HealthGroup, PhysicalHealth } from '@prisma/client'
+import { HealthGroup, MedicalHealth, PhysicalHealth, SocialHealth, Student } from '@prisma/client'
 import { useToast } from 'primevue/usetoast'
 
 const toast = useToast()
 
-const props = defineProps<{ studentId: string }>()
+const props = defineProps<{
+    studentData:
+        | (Student & {
+              physicalHealth: PhysicalHealth | null
+              medicalHealth: MedicalHealth | null
+              socialHealth: SocialHealth | null
+          })
+        | null
+    loadingData: boolean
+    refreshData: () => Promise<void>
+}>()
 
 const enableEditing = ref<boolean>(false)
 
 const hasChanges = computed(
     () =>
-        JSON.stringify(physicalHealth.value.healthGroup) !== JSON.stringify(info.value?.physicalHealth?.healthGroup) ||
+        JSON.stringify(physicalHealth.value.healthGroup) !== JSON.stringify(props.studentData?.physicalHealth?.healthGroup) ||
         JSON.stringify(physicalHealth.value.individualRecommendations) !==
-            JSON.stringify(info.value?.physicalHealth?.individualRecommendations) ||
+            JSON.stringify(props.studentData?.physicalHealth?.individualRecommendations) ||
         JSON.stringify(physicalHealth.value.specialistRecommendations) !==
-            JSON.stringify(info.value?.physicalHealth?.specialistRecommendations)
+            JSON.stringify(props.studentData?.physicalHealth?.specialistRecommendations)
 )
 
 function changeHealthGroup(value: HealthGroup) {
@@ -172,12 +185,12 @@ const showIndividualRecommendations = computed(
 )
 
 function cancelChanges() {
-    physicalHealth.value = { ...info.value!.physicalHealth! }
+    physicalHealth.value = { ...props.studentData!.physicalHealth! }
     enableEditing.value = false
 }
 
 async function saveChanges() {
-    const { error } = await useFetch('/api/students/components/physical-health', {
+    const { error } = await useFetch('/api/students/health/physical', {
         method: 'PATCH',
         body: physicalHealth.value as PhysicalHealth
     })
@@ -196,16 +209,16 @@ async function saveChanges() {
             life: 3000
         })
     }
-    await refreshInfo()
-    physicalHealth.value = { ...info.value!.physicalHealth! }
+    await props.refreshData()
+    physicalHealth.value = { ...props.studentData!.physicalHealth! }
     enableEditing.value = false
 }
 
-const { data: info, refresh: refreshInfo } = await useFetch('/api/students/info', {
-    query: { id: props.studentId }
-})
+// const { data: info, refresh: refreshInfo } = await useFetch('/api/students/info', {
+//     query: { id: props.studentId }
+// })
 
 const physicalHealth = ref({
-    ...info.value!.physicalHealth!
+    ...props.studentData!.physicalHealth!
 })
 </script>

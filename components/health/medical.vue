@@ -35,7 +35,7 @@
             <template #content>
                 <div class="text-xl font-bold">Группа здоровья</div>
                 <p-card
-                    class="col p-card-content-pb-0 p-card-content-pt-0 my-3"
+                    class="col p-card-content-pb-0 p-card-content-pt-0 my-3 shadow-none"
                     :class="{
                         'bg-green-300': currentHealthZone === 'GREEN',
                         'bg-yellow-300': currentHealthZone === 'YELLOW',
@@ -72,7 +72,7 @@
                     </template>
                 </p-card>
                 <p-card
-                    class="p-card-content-pb-0 p-card-content-pt-0 border-1 border-300"
+                    class="p-card-content-pb-0 p-card-content-pt-0 border-1 border-300 shadow-none"
                     :class="{ 'border-noround-bottom': showDetails }"
                 >
                     <template #content>
@@ -207,7 +207,7 @@
                 </p-card>
                 <p-card
                     v-if="showDetails"
-                    class="p-card-content-pb-0 p-card-content-pt-0 border-1 border-300 border-noround-top border-noround-bottom"
+                    class="p-card-content-pb-0 p-card-content-pt-0 border-1 border-300 border-noround-top border-noround-bottom shadow-none"
                 >
                     <template #title> Профилактические и здоровьесберегающие мероприятия </template>
                     <template #content>
@@ -410,7 +410,7 @@
 </template>
 
 <script setup lang="ts">
-import { HealthZone } from '@prisma/client'
+import { HealthZone, MedicalHealth, PhysicalHealth, SocialHealth, Student } from '@prisma/client'
 import { useToast } from 'primevue/usetoast'
 
 const selectedDisability = ref<{ value: string; healthZone: HealthZone }>()
@@ -421,18 +421,21 @@ const disabilities = ref<{ value: string; healthZone: HealthZone }[]>([
 
 const selectedMorbidity = ref<{ value: string; healthZone: HealthZone }>()
 const morbidities = ref<{ value: string; healthZone: HealthZone }[]>([
+    { value: 'Не болеет', healthZone: 'GREEN' },
     { value: 'Болеет (2-4 раза/год)', healthZone: 'YELLOW' },
     { value: 'Болеет (более 4 раз/год)', healthZone: 'RED' }
 ])
 
 const selectedBalancedDiets = ref<{ value: string; healthZone: HealthZone }>()
 const balancedDiets = ref<{ value: string; healthZone: HealthZone }[]>([
+    { value: 'Регулярно', healthZone: 'GREEN' },
     { value: 'Не регулярно', healthZone: 'YELLOW' },
     { value: 'Нет', healthZone: 'RED' }
 ])
 
 const selectedChronicDiseases = ref<{ value: string; healthZone: HealthZone }>()
 const chronicDiseases = ref<{ value: string; healthZone: HealthZone }[]>([
+    { value: 'Нет', healthZone: 'GREEN' },
     { value: 'Проблемная наследственность, риск заболеваний', healthZone: 'YELLOW' },
     { value: 'Да', healthZone: 'RED' }
 ])
@@ -460,7 +463,6 @@ const hearing = ref<{ value: string; healthZone: HealthZone }[]>([
 
     { value: 'диспансерное наблюдение врача-оториноларинголога', healthZone: 'RED' },
     { value: 'физиофункциональное лечение', healthZone: 'RED' },
-    // { value: 'консультация аллерголога', healthZone: 'RED' },
     { value: 'консультация сурдолога', healthZone: 'RED' },
     { value: 'организация специального рабочего места обучающегося с патологией органов слуха', healthZone: 'RED' },
     { value: 'контроль за ношением слуховых аппаратов', healthZone: 'RED' },
@@ -578,7 +580,17 @@ const individualRecommendations = computed(() => {
 
 const toast = useToast()
 
-const props = defineProps<{ studentId: string }>()
+const props = defineProps<{
+    studentData:
+        | (Student & {
+              physicalHealth: PhysicalHealth | null
+              medicalHealth: MedicalHealth | null
+              socialHealth: SocialHealth | null
+          })
+        | null
+    loadingData: boolean
+    refreshData: () => Promise<void>
+}>()
 
 const enableEditing = ref<boolean>(false)
 
@@ -590,7 +602,7 @@ async function saveChanges() {
     enableEditing.value = false
 }
 
-const { data: info, refresh: refreshInfo } = useFetch('/api/students/info', {
-    query: { id: props.studentId }
-})
+// const { data: info, refresh: refreshInfo } = useFetch('/api/students/info', {
+//     query: { id: props.studentId }
+// })
 </script>

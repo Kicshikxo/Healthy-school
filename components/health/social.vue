@@ -4,9 +4,10 @@
             <template #title>
                 <div class="flex align-items-center justify-content-between">
                     <span> Компонент социального здоровья </span>
-                    <div class="flex gap-3 align-self-end">
+                    <div class="flex gap-2 align-self-end">
                         <p-button
                             v-if="!enableEditing"
+                            :loading="loadingData"
                             icon="pi pi-pencil"
                             label="Редактировать"
                             :disabled="enableEditing"
@@ -23,6 +24,7 @@
                         />
                         <p-button
                             v-if="enableEditing"
+                            :loading="loadingData"
                             icon="pi pi-save"
                             label="Сохранить"
                             :disabled="!enableEditing || !hasChanges"
@@ -34,7 +36,7 @@
             </template>
             <template #content>
                 <p-card
-                    class="p-card-content-pb-0 border-1 border-300"
+                    class="p-card-content-pb-0 border-1 border-300 shadow-none"
                     :class="{
                         'border-noround-bottom': showIndividualRecommendations
                     }"
@@ -56,28 +58,21 @@
                                 :inputId="`indicator${indicator.id}`"
                                 :value="indicator"
                                 v-model="selectedHealthIndicators"
+                                :class="{
+                                    'p-checkbox-green': indicator.healthZone === 'GREEN',
+                                    'p-checkbox-yellow': indicator.healthZone === 'YELLOW',
+                                    'p-checkbox-red': indicator.healthZone === 'RED'
+                                }"
                             />
                             <label :for="`indicator${indicator.id}`">
                                 {{ indicator.title }}
                             </label>
                         </div>
                     </template>
-                    <template #footer>
-                        <span class="font-bold">Выводы: </span>
-                        <span class="underline">
-                            <span v-if="currentHealthZone === 'GREEN'"> нет ограничений по социальному здоровью </span>
-                            <span v-else-if="currentHealthZone === 'YELLOW'">
-                                группа риска по показателям социального здоровья
-                            </span>
-                            <span v-else-if="currentHealthZone === 'RED'">
-                                Наблюдаются значительные ухудшения по показателям социального здоровья
-                            </span>
-                        </span>
-                    </template>
                 </p-card>
                 <p-card
                     v-if="showIndividualRecommendations"
-                    class="p-card-content-pb-0 border-1 border-top-none border-300 border-noround-top"
+                    class="p-card-content-pb-0 border-1 border-top-none border-300 border-noround-top shadow-none"
                 >
                     <template #title> Профилактические и здоровьесберегающие рекомендации </template>
                     <template #content>
@@ -99,8 +94,20 @@
 </template>
 
 <script setup lang="ts">
-import { HealthZone, SocialHealth, SocialHealthIndicator } from '@prisma/client'
+import { Student, HealthZone, SocialHealth, SocialHealthIndicator, PhysicalHealth, MedicalHealth } from '@prisma/client'
 import { useToast } from 'primevue/usetoast'
+
+const props = defineProps<{
+    studentData:
+        | (Student & {
+              physicalHealth: PhysicalHealth | null
+              medicalHealth: MedicalHealth | null
+              socialHealth: (SocialHealth & { indicators: SocialHealthIndicator[] }) | null
+          })
+        | null
+    loadingData: boolean
+    refreshData: () => Promise<void>
+}>()
 
 const toast = useToast()
 
@@ -118,13 +125,13 @@ function cancelChanges() {
 }
 
 async function saveChanges() {
-    const { error } = await useFetch('/api/students/components/social-health', {
+    const { error } = await useFetch('/api/students/health/social', {
         method: 'PATCH',
         body: {
-            studentId: props.studentId,
-            indicators: selectedHealthIndicators.value.map((indicator) => indicator.id),
+            studentId: props.studentData?.id,
+            indicators: selectedHealthIndicators.value,
             individualRecommendations: selectedIndividualRecommendations.value
-        } as SocialHealth
+        } as SocialHealth & { indicators: SocialHealthIndicator[] }
     })
     if (error.value) {
         return toast.add({
@@ -142,37 +149,23 @@ async function saveChanges() {
         })
     }
 
-    await refreshInfo()
+    await props.refreshData()
     selectedHealthIndicators.value = [...(studentHealthIndicators.value ?? [])]
     selectedIndividualRecommendations.value = [...(studentIndividualRecommendations.value ?? [])]
     enableEditing.value = false
 }
 
-const props = defineProps<{ studentId: string }>()
+const { data: socialHealthIndicators } = await useFetch<SocialHealthIndicator[] | null>(
+    '/api/students/health/social-indicators'
+)
+const studentHealthIndicators = computed(() => props.studentData?.socialHealth?.indicators)
+const selectedHealthIndicators = ref<SocialHealthIndicator[]>([...(studentHealthIndicators.value || [])])
+const sortedHealthIndicators = computed<SocialHealthIndicator[]>(() => selectedHealthIndicators.value.sort())
 
 const showIndividualRecommendations = computed(() =>
     selectedHealthIndicators.value.some((indicator) => indicator.healthZone === 'YELLOW' || indicator.healthZone === 'RED')
 )
-
-const { data: info, refresh: refreshInfo } = await useFetch('/api/students/info', {
-    query: { id: props.studentId }
-})
-
-const studentHealthIndicators = computed(
-    () =>
-        info.value?.socialHealth?.indicators
-            .map((indicatorId) => socialHealthIndicators.value?.find((healthIndicator) => healthIndicator.id === indicatorId))
-            .filter((indicator) => indicator) as SocialHealthIndicator[] | undefined
-)
-
-const studentIndividualRecommendations = computed(() => [...(info.value?.socialHealth?.individualRecommendations ?? [])])
-
-const { data: socialHealthIndicators } = await useFetch<SocialHealthIndicator[] | null>(
-    '/api/students/components/social-health'
-)
-
-const selectedHealthIndicators = ref<SocialHealthIndicator[]>([...(studentHealthIndicators.value || [])])
-
+const studentIndividualRecommendations = computed(() => [...(props.studentData?.socialHealth?.individualRecommendations ?? [])])
 const selectedIndividualRecommendations = ref<string[]>([...(studentIndividualRecommendations.value ?? [])])
 
 const currentHealthZone = computed<HealthZone>(() => {
@@ -221,6 +214,4 @@ const individualRecommendations = computed(() => {
         return redRecommendations
     }
 })
-
-const sortedHealthIndicators = computed<SocialHealthIndicator[]>(() => selectedHealthIndicators.value.sort())
 </script>
