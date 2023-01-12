@@ -7,7 +7,6 @@ export default defineEventHandler(async (event) => {
     return await prisma.student.create({
         data: {
             ...studentData,
-            id: crc32(studentData.snils).toString(16),
             physicalHealth: { create: { healthGroup: HealthGroup.BASIC } },
             medicalHealth: { create: {} },
             socialHealth: { create: {} }
