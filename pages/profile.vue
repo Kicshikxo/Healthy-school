@@ -8,7 +8,7 @@
             {{ state.status }}
         </div>
         <div>
-            <p-button label="Выйти" @click="signOut" />
+            <p-button label="Выйти" @click="signOut().then(() => $router.push('/login'))" />
         </div>
     </div>
 </template>
