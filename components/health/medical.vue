@@ -225,7 +225,7 @@
                 </p-card>
                 <p-card
                     v-if="showDetails"
-                    class="p-card-content-pb-0 p-card-content-pt-0 border-1 border-300 border-noround-top"
+                    class="p-card-content-pb-0 p-card-content-pt-0 border-1 border-300 border-noround-top shadow-none"
                 >
                     <template #title> Индивидуальные рекомендации и назначения профильных медицинских специалистов </template>
                     <template #content>
