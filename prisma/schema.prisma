@@ -8,7 +8,7 @@ datasource db {
 }
 
 model User {
-    id         String   @id(map: "user_pkey") @map("user_id") @db.Char(8)
+    id         String   @id(map: "user_pkey") @default(dbgenerated("gen_random_uuid()")) @map("user_id") @db.Uuid
     role       Role     @map("role")
     username   String   @unique @map("username") @db.VarChar(64)
     password   String   @map("password") @db.Char(60)
@@ -16,21 +16,21 @@ model User {
     firstName  String   @map("first_name") @db.VarChar(64)
     middleName String   @map("middle_name") @db.VarChar(64)
     createdAt  DateTime @default(now()) @map("created_at")
-    updatedAt  DateTime @updatedAt @map("updated_at")
+    updatedAt  DateTime @default(now()) @updatedAt @map("updated_at")
 
     @@map("users")
 }
 
 model Student {
-    id         String   @id(map: "children_pkey") @map("student_id") @db.Char(8)
+    id         String   @id(map: "children_pkey") @default(dbgenerated("gen_random_uuid()")) @map("student_id") @db.Uuid
     snils      String   @unique @map("snils") @db.Char(14)
     secondName String   @map("second_name") @db.VarChar(64)
     firstName  String   @map("first_name") @db.VarChar(64)
     middleName String   @map("middle_name") @db.VarChar(64)
-    age        Int      @map("age")
+    birthdate  DateTime @map("birthdate")
     class      String   @map("class") @db.VarChar(64)
     createdAt  DateTime @default(now()) @map("created_at")
-    updatedAt  DateTime @updatedAt @map("updated_at")
+    updatedAt  DateTime @default(now()) @updatedAt @map("updated_at")
 
     physicalHealth PhysicalHealth?
     medicalHealth  MedicalHealth?
@@ -40,35 +40,36 @@ model Student {
 }
 
 model PhysicalHealth {
-    studentId                 String       @id(map: "physical_health_pkey") @map("student_id") @db.Char(8)
-    student                   Student      @relation(fields: [studentId], references: [id])
+    studentId                 String       @id(map: "physical_health_pkey") @map("student_id") @db.Uuid
+    student                   Student      @relation(fields: [studentId], references: [id], onUpdate: Cascade, onDelete: Cascade)
     healthGroup               HealthGroup? @map("health_group")
     individualRecommendations String[]     @map("individual_recommendations")
     specialistRecommendations String?      @map("specialist_recommendations")
 
-    @@map("physical_health")
+    @@map("student_physical_health")
 }
 
 model MedicalHealth {
-    studentId String  @id(map: "medical_health_pkey") @map("student_id") @db.Char(8)
-    student   Student @relation(fields: [studentId], references: [id])
+    studentId String  @id(map: "medical_health_pkey") @map("student_id") @db.Uuid
+    student   Student @relation(fields: [studentId], references: [id], onUpdate: Cascade, onDelete: Cascade)
 
-    @@map("medical_health")
+    @@map("student_medical_health")
 }
 
 model SocialHealth {
-    studentId                 String   @id(map: "social_health_pkey") @map("student_id") @db.Char(8)
-    student                   Student  @relation(fields: [studentId], references: [id])
-    indicators                Int[]    @map("indicators")
-    individualRecommendations String[] @map("individual_recommendations")
+    studentId                 String                  @id(map: "student_social_health_pkey") @map("student_id") @db.Uuid
+    student                   Student                 @relation(fields: [studentId], references: [id], onUpdate: Cascade, onDelete: Cascade)
+    indicators                SocialHealthIndicator[] @relation(name: "student_social_health_indicators")
+    individualRecommendations String[]                @map("individual_recommendations")
 
-    @@map("social_health")
+    @@map("student_social_health")
 }
 
 model SocialHealthIndicator {
-    id         Int        @id(map: "social_health_indicators_pkey") @default(autoincrement()) @map("indicator_id")
-    title      String     @map("title")
-    healthZone HealthZone @map("health_zone")
+    id           Int            @id(map: "social_health_indicators_pkey") @default(autoincrement()) @map("indicator_id")
+    title        String         @map("title")
+    healthZone   HealthZone     @map("health_zone")
+    socialHealth SocialHealth[] @relation(name: "student_social_health_indicators")
 
     @@map("social_health_indicators")
 }

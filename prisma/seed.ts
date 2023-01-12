@@ -28,21 +28,16 @@ async function main() {
         )
     }
 
-    const socialHealthIndicatorsCount =
-        await prisma.socialHealthIndicators.count()
+    const socialHealthIndicatorsCount = await prisma.socialHealthIndicator.count()
 
     if (socialHealthIndicatorsCount === 0) {
-        await prisma.socialHealthIndicators.createMany({
+        await prisma.socialHealthIndicator.createMany({
             data: socialHealthIndicators as any
         })
 
-        console.log(
-            `Создано ${socialHealthIndicators.length} социальных индикаторов здоровья`
-        )
+        console.log(`Создано ${socialHealthIndicators.length} социальных индикаторов здоровья`)
     } else {
-        console.log(
-            `В БД уже хранится ${socialHealthIndicatorsCount} социальных индикаторов здоровья`
-        )
+        console.log(`В БД уже хранится ${socialHealthIndicatorsCount} социальных индикаторов здоровья`)
     }
 }
 
