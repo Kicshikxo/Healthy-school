@@ -7,22 +7,25 @@ export default defineEventHandler(async (event) => {
         where: { id: query.id as string },
         include: {
             physicalHealth: {
-                select: {
-                    healthGroup: true,
-                    individualRecommendations: true,
-                    specialistRecommendations: true
-                }
+                // select: {
+                //     healthGroup: true,
+                //     individualRecommendations: true,
+                //     specialistRecommendations: true
+                // }
             },
             medicalHealth: {
-                select: {
-                    studentId: true
-                }
+                // select: {
+                //     studentId: true
+                // }
             },
             socialHealth: {
-                select: {
-                    indicators: true,
-                    individualRecommendations: true
+                include: {
+                    indicators: true
                 }
+                // select: {
+                //     indicators: true,
+                //     individualRecommendations: true
+                // }
             }
         }
     })
