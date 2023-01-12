@@ -35,6 +35,7 @@ export default defineEventHandler(async (event) => {
                 process.env.SECRET_KEY ?? ' '
             ),
             {
+                maxAge: 30 * 24 * 60 * 60,
                 httpOnly: true,
                 sameSite: true
             }
