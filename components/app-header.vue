@@ -9,13 +9,15 @@
                 <i class="pi pi-user w-1rem mr-2"></i>
                 <span>Учащиеся</span>
             </nuxt-link>
-            <nuxt-link
-                to="/statistics"
-                class="flex p-3 text-primary-100 hover:text-primary-50 hover:bg-primary-600 font-medium border-round transition-colors transition-duration-150 cursor-pointer no-underline"
-            >
-                <i class="pi pi-chart-line w-1rem mr-2"></i>
-                <span>Статистика</span>
-            </nuxt-link>
+            <role-access role="OPERATOR">
+                <nuxt-link
+                    to="/statistics"
+                    class="flex p-3 text-primary-100 hover:text-primary-50 hover:bg-primary-600 font-medium border-round transition-colors transition-duration-150 cursor-pointer no-underline"
+                >
+                    <i class="pi pi-chart-line w-1rem mr-2"></i>
+                    <span>Статистика</span>
+                </nuxt-link>
+            </role-access>
         </nav>
         <nav class="flex align-items-center">
             <nuxt-link
