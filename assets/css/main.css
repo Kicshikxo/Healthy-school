@@ -23,3 +23,36 @@
 .p-multiselect-panel .p-multiselect-items {
     padding: 0;
 }
+
+.p-checkbox.p-checkbox-red .p-checkbox-box.p-highlight,
+.p-checkbox.p-checkbox-red .p-checkbox-box.p-highlight:hover {
+    border-color: var(--red-500);
+    background: var(--red-500);
+}
+.p-checkbox.p-checkbox-red:not(.p-checkbox-disabled) .p-checkbox-box:hover,
+.p-checkbox.p-checkbox-red:not(.p-checkbox-disabled) .p-checkbox-box.p-focus {
+    border-color: var(--red-500);
+    box-shadow: 0 0 0 0.2rem hsl(3, 96%, 89%);
+}
+
+.p-checkbox.p-checkbox-yellow .p-checkbox-box.p-highlight,
+.p-checkbox.p-checkbox-yellow .p-checkbox-box.p-highlight:hover {
+    border-color: var(--yellow-500);
+    background: var(--yellow-500);
+}
+.p-checkbox.p-checkbox-yellow:not(.p-checkbox-disabled) .p-checkbox-box:hover,
+.p-checkbox.p-checkbox-yellow:not(.p-checkbox-disabled) .p-checkbox-box.p-focus {
+    border-color: var(--yellow-500);
+    box-shadow: 0 0 0 0.2rem hsl(45, 96%, 89%);
+}
+
+.p-checkbox.p-checkbox-green .p-checkbox-box.p-highlight,
+.p-checkbox.p-checkbox-green .p-checkbox-box.p-highlight:hover {
+    border-color: var(--green-500);
+    background: var(--green-500);
+}
+.p-checkbox.p-checkbox-green:not(.p-checkbox-disabled) .p-checkbox-box:hover,
+.p-checkbox.p-checkbox-green:not(.p-checkbox-disabled) .p-checkbox-box.p-focus {
+    border-color: var(--green-500);
+    box-shadow: 0 0 0 0.2rem hsl(142, 96%, 89%);
+}
