@@ -67,8 +67,8 @@
                     <p-input-text id="class" v-model="newStudent.class" required="true" />
                 </div>
                 <div class="field col">
-                    <label for="quantity">Возраст</label>
-                    <p-input-number id="quantity" v-model="newStudent.age" :min="6" :max="20" suffix=" лет" integeronly />
+                    <label for="birthdate">Дата рождения</label>
+                    <p-calendar inputId="birthdate" v-model="newStudent.birthdate" dateFormat="mm.dd.yy" />
                 </div>
             </div>
             <template #footer>
