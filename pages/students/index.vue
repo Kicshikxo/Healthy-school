@@ -40,7 +40,7 @@
             <p-column field="secondName" header="Фамилия"></p-column>
             <p-column field="firstName" header="Имя"></p-column>
             <p-column field="middleName" header="Отчество"></p-column>
-            <p-column field="age" header="Возраст"></p-column>
+            <p-column field="birthdate" header="Дата рождения"></p-column>
             <p-column field="class" header="Класс"></p-column>
         </p-data-table>
 
