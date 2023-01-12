@@ -22,7 +22,7 @@ import Chart from 'primevue/chart/Chart.vue'
 import Calendar from 'primevue/calendar/Calendar.vue'
 
 export default defineNuxtPlugin((nuxtApp) => {
-    nuxtApp.vueApp.use(PrimeVue, { ripple: false })
+    nuxtApp.vueApp.use(PrimeVue, { locale, ripple: false })
     nuxtApp.vueApp.use(ToastService)
     nuxtApp.vueApp.component('p-button', Button)
     nuxtApp.vueApp.component('p-toggle-button', ToggleButton)
@@ -45,3 +45,83 @@ export default defineNuxtPlugin((nuxtApp) => {
     nuxtApp.vueApp.component('p-chart', Chart)
     nuxtApp.vueApp.component('p-calendar', Calendar)
 })
+
+const locale = {
+    startsWith: 'Начинается с',
+    contains: 'Содержит',
+    notContains: 'Не содержит',
+    endsWith: 'Заканчивается на',
+    equals: 'Равняется',
+    notEquals: 'Не равняется',
+    noFilter: 'Без фильтра',
+    lt: 'Меньше',
+    lte: 'Меньше или равно',
+    gt: 'Больше',
+    gte: 'Больше или равно',
+    dateIs: 'Дата',
+    dateIsNot: 'Дата не',
+    dateBefore: 'Дата до',
+    dateAfter: 'Дата после',
+    clear: 'Очистить',
+    apply: 'Применить',
+    matchAll: 'Соответствует всем',
+    matchAny: 'Соответствует любому',
+    addRule: 'Добавить правило',
+    removeRule: 'Удалить правило',
+    accept: 'Да',
+    reject: 'Нет',
+    choose: 'Выбрать',
+    upload: 'Загрузить',
+    cancel: 'Отменить',
+    completed: 'Завершено',
+    pending: 'Ожидание',
+    dayNames: ['Воскресенье', 'Понедельник', 'Вторник', 'Среда', 'Четверг', 'Пятница', 'Суббота'],
+    dayNamesShort: ['Вск', 'Пнд', 'Втр', 'Срд', 'Чтв', 'Птн', 'Сбт'],
+    dayNamesMin: ['Вс', 'Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб'],
+    monthNames: [
+        'Январь',
+        'Февраль',
+        'Март',
+        'Апрель',
+        'Май',
+        'Июнь',
+        'Июль',
+        'Август',
+        'Сентябль',
+        'Октябрь',
+        'Ноябрь',
+        'Декабрь'
+    ],
+    monthNamesShort: ['Янв', 'Фев', 'Мар', 'Апр', 'Май', 'Июн', 'Июл', 'Авг', 'Сен', 'Окт', 'Ноя', 'Дек'],
+    chooseYear: 'Выберите год',
+    chooseMonth: 'Выберите месяц',
+    chooseDate: 'Выберите дату',
+    prevDecade: 'Предыдущее десятилетие',
+    nextDecade: 'Следующее десятилетие',
+    prevYear: 'Предыдущий год',
+    nextYear: 'Следующий год',
+    prevMonth: 'Предыдущий месяц',
+    nextMonth: 'Следующий месяц',
+    prevHour: 'Предыдущий час',
+    nextHour: 'Следующий час',
+    prevMinute: 'Предыдущая минута',
+    nextMinute: 'Следующая минута',
+    prevSecond: 'Предыдущая секунда',
+    nextSecond: 'Следующая секунда',
+    am: 'am',
+    pm: 'pm',
+    today: 'Сегодня',
+    weekHeader: 'Нед',
+    firstDayOfWeek: 0,
+    dateFormat: 'dd.mm.yy',
+    weak: 'Слабый',
+    medium: 'Средний',
+    strong: 'Сильный',
+    passwordPrompt: 'Введите пароль',
+    emptyFilterMessage: 'Результаты не найдены', // @deprecated Use 'emptySearchMessage' option instead.
+    searchMessage: 'Найдено {0} результатов',
+    selectionMessage: '{0} элементов выбрано',
+    emptySelectionMessage: 'Нет выбранного элемента',
+    emptySearchMessage: 'Результаты не найдены',
+    emptyMessage: 'Нет доступных вариантов'
+}

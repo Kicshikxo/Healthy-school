@@ -67,12 +67,12 @@
             </div>
             <div class="formgrid grid">
                 <div class="field col">
-                    <label for="class">Класс</label>
-                    <p-input-text id="class" v-model="newStudent.class" required="true" />
+                    <label for="birthdate">Дата рождения</label>
+                    <p-calendar inputId="birthdate" v-model="newStudent.birthdate" />
                 </div>
                 <div class="field col">
-                    <label for="birthdate">Дата рождения</label>
-                    <p-calendar inputId="birthdate" v-model="newStudent.birthdate" dateFormat="mm.dd.yy" />
+                    <label for="class">Класс</label>
+                    <p-input-text id="class" v-model="newStudent.class" required="true" />
                 </div>
             </div>
             <template #footer>
