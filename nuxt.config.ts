@@ -22,7 +22,9 @@ export default defineNuxtConfig({
                     crossorigin: ''
                 }
             ]
-        }
+        },
+
+        pageTransition: { name: 'page', mode: 'out-in' }
     },
 
     css: [
