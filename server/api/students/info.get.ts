@@ -2,31 +2,44 @@ import { PrismaClient } from '@prisma/client'
 const prisma = new PrismaClient()
 
 export default defineEventHandler(async (event) => {
-    const query = getQuery(event)
-    return await prisma.student.findUnique({
-        where: { id: query.id as string },
+    const tokenData = event.context.authTokenData as AuthTokenData
+    if (!tokenData) {
+        return sendError(
+            event,
+            createError({
+                statusCode: 401,
+                statusMessage: 'Unable to read token data'
+            })
+        )
+    }
+
+    const query = getQuery(event) as { studentId: string }
+
+    const data = await prisma.student.findFirst({
+        where: {
+            AND: [{ id: query.studentId as string }, { class: { organizationId: tokenData.organizationId } }]
+        },
         include: {
+            class: true,
             physicalHealth: {
-                // select: {
-                //     healthGroup: true,
-                //     individualRecommendations: true,
-                //     specialistRecommendations: true
-                // }
+                select: {
+                    healthGroup: true,
+                    recommendations: true,
+                    specialistNotes: true
+                }
             },
             medicalHealth: {
-                // select: {
-                //     studentId: true
-                // }
+                select: {
+                    studentId: true
+                }
             },
             socialHealth: {
-                include: {
-                    indicators: true
+                select: {
+                    indicators: true,
+                    recommendations: true
                 }
-                // select: {
-                //     indicators: true,
-                //     individualRecommendations: true
-                // }
             }
         }
     })
+    return data
 })

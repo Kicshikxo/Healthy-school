@@ -1,4 +1,4 @@
-import { PrismaClient, Role } from '@prisma/client'
+import { PrismaClient, Role, PhysicalHealth, PhysicalHealthRecommendation } from '@prisma/client'
 const prisma = new PrismaClient()
 
 export default defineEventHandler(async (event) => {
@@ -13,7 +13,7 @@ export default defineEventHandler(async (event) => {
         )
     }
 
-    if (tokenData.role !== Role.CLASS_TEACHER) {
+    if (tokenData.role !== Role.PHYSICAL_EDUCATION_TEACHER) {
         return sendError(
             event,
             createError({
@@ -23,16 +23,18 @@ export default defineEventHandler(async (event) => {
         )
     }
 
-    const body: { studentId: string } = await readBody(event)
+    const body: PhysicalHealth & { recommendations: PhysicalHealthRecommendation[] } = await readBody(event)
 
-    return await prisma.student.delete({
+    return prisma.physicalHealth.update({
         where: {
-            id: body.studentId
+            studentId: body.studentId
         },
-        include: {
-            physicalHealth: true,
-            medicalHealth: true,
-            socialHealth: true
+        data: {
+            healthGroup: body.healthGroup,
+            recommendations: {
+                set: body.recommendations.map((recommendation) => ({ id: recommendation.id }))
+            },
+            specialistNotes: body.specialistNotes
         }
     })
 })
