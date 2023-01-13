@@ -3,11 +3,11 @@
         <nav class="flex align-items-center">
             <nuxt-img src="images/logo.png" alt="logo" width="48" height="48" class="mr-5" />
             <nuxt-link
-                to="/students"
+                to="/"
                 class="flex p-3 text-primary-100 hover:text-primary-50 hover:bg-primary-600 font-medium border-round transition-colors transition-duration-150 cursor-pointer no-underline"
             >
-                <i class="pi pi-user w-1rem mr-2"></i>
-                <span>Учащиеся</span>
+                <i class="pi pi-users w-1rem mr-2"></i>
+                <span>Классы</span>
             </nuxt-link>
             <role-access role="OPERATOR">
                 <nuxt-link
@@ -37,7 +37,7 @@
                         {{ data?.middleName }}
                     </div>
                     <span class="text-primary-100 font-medium text-sm">
-                        {{ data?.role }}
+                        {{ roleLocalization[data?.role!] }}
                     </span>
                 </div>
             </nuxt-link>
@@ -46,7 +46,21 @@
 </template>
 
 <script setup lang="ts">
+import { Role } from '@prisma/client'
+
 const { data } = useSessionState()
+
+const roleLocalization: { [key in Role]: string } = {
+    OPERATOR: 'Оператор',
+    CLASS_TEACHER: 'Классный руководитель',
+    HEALTH_WORKER: 'Медицинский работник',
+    PEDAGOGUE: 'Педагог',
+    SOCIAL_PEDAGOGUE: 'Социальный педагог',
+    PSYCHOLOGIST: 'Психолог',
+    PHYSICAL_EDUCATION_TEACHER: 'Учитель физической культуры'
+}
+
+const { data: organization } = useFetch('/api/organization/info', { query: { organizationId: data.value?.organizationId } })
 
 const avatarSrc = `images/avatars/persona ${~~(Math.random() * 4)}-${~~(Math.random() * 3)}.png`
 </script>
