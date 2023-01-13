@@ -100,9 +100,9 @@ async function saveChanges() {
 }
 
 // Student data
-const studentHealthGroup = computed(() => props.studentData?.physicalHealth?.healthGroup ?? 'BASIC')
-const studentRecommendations = computed(() => props.studentData?.physicalHealth?.recommendations ?? [])
-const studentSpecialistNotes = computed(() => props.studentData?.physicalHealth?.specialistNotes ?? '')
+const studentHealthGroup = ref(props.studentData?.physicalHealth?.healthGroup ?? 'BASIC')
+const studentRecommendations = ref(props.studentData?.physicalHealth?.recommendations ?? [])
+const studentSpecialistNotes = ref(props.studentData?.physicalHealth?.specialistNotes ?? '')
 
 // Selected data
 const selectedHealthGroup = ref<HealthGroup>(studentHealthGroup.value)

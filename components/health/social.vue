@@ -97,8 +97,8 @@ async function saveChanges() {
 }
 
 // Student data
-const studentIndicators = computed(() => props.studentData?.socialHealth?.indicators ?? [])
-const studentRecommendations = computed(() => props.studentData?.socialHealth?.recommendations ?? [])
+const studentIndicators = ref(props.studentData?.socialHealth?.indicators ?? [])
+const studentRecommendations = ref(props.studentData?.socialHealth?.recommendations ?? [])
 
 // Selected data
 const selectedIndicators = ref<SocialHealthIndicator[]>(studentIndicators.value)
