@@ -3,14 +3,14 @@
         <section class="p-5">
             <div class="flex justify-content-between gap-8">
                 <div class="flex flex-auto gap-5">
-                    <nuxt-img src="images/avatars/persona 0-1.png" alt="student avatar" width="96" height="96" />
+                    <nuxt-img src="images/avatars/persona 0-0.png" alt="student avatar" width="96" height="96" />
                     <div class="flex flex-auto flex-column justify-content-between">
                         <div class="flex align-items-center text-900 text-3xl h-2rem">
                             <p-skeleton v-if="loadingData" class="max-w-30rem" />
                             <div v-else class="text-800 font-bold">
-                                {{ data?.secondName }}
-                                {{ data?.firstName }}
-                                {{ data?.middleName }}
+                                {{ studentData?.secondName }}
+                                {{ studentData?.firstName }}
+                                {{ studentData?.middleName }}
                             </div>
                         </div>
                         <div class="flex flex-wrap gap-5">
@@ -18,21 +18,21 @@
                                 <div class="text-500">Дата рождения</div>
                                 <div class="flex align-items-end h-1rem mt-2 text-700">
                                     <p-skeleton v-if="loadingData" class="max-w-30rem" />
-                                    <div v-else>{{ new Date(data?.birthdate!).toLocaleDateString() }}</div>
+                                    <div v-else>{{ new Date(studentData?.birthdate!).toLocaleDateString() }}</div>
                                 </div>
                             </div>
                             <div class="flex flex-column">
                                 <div class="text-500">Класс</div>
                                 <div class="flex align-items-end h-1rem mt-2 text-700">
                                     <p-skeleton v-if="loadingData" class="max-w-30rem" />
-                                    <div v-else>{{ data?.class }}</div>
+                                    <div v-else>{{ studentData?.class.number! + studentData?.class.liter! }}</div>
                                 </div>
                             </div>
                             <div class="flex flex-column w-8rem">
                                 <div class="text-500">СНИЛС</div>
                                 <div class="flex align-items-end h-1rem mt-2 text-700">
                                     <p-skeleton v-if="loadingData" class="max-w-30rem" />
-                                    <div v-else>{{ data?.snils }}</div>
+                                    <div v-else>{{ studentData?.snils }}</div>
                                 </div>
                             </div>
                         </div>
@@ -48,16 +48,16 @@
             </div>
         </section>
         <role-access role="PHYSICAL_EDUCATION_TEACHER">
-            <health-physical :student-data="data" :loading-data="loadingData" :refresh-data="refreshData" />
+            <health-physical :student-data="studentData" :loading-data="loadingData" :refresh-data="refreshData" />
         </role-access>
         <role-access role="HEALTH_WORKER">
-            <health-medical :student-data="data" :loading-data="loadingData" :refresh-data="refreshData" />
+            <health-medical :student-data="studentData" :loading-data="loadingData" :refresh-data="refreshData" />
         </role-access>
         <role-access role="SOCIAL_PEDAGOGUE">
-            <health-social :student-data="data" :loading-data="loadingData" :refresh-data="refreshData" />
+            <health-social :student-data="studentData" :loading-data="loadingData" :refresh-data="refreshData" />
         </role-access>
         <role-access role="CLASS_TEACHER">
-            <health-route :student-data="data" :loading-data="loadingData" :refresh-data="refreshData" />
+            <health-route :student-data="studentData" :loading-data="loadingData" :refresh-data="refreshData" />
         </role-access>
     </div>
 </template>
@@ -66,6 +66,10 @@
 import { useToast } from 'primevue/usetoast'
 import jsPDF from 'jspdf'
 import html2canvas from 'html2canvas'
+
+definePageMeta({
+    title: `Информация по учащемуся`
+})
 
 const toast = useToast()
 const route = useRoute()
@@ -76,7 +80,7 @@ const studentPage = ref<HTMLElement>()
 async function deleteStudent() {
     const { error } = await useFetch('/api/students/remove', {
         method: 'DELETE',
-        body: { studentId: data.value?.id }
+        body: { studentId: studentData.value?.id }
     })
     if (error.value) {
         return toast.add({
@@ -135,18 +139,18 @@ async function printStudent() {
 async function saveToPDF() {
     const pdf = await getPDF()
 
-    pdf.save(`${data.value?.secondName} ${data.value?.firstName} ${data.value?.middleName}.pdf`)
+    pdf.save(`${studentData.value?.secondName} ${studentData.value?.firstName} ${studentData.value?.middleName}.pdf`)
 }
 
 const {
-    data: data,
+    data: studentData,
     pending: loadingData,
     refresh: refreshData
 } = useFetch('/api/students/info', {
-    query: { id: route.params.id }
-})
-
-definePageMeta({
-    title: `Информация по обучающемуся`
+    headers: useRequestHeaders() as HeadersInit,
+    query: {
+        studentId: route.params.studentId,
+        classId: route.params.classId
+    }
 })
 </script>

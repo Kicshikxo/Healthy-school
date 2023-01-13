@@ -1,14 +1,15 @@
 <template>
     <div class="absolute w-full h-full">
         <p-data-table
-            :value="(students as any[])"
-            :rowHover="true"
+            :value="students"
+            :rowHover="!!students?.length"
             :scrollable="true"
             scrollHeight="flex"
             dataKey="id"
             responsiveLayout="scroll"
             row-style="cursor: pointer"
-            @row-click="$router.push(`${$route.path}/${$event.data.id}`)"
+            @row-click="$router.push(`/class/${$route.params.classId}/${$event.data.id}`)"
+            class="p-datatable-lg"
         >
             <template #header>
                 <div class="flex justify-content-between align-items-center">
@@ -34,7 +35,7 @@
             <template #empty>
                 <div class="flex justify-content-center w-full">
                     <p-progress-bar v-if="loadingStudents" mode="indeterminate" class="w-full h-1rem" />
-                    <div v-else>Данных нет...</div>
+                    <div v-else>Учащихся нет...</div>
                 </div>
             </template>
             <p-column field="secondName" header="Фамилия"></p-column>
@@ -45,7 +46,11 @@
                     {{ new Date(data.birthdate).toLocaleDateString() }}
                 </template>
             </p-column>
-            <p-column field="class" header="Класс"></p-column>
+            <p-column field="class" header="Класс">
+                <template #body="{ data }">
+                    {{ (data.class as Class).number + (data.class as Class).liter }}
+                </template>
+            </p-column>
         </p-data-table>
 
         <p-dialog :modal="true" v-model:visible="showDialog" header="Добавить учащегося" class="p-fluid">
@@ -71,8 +76,8 @@
                     <p-calendar inputId="birthdate" v-model="newStudent.birthdate" />
                 </div>
                 <div class="field col">
-                    <label for="class">Класс</label>
-                    <p-input-text id="class" v-model="newStudent.class" required="true" />
+                    <label for="class">Ничего...</label>
+                    <p-input-text id="class" />
                 </div>
             </div>
             <template #footer>
@@ -84,19 +89,25 @@
 </template>
 
 <script setup lang="ts">
-import { Student } from '@prisma/client'
+import { Student, Class } from '@prisma/client'
 
 definePageMeta({
-    title: 'Учащиеся'
+    title: 'Список учащихся'
 })
 
+const route = useRoute()
+
 const newStudent = ref<Student>({} as Student)
+const showDialog = ref(false)
 
 async function addStudent() {
     const { error } = await useFetch('/api/students/add', {
         method: 'POST',
         body: {
-            studentData: newStudent.value
+            studentData: {
+                ...newStudent.value,
+                classId: route.params.classId
+            }
         }
     })
     if (error.value) return
@@ -106,7 +117,14 @@ async function addStudent() {
     await refreshStudents()
 }
 
-const { data: students, refresh: refreshStudents, pending: loadingStudents } = useFetch('/api/students')
-
-let showDialog = ref(false)
+const {
+    data: students,
+    refresh: refreshStudents,
+    pending: loadingStudents
+} = useFetch('/api/students/list', {
+    headers: useRequestHeaders() as HeadersInit,
+    query: {
+        classId: route.params.classId
+    }
+})
 </script>
