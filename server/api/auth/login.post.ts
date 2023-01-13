@@ -29,9 +29,10 @@ export default defineEventHandler(async (event) => {
             jwt.sign(
                 {
                     id: user.id,
-                    password: crc32(user.password).toString(16),
-                    role: user.role
-                },
+                    organizationId: user.organizationId,
+                    role: user.role,
+                    password: crc32(user.password).toString(16)
+                } as AuthTokenData,
                 process.env.SECRET_KEY ?? ' '
             ),
             {

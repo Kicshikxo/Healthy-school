@@ -55,9 +55,10 @@ export default defineEventHandler(async (event) => {
 
     return {
         id: user.id,
+        organizationId: user.organizationId,
         role: user.role,
         firstName: user.firstName,
         secondName: user.secondName,
         middleName: user.middleName
-    }
+    } as SessionData
 })
