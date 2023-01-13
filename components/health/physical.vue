@@ -9,9 +9,9 @@
                         <p-select-button
                             v-model="selectedHealthGroup"
                             :options="[
-                                { label: 'Основная', value: HealthGroup.BASIC },
-                                { label: 'Подготовительная', value: HealthGroup.PREPARATORY },
-                                { label: 'Специальная', value: HealthGroup.SPECIAL }
+                                { label: 'Основная', value: 'BASIC' },
+                                { label: 'Подготовительная', value: 'PREPARATORY' },
+                                { label: 'Специальная', value: 'SPECIAL' }
                             ]"
                             optionLabel="label"
                             optionValue="value"
