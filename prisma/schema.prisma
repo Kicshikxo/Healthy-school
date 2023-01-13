@@ -7,28 +7,62 @@ datasource db {
     url      = env("DATABASE_URL")
 }
 
+model Municipality {
+    id                      String                    @id(map: "municipalities_pkey") @default(dbgenerated("gen_random_uuid()")) @map("municipality_id") @db.Uuid
+    name                    String                    @unique @map("municipality_name") @db.VarChar(255)
+    EducationalOrganization EducationalOrganization[]
+
+    @@map("municipalities")
+}
+
+model EducationalOrganization {
+    id             String       @id(map: "educational_organizations_pkey") @default(dbgenerated("gen_random_uuid()")) @map("organization_id") @db.Uuid
+    municipality   Municipality @relation(fields: [municipalityId], references: [id], onUpdate: Cascade, onDelete: Cascade)
+    municipalityId String       @map("municipality_id") @db.Uuid
+    name           String       @unique @map("organization_name") @db.VarChar(255)
+    users          User[]
+    classes        Class[]
+
+    @@map("educational_organizations")
+}
+
 model User {
-    id         String   @id(map: "user_pkey") @default(dbgenerated("gen_random_uuid()")) @map("user_id") @db.Uuid
-    role       Role     @map("role")
-    username   String   @unique @map("username") @db.VarChar(64)
-    password   String   @map("password") @db.Char(60)
-    secondName String   @map("second_name") @db.VarChar(64)
-    firstName  String   @map("first_name") @db.VarChar(64)
-    middleName String   @map("middle_name") @db.VarChar(64)
-    createdAt  DateTime @default(now()) @map("created_at")
-    updatedAt  DateTime @default(now()) @updatedAt @map("updated_at")
+    id             String                  @id(map: "user_pkey") @default(dbgenerated("gen_random_uuid()")) @map("user_id") @db.Uuid
+    organization   EducationalOrganization @relation(fields: [organizationId], references: [id], onUpdate: Cascade, onDelete: Cascade)
+    organizationId String                  @map("organization_id") @db.Uuid
+    role           Role                    @map("role")
+    username       String                  @unique @map("username") @db.VarChar(64)
+    password       String                  @map("password") @db.Char(60)
+    secondName     String                  @map("second_name") @db.VarChar(64)
+    firstName      String                  @map("first_name") @db.VarChar(64)
+    middleName     String                  @map("middle_name") @db.VarChar(64)
+    createdAt      DateTime                @default(now()) @map("created_at")
+    updatedAt      DateTime                @default(now()) @updatedAt @map("updated_at")
 
     @@map("users")
 }
 
+model Class {
+    id             String                  @id(map: "classes_pkey") @default(dbgenerated("gen_random_uuid()")) @map("class_id") @db.Uuid
+    organization   EducationalOrganization @relation(fields: [organizationId], references: [id])
+    organizationId String                  @map("organization_id") @db.Uuid
+    number         Int                     @map("number")
+    liter          String                  @map("liter") @db.Char(1)
+    academicYear   String                  @map("academic_year") @db.Char(9)
+    students       Student[]
+
+    @@map("classes")
+}
+
 model Student {
     id         String   @id(map: "children_pkey") @default(dbgenerated("gen_random_uuid()")) @map("student_id") @db.Uuid
+    class      Class    @relation(fields: [classId], references: [id])
+    classId    String   @map("class_id") @db.Uuid
     snils      String   @unique @map("snils") @db.Char(14)
     secondName String   @map("second_name") @db.VarChar(64)
     firstName  String   @map("first_name") @db.VarChar(64)
     middleName String   @map("middle_name") @db.VarChar(64)
     birthdate  DateTime @map("birthdate")
-    class      String   @map("class") @db.VarChar(64)
     createdAt  DateTime @default(now()) @map("created_at")
     updatedAt  DateTime @default(now()) @updatedAt @map("updated_at")
 
@@ -40,27 +74,29 @@ model Student {
 }
 
 model PhysicalHealth {
-    studentId                 String       @id(map: "physical_health_pkey") @map("student_id") @db.Uuid
-    student                   Student      @relation(fields: [studentId], references: [id], onUpdate: Cascade, onDelete: Cascade)
-    healthGroup               HealthGroup? @map("health_group")
-    individualRecommendations String[]     @map("individual_recommendations")
-    specialistRecommendations String?      @map("specialist_recommendations")
+    studentId       String                         @id(map: "physical_health_pkey") @map("student_id") @db.Uuid
+    student         Student                        @relation(fields: [studentId], references: [id], onUpdate: Cascade, onDelete: Cascade)
+    healthGroup     HealthGroup?                   @default(dbgenerated("'BASIC'")) @map("health_group")
+    recommendations PhysicalHealthRecommendation[] @relation(name: "student_physical_health_recommendations")
+    specialistNotes String?                        @map("specialist_notes")
 
     @@map("student_physical_health")
 }
 
-model MedicalHealth {
-    studentId String  @id(map: "medical_health_pkey") @map("student_id") @db.Uuid
-    student   Student @relation(fields: [studentId], references: [id], onUpdate: Cascade, onDelete: Cascade)
+model PhysicalHealthRecommendation {
+    id             Int              @id(map: "physical_health_recommendations_pkey") @default(autoincrement()) @map("recommendation_id")
+    title          String           @map("title")
+    healthGroup    HealthGroup      @map("health_group")
+    physicalHealth PhysicalHealth[] @relation(name: "student_physical_health_recommendations")
 
-    @@map("student_medical_health")
+    @@map("physical_health_recommendations")
 }
 
 model SocialHealth {
-    studentId                 String                  @id(map: "student_social_health_pkey") @map("student_id") @db.Uuid
-    student                   Student                 @relation(fields: [studentId], references: [id], onUpdate: Cascade, onDelete: Cascade)
-    indicators                SocialHealthIndicator[] @relation(name: "student_social_health_indicators")
-    individualRecommendations String[]                @map("individual_recommendations")
+    studentId       String                       @id(map: "student_social_health_pkey") @map("student_id") @db.Uuid
+    student         Student                      @relation(fields: [studentId], references: [id], onUpdate: Cascade, onDelete: Cascade)
+    indicators      SocialHealthIndicator[]      @relation(name: "student_social_health_indicators")
+    recommendations SocialHealthRecommendation[] @relation(name: "student_social_health_recommendations")
 
     @@map("student_social_health")
 }
@@ -72,6 +108,22 @@ model SocialHealthIndicator {
     socialHealth SocialHealth[] @relation(name: "student_social_health_indicators")
 
     @@map("social_health_indicators")
+}
+
+model SocialHealthRecommendation {
+    id           Int            @id(map: "social_health_recommendations_pkey") @default(autoincrement()) @map("recommendation_id")
+    title        String         @map("title")
+    healthZone   HealthZone     @map("health_zone")
+    socialHealth SocialHealth[] @relation(name: "student_social_health_recommendations")
+
+    @@map("social_health_recommendations")
+}
+
+model MedicalHealth {
+    studentId String  @id(map: "medical_health_pkey") @map("student_id") @db.Uuid
+    student   Student @relation(fields: [studentId], references: [id], onUpdate: Cascade, onDelete: Cascade)
+
+    @@map("student_medical_health")
 }
 
 enum Role {
