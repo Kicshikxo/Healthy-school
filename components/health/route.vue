@@ -88,16 +88,8 @@
 </template>
 
 <script setup lang="ts">
-import { MedicalHealth, PhysicalHealth, SocialHealth, Student } from '@prisma/client'
-
 const props = defineProps<{
-    studentData:
-        | (Student & {
-              physicalHealth: PhysicalHealth | null
-              medicalHealth: MedicalHealth | null
-              socialHealth: SocialHealth | null
-          })
-        | null
+    studentData: HealthComponentData
     loadingData: boolean
     refreshData: () => Promise<void>
 }>()
