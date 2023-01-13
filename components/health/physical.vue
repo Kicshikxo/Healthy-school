@@ -1,224 +1,123 @@
 <template>
-    <section class="px-3">
-        <p-card class="shadow-none">
-            <template #title>
-                <div class="flex align-items-center justify-content-between">
-                    <span> Компонент физической культуры </span>
-                    <div class="flex gap-3 align-self-end">
-                        <p-button
-                            v-if="!enableEditing"
-                            icon="pi pi-pencil"
-                            label="Редактировать"
-                            :disabled="enableEditing"
-                            class="p-button-primary"
-                            @click="enableEditing = true"
-                        />
-                        <p-button
-                            v-if="enableEditing"
-                            icon="pi pi-times"
-                            label="Отменить"
+    <health-component :loading="loadingData" :has-changes="hasChanges" :on-cancel="cancelChanges" :on-save="saveChanges">
+        <template #title>Компонент физической культуры</template>
+        <template #body="{ enableEditing }">
+            <health-component-body>
+                <template #title> Медицинская группа для занятий физической культурой </template>
+                <template #content>
+                    <div class="flex justify-content-center">
+                        <p-select-button
+                            v-model="selectedHealthGroup"
+                            :options="[
+                                { label: 'Основная', value: HealthGroup.BASIC },
+                                { label: 'Подготовительная', value: HealthGroup.PREPARATORY },
+                                { label: 'Специальная', value: HealthGroup.SPECIAL }
+                            ]"
+                            optionLabel="label"
+                            optionValue="value"
                             :disabled="!enableEditing"
-                            class="p-button-danger"
-                            @click="cancelChanges"
-                        />
-                        <p-button
-                            v-if="enableEditing"
-                            icon="pi pi-save"
-                            label="Сохранить"
-                            :disabled="!enableEditing || !hasChanges"
-                            class="p-button-success"
-                            @click="saveChanges"
+                            :unselectable="false"
+                            class="select-health-group"
                         />
                     </div>
-                </div>
-            </template>
-            <template #content>
-                <p-card
-                    class="p-card-content-pb-0 border-1 border-300 shadow-none"
-                    :class="{
-                        'border-noround-bottom': showIndividualRecommendations
-                    }"
-                >
-                    <template #title> Медицинская группа для занятий физической культурой </template>
-                    <template #content>
-                        <div class="grid grid-nogutter gap-2 h-3rem">
-                            <p-button
-                                label="Основная"
-                                :class="{
-                                    'p-button-outlined': physicalHealth.healthGroup !== 'BASIC'
-                                }"
-                                class="col p-button-success"
-                                :disabled="!enableEditing"
-                                @click="changeHealthGroup('BASIC')"
-                            />
-                            <p-button
-                                label="Подготовительная"
-                                :class="{
-                                    'p-button-outlined': physicalHealth.healthGroup !== 'PREPARATORY'
-                                }"
-                                class="col p-button-warning"
-                                :disabled="!enableEditing"
-                                @click="changeHealthGroup('PREPARATORY')"
-                            />
-                            <p-button
-                                label="Специальная"
-                                :class="{
-                                    'p-button-outlined': physicalHealth.healthGroup !== 'SPECIAL'
-                                }"
-                                class="col p-button-danger"
-                                :disabled="!enableEditing"
-                                @click="changeHealthGroup('SPECIAL')"
-                            />
-                        </div>
-                    </template>
-                    <template #footer>
-                        <span class="font-bold">Выводы: </span>
-                        <span class="underline">
-                            <span v-if="physicalHealth.healthGroup === 'BASIC'">
-                                основная группа для занятий физической культурой
-                            </span>
-                            <span v-else-if="physicalHealth.healthGroup === 'PREPARATORY'">
-                                подготовительная группа для занятий физической культурой
-                            </span>
-                            <span v-else-if="physicalHealth.healthGroup === 'SPECIAL'">
-                                специальная группа для занятий физической культурой
-                            </span>
-                        </span>
-                    </template>
-                </p-card>
-                <p-card
-                    v-if="showIndividualRecommendations"
-                    class="border-1 border-top-none border-300 border-noround-top shadow-none"
-                >
-                    <template #title> Индивидуальные рекомендации и назначения </template>
-                    <template #content>
-                        <p-multi-select
-                            :disabled="!enableEditing"
-                            v-model="physicalHealth.individualRecommendations"
-                            :options="individualRecommendations"
-                            panelClass="border-1 border-300"
-                            display="chip"
-                            appendTo="self"
-                            placeholder="Индивидуальные рекомендации"
-                            class="w-full"
-                        />
-                    </template>
-                    <template #footer>
-                        <div class="mb-2 text-xl font-bold">Иное</div>
-                        <p-textarea
-                            :disabled="!enableEditing"
-                            v-model="physicalHealth.specialistRecommendations"
-                            :autoResize="true"
-                            :rows="2"
-                            placeholder="Рекомендации для занятий физической культурой от профильного медицинского специалиста"
-                            class="w-full"
-                        />
-                    </template>
-                </p-card>
-            </template>
-        </p-card>
-    </section>
+                </template>
+            </health-component-body>
+            <health-component-body v-if="showRecommendations">
+                <template #title> Индивидуальные рекомендации и назначения </template>
+                <template #content>
+                    <p-multi-select
+                        :disabled="!enableEditing"
+                        v-model="selectedRecommendations"
+                        :options="availableRecommendations"
+                        optionLabel="title"
+                        panelClass="border-1 border-300"
+                        display="chip"
+                        appendTo="self"
+                        placeholder="Индивидуальные рекомендации"
+                        class="w-full"
+                    />
+                </template>
+                <template #footer>
+                    <div class="mb-2 text-xl font-bold">Иное</div>
+                    <p-textarea
+                        :disabled="!enableEditing"
+                        v-model="currentSpecialistNotes"
+                        :autoResize="true"
+                        :rows="4"
+                        placeholder="Рекомендации для занятий физической культурой от профильного медицинского специалиста"
+                        class="w-full"
+                    />
+                </template>
+            </health-component-body>
+        </template>
+    </health-component>
 </template>
 
 <script setup lang="ts">
-import { HealthGroup, MedicalHealth, PhysicalHealth, SocialHealth, Student } from '@prisma/client'
-import { useToast } from 'primevue/usetoast'
-
-const toast = useToast()
+import { HealthGroup, PhysicalHealth, PhysicalHealthRecommendation } from '@prisma/client'
 
 const props = defineProps<{
-    studentData:
-        | (Student & {
-              physicalHealth: PhysicalHealth | null
-              medicalHealth: MedicalHealth | null
-              socialHealth: SocialHealth | null
-          })
-        | null
+    studentData: HealthComponentData
     loadingData: boolean
     refreshData: () => Promise<void>
 }>()
 
-const enableEditing = ref<boolean>(false)
-
 const hasChanges = computed(
     () =>
-        JSON.stringify(physicalHealth.value.healthGroup) !== JSON.stringify(props.studentData?.physicalHealth?.healthGroup) ||
-        JSON.stringify(physicalHealth.value.individualRecommendations) !==
-            JSON.stringify(props.studentData?.physicalHealth?.individualRecommendations) ||
-        JSON.stringify(physicalHealth.value.specialistRecommendations) !==
-            JSON.stringify(props.studentData?.physicalHealth?.specialistRecommendations)
+        JSON.stringify(selectedHealthGroup.value) !== JSON.stringify(studentHealthGroup.value) ||
+        JSON.stringify(sortedSelectedRecommendations.value) !== JSON.stringify(studentRecommendations.value) ||
+        JSON.stringify(currentSpecialistNotes.value) !== JSON.stringify(studentSpecialistNotes.value)
 )
 
-function changeHealthGroup(value: HealthGroup) {
-    physicalHealth.value.healthGroup = value
+async function invalidateData() {
+    await props.refreshData()
+    selectedHealthGroup.value = studentHealthGroup.value
+    selectedRecommendations.value = studentRecommendations.value
 }
 
-const preparatoryRecomendations = [
-    'выполнение программы физического воспитания с ограничениями по рекомендации врача',
-    'сдача индивидуальных нормативов и участие в массовых физкультурных мероприятиях при наличии медицинского заключения по результатам дополнительного осмотра',
-    'не допущение к занятиям спортом и участию в соревнованиях',
-    'проведение дополнительных занятий для повышения общей физической подготовки'
-]
-
-const specialRecomendations = [
-    'обучение умению и навыкам элементов ЗОЖ',
-    'осуществление самоконтроля здоровья и функциональных возможностей',
-    'организация физкультурных занятий по особой программе, снижение нормативов, строгое дозирование физической нагрузки',
-    'включение лечебной физкультуры в программу занятий',
-    'широкое использование дыхательных, корригирующих и общеразвивающих упражнений',
-    'проявление повышенной осторожности при использовании физических упражнений',
-    'исключение физических упражнений, противопоказанных по состоянию здоровья',
-    'включение в занятия подвижных игр умеренной интенсивности'
-]
-
-const individualRecommendations = computed(() => {
-    if (physicalHealth.value.healthGroup === 'PREPARATORY') {
-        return preparatoryRecomendations
-    }
-    if (physicalHealth.value.healthGroup === 'SPECIAL') {
-        return specialRecomendations
-    }
-})
-
-const showIndividualRecommendations = computed(
-    () => physicalHealth.value.healthGroup === 'PREPARATORY' || physicalHealth.value.healthGroup === 'SPECIAL'
-)
-
-function cancelChanges() {
-    physicalHealth.value = { ...props.studentData!.physicalHealth! }
-    enableEditing.value = false
+async function cancelChanges() {
+    await invalidateData()
 }
 
 async function saveChanges() {
     const { error } = await useFetch('/api/students/health/physical', {
         method: 'PATCH',
-        body: physicalHealth.value as PhysicalHealth
+        body: {
+            studentId: props.studentData?.id,
+            healthGroup: selectedHealthGroup.value,
+            recommendations: selectedRecommendations.value.filter(
+                (recommendation) => recommendation.healthGroup === selectedHealthGroup.value
+            ),
+            specialistNotes: currentSpecialistNotes.value
+        } as PhysicalHealth & { recommendations: PhysicalHealthRecommendation[] }
     })
+
     if (error.value) {
-        return toast.add({
-            severity: 'error',
-            summary: 'Ошибка сохранения',
-            detail: 'Изменения не были сохранены',
-            life: 3000
-        })
-    } else {
-        toast.add({
-            severity: 'success',
-            summary: 'Данные сохранены',
-            detail: 'Изменения были сохранены',
-            life: 3000
-        })
+        throw new Error(error.value.message)
     }
-    await props.refreshData()
-    physicalHealth.value = { ...props.studentData!.physicalHealth! }
-    enableEditing.value = false
+
+    invalidateData()
 }
 
-// const { data: info, refresh: refreshInfo } = await useFetch('/api/students/info', {
-//     query: { id: props.studentId }
-// })
+// Student data
+const studentHealthGroup = computed(() => props.studentData?.physicalHealth?.healthGroup ?? 'BASIC')
+const studentRecommendations = computed(() => props.studentData?.physicalHealth?.recommendations ?? [])
+const studentSpecialistNotes = computed(() => props.studentData?.physicalHealth?.specialistNotes ?? '')
 
-const physicalHealth = ref({
-    ...props.studentData!.physicalHealth!
-})
+// Selected data
+const selectedHealthGroup = ref<HealthGroup>(studentHealthGroup.value)
+const selectedRecommendations = ref<PhysicalHealthRecommendation[]>(studentRecommendations.value)
+const currentSpecialistNotes = ref<string>(studentSpecialistNotes.value)
+
+// Sorted selected data
+const sortedSelectedRecommendations = computed<PhysicalHealthRecommendation[]>(() =>
+    selectedRecommendations.value.sort((a, b) => a.id - b.id)
+)
+
+const { data: physicalRecommendations } = await useFetch('/api/students/health/physical/recommendations')
+const availableRecommendations = computed(() =>
+    physicalRecommendations.value?.filter((recommendation) => recommendation.healthGroup === selectedHealthGroup.value)
+)
+
+const showRecommendations = computed(() => (['PREPARATORY', 'SPECIAL'] as HealthGroup[]).includes(selectedHealthGroup.value))
 </script>
