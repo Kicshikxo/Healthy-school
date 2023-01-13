@@ -581,13 +581,7 @@ const individualRecommendations = computed(() => {
 const toast = useToast()
 
 const props = defineProps<{
-    studentData:
-        | (Student & {
-              physicalHealth: PhysicalHealth | null
-              medicalHealth: MedicalHealth | null
-              socialHealth: SocialHealth | null
-          })
-        | null
+    studentData: HealthComponentData
     loadingData: boolean
     refreshData: () => Promise<void>
 }>()
@@ -601,8 +595,4 @@ function cancelChanges() {
 async function saveChanges() {
     enableEditing.value = false
 }
-
-// const { data: info, refresh: refreshInfo } = useFetch('/api/students/info', {
-//     query: { id: props.studentId }
-// })
 </script>
