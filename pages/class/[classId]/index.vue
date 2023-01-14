@@ -48,7 +48,7 @@
             </p-column>
             <p-column field="class" header="Класс">
                 <template #body="{ data }">
-                    {{ (data.class as Class).number + (data.class as Class).liter }}
+                    {{ data.class.number + data.class.liter }}
                 </template>
             </p-column>
         </p-data-table>
