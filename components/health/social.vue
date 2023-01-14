@@ -67,14 +67,8 @@ const hasChanges = computed(
         JSON.stringify(sortedSelectedRecommendations.value) !== JSON.stringify(studentRecommendations.value)
 )
 
-async function invalidateData() {
-    await props.refreshData()
-    selectedIndicators.value = studentIndicators.value
-    selectedRecommendations.value = studentRecommendations.value
-}
-
 async function cancelChanges() {
-    await invalidateData()
+    await props.refreshData()
 }
 
 async function saveChanges() {
@@ -93,16 +87,20 @@ async function saveChanges() {
         throw new Error(error.value.message)
     }
 
-    invalidateData()
+    await props.refreshData()
 }
 
 // Student data
-const studentIndicators = ref(props.studentData?.socialHealth?.indicators ?? [])
-const studentRecommendations = ref(props.studentData?.socialHealth?.recommendations ?? [])
+const studentIndicators = computed(() => props.studentData?.socialHealth?.indicators ?? [])
+const studentRecommendations = computed(() => props.studentData?.socialHealth?.recommendations ?? [])
 
 // Selected data
 const selectedIndicators = ref<SocialHealthIndicator[]>(studentIndicators.value)
 const selectedRecommendations = ref<SocialHealthRecommendation[]>(studentRecommendations.value)
+
+// Watch on student data update
+const watchStudentIndicators = watch(studentIndicators, (value) => (selectedIndicators.value = value))
+const watchStudentRecommendations = watch(studentRecommendations, (value) => (selectedRecommendations.value = value))
 
 // Sorted selected data
 const sortedSelectedIndicators = computed<SocialHealthIndicator[]>(() => selectedIndicators.value.sort((a, b) => a.id - b.id))

@@ -69,14 +69,8 @@ const hasChanges = computed(
         JSON.stringify(currentSpecialistNotes.value) !== JSON.stringify(studentSpecialistNotes.value)
 )
 
-async function invalidateData() {
-    await props.refreshData()
-    selectedHealthGroup.value = studentHealthGroup.value
-    selectedRecommendations.value = studentRecommendations.value
-}
-
 async function cancelChanges() {
-    await invalidateData()
+    await props.refreshData()
 }
 
 async function saveChanges() {
@@ -96,25 +90,30 @@ async function saveChanges() {
         throw new Error(error.value.message)
     }
 
-    invalidateData()
+    await props.refreshData()
 }
 
 // Student data
-const studentHealthGroup = ref(props.studentData?.physicalHealth?.healthGroup ?? 'BASIC')
-const studentRecommendations = ref(props.studentData?.physicalHealth?.recommendations ?? [])
-const studentSpecialistNotes = ref(props.studentData?.physicalHealth?.specialistNotes ?? '')
+const studentHealthGroup = computed(() => props.studentData?.physicalHealth?.healthGroup ?? 'BASIC')
+const studentRecommendations = computed(() => props.studentData?.physicalHealth?.recommendations ?? [])
+const studentSpecialistNotes = computed(() => props.studentData?.physicalHealth?.specialistNotes ?? '')
 
 // Selected data
 const selectedHealthGroup = ref<HealthGroup>(studentHealthGroup.value)
 const selectedRecommendations = ref<PhysicalHealthRecommendation[]>(studentRecommendations.value)
 const currentSpecialistNotes = ref<string>(studentSpecialistNotes.value)
 
+// Watch on student data update
+const watchStudentHealthGroup = watch(studentHealthGroup, (value) => (selectedHealthGroup.value = value))
+const watchStudentRecommendations = watch(studentRecommendations, (value) => (selectedRecommendations.value = value))
+const watchStudentSpecialistNotes = watch(studentSpecialistNotes, (value) => (currentSpecialistNotes.value = value))
+
 // Sorted selected data
 const sortedSelectedRecommendations = computed<PhysicalHealthRecommendation[]>(() =>
     selectedRecommendations.value.sort((a, b) => a.id - b.id)
 )
 
-const { data: physicalRecommendations } = await useFetch('/api/students/health/physical/recommendations')
+const { data: physicalRecommendations } = useFetch('/api/students/health/physical/recommendations')
 const availableRecommendations = computed(() =>
     physicalRecommendations.value?.filter((recommendation) => recommendation.healthGroup === selectedHealthGroup.value)
 )
