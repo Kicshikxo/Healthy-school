@@ -1,6 +1,6 @@
 <template>
     <section class="px-3">
-        <p-card class="shadow-none">
+        <p-card class="health-component shadow-none">
             <template #title>
                 <div class="flex align-items-center justify-content-between">
                     <div>

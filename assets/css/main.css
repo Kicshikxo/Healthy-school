@@ -3,6 +3,7 @@
     margin: 0;
 }
 
+/* Анимация перехода страниц */
 .page-enter-active,
 .page-leave-active {
   transition: all .3s;
@@ -12,6 +13,7 @@
   opacity: 0;
 }
 
+/* Анимация появления сверху и угасания вниз */
 .text-slide-enter-active, .text-slide-down-leave-active {
 	transition: transform .25s ease-in-out, opacity .25s ease-in-out;
 }
@@ -24,6 +26,7 @@
 	transform: translateY(100%);
 }
 
+/* Стили для убирания внутренних отступов у контента карт */
 .p-card.p-card-content-pb-0 .p-card-content {
     padding-bottom: 0 !important;
 }
@@ -31,20 +34,31 @@
     padding-top: 0 !important;
 }
 
+/* Стили для карточек-тел компонентов */
+.p-card.component-body:not(:last-child) {
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+    border-bottom: 0;
+}
+.p-card.component-body:not(:first-child) {
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+}
+
+/* Стили для мультиселектов */
 .p-multiselect-item,
 .p-multiselect-label {
     white-space: normal !important;
 }
-
 .p-multiselect-token {
     margin: 0.2rem;
     margin-left: 0;
 }
-
 .p-multiselect-panel .p-multiselect-items {
     padding: 0;
 }
 
+/* Стили для цветных кнопок выбора группы здоровья */
 .p-selectbutton.select-health-group {
     display: flex;
     width: 100%;
@@ -90,6 +104,7 @@
     box-shadow: 0 0 0 2px #ffffff, 0 0 0 4px hsl(0, 84%, 80%), 0 1px 2px 0 black;
 }
 
+/* Стили для цветных чекбоксов */
 .p-checkbox.p-checkbox-green .p-checkbox-box.p-highlight,
 .p-checkbox.p-checkbox-green .p-checkbox-box.p-highlight:hover {
     border-color: var(--green-500);
