@@ -35,12 +35,12 @@
 }
 
 /* Стили для карточек-тел компонентов */
-.p-card.component-body:not(:last-child) {
+.p-card.health-component-body:not(:first-child) {
     border-bottom-left-radius: 0;
     border-bottom-right-radius: 0;
     border-bottom: 0;
 }
-.p-card.component-body:not(:first-child) {
+.p-card.health-component-body:not(:last-child) {
     border-top-left-radius: 0;
     border-top-right-radius: 0;
 }
