@@ -1,5 +1,5 @@
 <template>
-    <health-component :loading="loadingData" :has-changes="hasChanges" :on-cancel="cancelChanges" :on-save="saveChanges">
+    <health-component :loading="loadingData" :allow-save="hasChanges" :on-cancel="cancelChanges" :on-save="saveChanges">
         <template #title>Компонент социального здоровья</template>
         <template #body="{ enableEditing }">
             <health-component-body>
@@ -99,8 +99,8 @@ const selectedIndicators = ref<SocialHealthIndicator[]>(studentIndicators.value)
 const selectedRecommendations = ref<SocialHealthRecommendation[]>(studentRecommendations.value)
 
 // Watch on student data update
-const watchStudentIndicators = watch(studentIndicators, (value) => (selectedIndicators.value = value))
-const watchStudentRecommendations = watch(studentRecommendations, (value) => (selectedRecommendations.value = value))
+watch(studentIndicators, (value) => (selectedIndicators.value = value))
+watch(studentRecommendations, (value) => (selectedRecommendations.value = value))
 
 // Sorted selected data
 const sortedSelectedIndicators = computed<SocialHealthIndicator[]>(() => selectedIndicators.value.sort((a, b) => a.id - b.id))

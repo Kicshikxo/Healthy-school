@@ -29,7 +29,7 @@
                             :loading="isLoading"
                             icon="pi pi-save"
                             label="Сохранить"
-                            :disabled="!enableEditing || !hasChanges"
+                            :disabled="!enableEditing || !allowSave"
                             class="p-button-success"
                             @click="saveChanges"
                         />
@@ -48,7 +48,7 @@ import { useToast } from 'primevue/usetoast'
 
 const props = defineProps<{
     loading?: boolean
-    hasChanges?: boolean
+    allowSave?: boolean
     onCancel?: () => Promise<void> | void
     onSave?: () => Promise<void> | void
 }>()

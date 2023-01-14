@@ -1,5 +1,5 @@
 <template>
-    <health-component :loading="loadingData" :has-changes="hasChanges" :on-cancel="cancelChanges" :on-save="saveChanges">
+    <health-component :loading="loadingData" :allow-save="hasChanges" :on-cancel="cancelChanges" :on-save="saveChanges">
         <template #title>Компонент физической культуры</template>
         <template #body="{ enableEditing }">
             <health-component-body>
@@ -104,9 +104,9 @@ const selectedRecommendations = ref<PhysicalHealthRecommendation[]>(studentRecom
 const currentSpecialistNotes = ref<string>(studentSpecialistNotes.value)
 
 // Watch on student data update
-const watchStudentHealthGroup = watch(studentHealthGroup, (value) => (selectedHealthGroup.value = value))
-const watchStudentRecommendations = watch(studentRecommendations, (value) => (selectedRecommendations.value = value))
-const watchStudentSpecialistNotes = watch(studentSpecialistNotes, (value) => (currentSpecialistNotes.value = value))
+watch(studentHealthGroup, (value) => (selectedHealthGroup.value = value))
+watch(studentRecommendations, (value) => (selectedRecommendations.value = value))
+watch(studentSpecialistNotes, (value) => (currentSpecialistNotes.value = value))
 
 // Sorted selected data
 const sortedSelectedRecommendations = computed<PhysicalHealthRecommendation[]>(() =>
