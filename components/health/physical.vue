@@ -62,13 +62,6 @@ const props = defineProps<{
     refreshData: () => Promise<void>
 }>()
 
-const hasChanges = computed(
-    () =>
-        JSON.stringify(selectedHealthGroup.value) !== JSON.stringify(studentHealthGroup.value) ||
-        JSON.stringify(sortedSelectedRecommendations.value) !== JSON.stringify(studentRecommendations.value) ||
-        JSON.stringify(currentSpecialistNotes.value) !== JSON.stringify(studentSpecialistNotes.value)
-)
-
 async function cancelChanges() {
     await props.refreshData()
 }
@@ -93,8 +86,11 @@ async function saveChanges() {
     await props.refreshData()
 }
 
+// Data from server
+const { data: physicalRecommendations } = useFetch('/api/students/health/physical/recommendations')
+
 // Student data
-const studentHealthGroup = computed(() => props.studentData?.physicalHealth?.healthGroup ?? 'BASIC')
+const studentHealthGroup = computed(() => props.studentData?.physicalHealth?.healthGroup ?? HealthGroup.BASIC)
 const studentRecommendations = computed(() => props.studentData?.physicalHealth?.recommendations ?? [])
 const studentSpecialistNotes = computed(() => props.studentData?.physicalHealth?.specialistNotes ?? '')
 
@@ -113,7 +109,13 @@ const sortedSelectedRecommendations = computed<PhysicalHealthRecommendation[]>((
     selectedRecommendations.value.sort((a, b) => a.id - b.id)
 )
 
-const { data: physicalRecommendations } = useFetch('/api/students/health/physical/recommendations')
+const hasChanges = computed(
+    () =>
+        JSON.stringify(selectedHealthGroup.value) !== JSON.stringify(studentHealthGroup.value) ||
+        JSON.stringify(sortedSelectedRecommendations.value) !== JSON.stringify(studentRecommendations.value) ||
+        JSON.stringify(currentSpecialistNotes.value) !== JSON.stringify(studentSpecialistNotes.value)
+)
+
 const availableRecommendations = computed(() =>
     physicalRecommendations.value?.filter((recommendation) => recommendation.healthGroup === selectedHealthGroup.value)
 )
