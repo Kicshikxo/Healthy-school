@@ -20,14 +20,14 @@
                                     panelClass="border-1 border-300"
                                 >
                                     <template #value="{ value }">
-                                        <!-- <health-zone-indicator :health-zone="value.healthZone" :label="value.title" /> -->
+                                        <health-zone-indicator :health-zone="value.healthZone" :label="value.title" />
                                     </template>
                                     <template #option="{ option }">
-                                        <!-- <health-zone-indicator
+                                        <health-zone-indicator
                                             :health-zone="option.healthZone"
                                             :label="option.title"
                                             :gap="3"
-                                        /> -->
+                                        />
                                     </template>
                                 </p-dropdown>
                             </div>
@@ -55,10 +55,10 @@
                                     panelClass="border-1 border-300"
                                 >
                                     <template #chip="{ value }">
-                                        <!-- <health-zone-indicator :health-zone="value.healthZone" :label="value.title" /> -->
+                                        <health-zone-indicator :health-zone="value.healthZone" :label="value.title" />
                                     </template>
                                     <template #option="{ option }">
-                                        <!-- <health-zone-indicator :health-zone="option.healthZone" :label="option.title" /> -->
+                                        <health-zone-indicator :health-zone="option.healthZone" :label="option.title" />
                                     </template>
                                 </p-multi-select>
                             </div>
