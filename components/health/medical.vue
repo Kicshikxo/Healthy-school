@@ -1,584 +1,107 @@
 <template>
-    <section class="px-3">
-        <p-card class="shadow-none">
-            <template #title>
-                <div class="flex align-items-center justify-content-between">
-                    <span> Компонент медицинского здоровья </span>
-                    <div class="flex gap-3 align-self-end">
-                        <p-button
-                            v-if="!enableEditing"
-                            icon="pi pi-pencil"
-                            label="Редактировать"
-                            :disabled="enableEditing"
-                            class="p-button-primary"
-                            @click="enableEditing = true"
-                        />
-                        <p-button
-                            v-if="enableEditing"
-                            icon="pi pi-times"
-                            label="Отменить"
-                            :disabled="!enableEditing"
-                            class="p-button-danger"
-                            @click="cancelChanges"
-                        />
-                        <p-button
-                            v-if="enableEditing"
-                            icon="pi pi-save"
-                            label="Сохранить"
-                            :disabled="!enableEditing"
-                            class="p-button-success"
-                            @click="saveChanges"
-                        />
-                    </div>
-                </div>
-            </template>
-            <template #content>
-                <div class="text-xl font-bold">Группа здоровья</div>
-                <p-card
-                    class="col p-card-content-pb-0 p-card-content-pt-0 my-3 shadow-none"
-                    :class="{
-                        'bg-green-300': currentHealthZone === 'GREEN',
-                        'bg-yellow-300': currentHealthZone === 'YELLOW',
-                        'bg-red-300': currentHealthZone === 'RED'
-                    }"
-                >
-                    <template #title>
-                        <span v-if="currentHealthZone === 'GREEN'" class="text-0"> Первая </span>
-                        <span v-if="currentHealthZone === 'YELLOW'" class="text-0"> Вторая </span>
-                        <span v-if="currentHealthZone === 'RED'" class="text-0"> Третья </span>
-                    </template>
-                    <template #content>
-                        <span v-if="currentHealthZone === 'GREEN'" class="text-0">
-                            Выводы:
-                            <br />
-                            - нет ограничений по здоровью
-                        </span>
-                        <span v-if="currentHealthZone === 'YELLOW'" class="text-0">
-                            Выводы:
-                            <br />
-                            - подвержен риску развития частых/хронических заболеваний
-                            <br />
-                            - обладает пониженным иммунитетом/проблемной наследственностью
-                        </span>
-                        <span v-if="currentHealthZone === 'RED'" class="text-0">
-                            Выводы:
-                            <br />
-                            - наблюдается значительное ухудшение здоровья, нарушение функционирования некоторых органов и систем
-                            <br />
-                            - сниженная сопротивляемость организма
-                            <br />
-                            - требуется лечение/реабилитация
-                        </span>
-                    </template>
-                </p-card>
-                <p-card
-                    class="p-card-content-pb-0 p-card-content-pt-0 border-1 border-300 shadow-none"
-                    :class="{ 'border-noround-bottom': showDetails }"
-                >
-                    <template #content>
+    <health-component :loading="loadingData" :allow-save="hasChanges" :on-cancel="cancelChanges" :on-save="saveChanges">
+        <template #title>Компонент медицинского здоровья</template>
+        <template #body="{ enableEditing }">
+            <health-component-body :padding-top="false">
+                <template #title> Основные показатели </template>
+                <template #content>
+                    <template v-for="{ title, options, selected } in generalOptions">
+                        <p-divider />
                         <div class="grid grid-nogutter">
-                            <div class="col-6 flex justify-content-start align-items-center text-lg">Наличие инвалидности</div>
+                            <div class="col-6 flex justify-content-start align-items-center text-lg">{{ title }}</div>
                             <div class="col-6 border-left-1 border-300 pl-4">
                                 <p-dropdown
                                     :disabled="!enableEditing"
-                                    :options="disabilities"
-                                    optionLabel="value"
-                                    v-model="selectedDisability"
+                                    :options="options.value"
+                                    optionLabel="title"
+                                    v-model="selected.value"
+                                    :placeholder="title"
                                     class="w-full"
-                                    placeholder="Наличие инвалидности"
                                     panelClass="border-1 border-300"
                                 >
-                                    <template #option="slotProps">
-                                        <div class="flex">
-                                            <div
-                                                style="min-width: 6px; height: 20px"
-                                                class="mr-3 border-round"
-                                                :class="{
-                                                    'bg-green-500': slotProps.option.healthZone === 'GREEN',
-                                                    'bg-yellow-500': slotProps.option.healthZone === 'YELLOW',
-                                                    'bg-red-500': slotProps.option.healthZone === 'RED'
-                                                }"
-                                            />
-                                            <div>
-                                                {{ slotProps.option.value }}
-                                            </div>
-                                        </div>
+                                    <template #value="{ value }">
+                                        <health-zone-indicator :health-zone="value.healthZone" :label="value.title" />
                                     </template>
-                                </p-dropdown>
-                            </div>
-                            <p-divider />
-                            <div class="col-6 flex justify-content-start align-items-center text-lg">
-                                Сведения о заболеваемости
-                            </div>
-                            <div class="col-6 border-left-1 border-300 pl-4">
-                                <p-dropdown
-                                    :disabled="!enableEditing"
-                                    :options="morbidities"
-                                    optionLabel="value"
-                                    v-model="selectedMorbidity"
-                                    class="w-full"
-                                    placeholder="Сведения о заболеваемости"
-                                    panelClass="border-1 border-300"
-                                >
-                                    <template #option="slotProps">
-                                        <div class="flex">
-                                            <div
-                                                style="min-width: 6px; height: 20px"
-                                                class="mr-3 border-round"
-                                                :class="{
-                                                    'bg-green-500': slotProps.option.healthZone === 'GREEN',
-                                                    'bg-yellow-500': slotProps.option.healthZone === 'YELLOW',
-                                                    'bg-red-500': slotProps.option.healthZone === 'RED'
-                                                }"
-                                            />
-                                            <div>
-                                                {{ slotProps.option.value }}
-                                            </div>
-                                        </div>
-                                    </template>
-                                </p-dropdown>
-                            </div>
-                            <p-divider />
-                            <div class="col-6 flex justify-content-start align-items-center text-lg">
-                                Сбалансированное питание
-                            </div>
-                            <div class="col-6 border-left-1 border-300 pl-4">
-                                <p-dropdown
-                                    :disabled="!enableEditing"
-                                    :options="balancedDiets"
-                                    optionLabel="value"
-                                    v-model="selectedBalancedDiets"
-                                    class="w-full"
-                                    placeholder="Сбалансированное питание"
-                                    panelClass="border-1 border-300"
-                                >
-                                    <template #option="slotProps">
-                                        <div class="flex">
-                                            <div
-                                                style="min-width: 6px; height: 20px"
-                                                class="mr-3 border-round"
-                                                :class="{
-                                                    'bg-green-500': slotProps.option.healthZone === 'GREEN',
-                                                    'bg-yellow-500': slotProps.option.healthZone === 'YELLOW',
-                                                    'bg-red-500': slotProps.option.healthZone === 'RED'
-                                                }"
-                                            />
-                                            <div>
-                                                {{ slotProps.option.value }}
-                                            </div>
-                                        </div>
-                                    </template>
-                                </p-dropdown>
-                            </div>
-                            <p-divider />
-                            <div class="col-6 flex justify-content-start align-items-center text-lg">
-                                Наличие хронических заболеваний
-                            </div>
-                            <div class="col-6 border-left-1 border-300 pl-4">
-                                <p-dropdown
-                                    :disabled="!enableEditing"
-                                    :options="chronicDiseases"
-                                    optionLabel="value"
-                                    v-model="selectedChronicDiseases"
-                                    class="w-full"
-                                    placeholder="Наличие хронических заболеваний"
-                                    panelClass="border-1 border-300"
-                                >
-                                    <template #option="slotProps">
-                                        <div class="flex">
-                                            <div
-                                                style="min-width: 6px; height: 20px"
-                                                class="mr-3 border-round"
-                                                :class="{
-                                                    'bg-green-500': slotProps.option.healthZone === 'GREEN',
-                                                    'bg-yellow-500': slotProps.option.healthZone === 'YELLOW',
-                                                    'bg-red-500': slotProps.option.healthZone === 'RED'
-                                                }"
-                                            />
-                                            <div>
-                                                {{ slotProps.option.value }}
-                                            </div>
-                                        </div>
+                                    <template #option="{ option }">
+                                        <health-zone-indicator
+                                            :health-zone="option.healthZone"
+                                            :label="option.title"
+                                            :gap="3"
+                                        />
                                     </template>
                                 </p-dropdown>
                             </div>
                         </div>
                     </template>
-                </p-card>
-                <p-card
-                    v-if="showDetails"
-                    class="p-card-content-pb-0 p-card-content-pt-0 border-1 border-300 border-noround-top border-noround-bottom shadow-none"
-                >
-                    <template #title> Профилактические и здоровьесберегающие мероприятия </template>
-                    <template #content>
-                        <p-multi-select
-                            :disabled="!enableEditing"
-                            v-model="selectedIndividualRecommendations"
-                            :options="individualRecommendations"
-                            panelClass="border-1 border-300"
-                            display="chip"
-                            appendTo="self"
-                            placeholder="Профилактические и здоровьесберегающие мероприятия"
-                            class="w-full"
-                        />
-                    </template>
-                </p-card>
-                <p-card
-                    v-if="showDetails"
-                    class="p-card-content-pb-0 p-card-content-pt-0 border-1 border-300 border-noround-top shadow-none"
-                >
-                    <template #title> Индивидуальные рекомендации и назначения профильных медицинских специалистов </template>
-                    <template #content>
+                </template>
+            </health-component-body>
+            <health-component-body v-if="showIndividualOptions" :padding-top="false">
+                <template #title>Индивидуальные рекомендации и назначения профильных медицинских специалистов</template>
+                <template #content>
+                    <template v-for="{ title, options, selected } in individualOptions">
+                        <p-divider />
                         <div class="grid grid-nogutter">
-                            <p-divider class="mt-2" />
-                            <div class="col-6 flex justify-content-start align-items-center text-lg">Зрение</div>
+                            <div class="col-6 flex justify-content-start align-items-center text-lg">{{ title }}</div>
                             <div class="col-6 border-left-1 border-300 pl-4">
                                 <p-multi-select
                                     :disabled="!enableEditing"
-                                    :options="vision"
+                                    :options="options.value"
                                     optionLabel="value"
-                                    v-model="selectedVision"
-                                    class="w-full"
+                                    v-model="selected.value"
                                     display="chip"
                                     appendTo="self"
-                                    placeholder="Зрение"
+                                    :placeholder="title"
+                                    class="w-full"
                                     panelClass="border-1 border-300"
                                 >
-                                    <template #option="slotProps">
-                                        <div class="flex align-items-center">
-                                            <div
-                                                style="min-width: 6px; height: 20px"
-                                                class="mr-2 border-round"
-                                                :class="{
-                                                    'bg-green-500': slotProps.option.healthZone === 'GREEN',
-                                                    'bg-yellow-500': slotProps.option.healthZone === 'YELLOW',
-                                                    'bg-red-500': slotProps.option.healthZone === 'RED'
-                                                }"
-                                            />
-                                            <div>
-                                                {{ slotProps.option.value }}
-                                            </div>
-                                        </div>
+                                    <template #chip="{ value }">
+                                        <health-zone-indicator :health-zone="value.healthZone" :label="value.title" />
+                                    </template>
+                                    <template #option="{ option }">
+                                        <health-zone-indicator :health-zone="option.healthZone" :label="option.title" />
                                     </template>
                                 </p-multi-select>
                             </div>
-                            <p-divider />
-                            <div class="col-6 flex justify-content-start align-items-center text-lg">Слух</div>
-                            <div class="col-6 border-left-1 border-300 pl-4">
-                                <p-multi-select
-                                    :disabled="!enableEditing"
-                                    :options="hearing"
-                                    optionLabel="value"
-                                    v-model="selectedHearing"
-                                    class="w-full"
-                                    display="chip"
-                                    appendTo="self"
-                                    placeholder="Слух"
-                                    panelClass="border-1 border-300"
-                                >
-                                    <template #option="slotProps">
-                                        <div class="flex align-items-center">
-                                            <div
-                                                style="min-width: 6px; height: 20px"
-                                                class="mr-2 border-round"
-                                                :class="{
-                                                    'bg-green-500': slotProps.option.healthZone === 'GREEN',
-                                                    'bg-yellow-500': slotProps.option.healthZone === 'YELLOW',
-                                                    'bg-red-500': slotProps.option.healthZone === 'RED'
-                                                }"
-                                            />
-                                            <div>
-                                                {{ slotProps.option.value }}
-                                            </div>
-                                        </div>
-                                    </template>
-                                </p-multi-select>
-                            </div>
-                            <p-divider />
-                            <div class="col-6 flex justify-content-start align-items-center text-lg">Ортопедия</div>
-                            <div class="col-6 border-left-1 border-300 pl-4">
-                                <p-multi-select
-                                    :disabled="!enableEditing"
-                                    :options="orthopedia"
-                                    optionLabel="value"
-                                    v-model="selectedOrthopedia"
-                                    class="w-full"
-                                    display="chip"
-                                    appendTo="self"
-                                    placeholder="Ортопедия"
-                                    panelClass="border-1 border-300"
-                                >
-                                    <template #option="slotProps">
-                                        <div class="flex align-items-center">
-                                            <div
-                                                style="min-width: 6px; height: 20px"
-                                                class="mr-2 border-round"
-                                                :class="{
-                                                    'bg-green-500': slotProps.option.healthZone === 'GREEN',
-                                                    'bg-yellow-500': slotProps.option.healthZone === 'YELLOW',
-                                                    'bg-red-500': slotProps.option.healthZone === 'RED'
-                                                }"
-                                            />
-                                            <div>
-                                                {{ slotProps.option.value }}
-                                            </div>
-                                        </div>
-                                    </template>
-                                </p-multi-select>
-                            </div>
-                            <p-divider />
-                            <div class="col-6 flex justify-content-start align-items-center text-lg">ЖКТ</div>
-                            <div class="col-6 border-left-1 border-300 pl-4">
-                                <p-multi-select
-                                    :disabled="!enableEditing"
-                                    :options="gastrointestinal"
-                                    optionLabel="value"
-                                    v-model="selectedGastrointestinal"
-                                    class="w-full"
-                                    display="chip"
-                                    appendTo="self"
-                                    placeholder="ЖКТ"
-                                    panelClass="border-1 border-300"
-                                >
-                                    <template #option="slotProps">
-                                        <div class="flex align-items-center">
-                                            <div
-                                                style="min-width: 6px; height: 20px"
-                                                class="mr-2 border-round"
-                                                :class="{
-                                                    'bg-green-500': slotProps.option.healthZone === 'GREEN',
-                                                    'bg-yellow-500': slotProps.option.healthZone === 'YELLOW',
-                                                    'bg-red-500': slotProps.option.healthZone === 'RED'
-                                                }"
-                                            />
-                                            <div>
-                                                {{ slotProps.option.value }}
-                                            </div>
-                                        </div>
-                                    </template>
-                                </p-multi-select>
-                            </div>
-                            <p-divider />
-                            <div class="col-6 flex justify-content-start align-items-center text-lg">
-                                Неврология, психиатрия
-                            </div>
-                            <div class="col-6 border-left-1 border-300 pl-4">
-                                <p-multi-select
-                                    :disabled="!enableEditing"
-                                    :options="neurologyAndPsychiatry"
-                                    optionLabel="value"
-                                    v-model="selectedNeurologyAndPsychiatry"
-                                    class="w-full"
-                                    display="chip"
-                                    appendTo="self"
-                                    placeholder="Неврология, психиатрия"
-                                    panelClass="border-1 border-300"
-                                >
-                                    <template #option="slotProps">
-                                        <div class="flex align-items-center">
-                                            <div
-                                                style="min-width: 6px; height: 20px"
-                                                class="mr-2 border-round"
-                                                :class="{
-                                                    'bg-green-500': slotProps.option.healthZone === 'GREEN',
-                                                    'bg-yellow-500': slotProps.option.healthZone === 'YELLOW',
-                                                    'bg-red-500': slotProps.option.healthZone === 'RED'
-                                                }"
-                                            />
-                                            <div>
-                                                {{ slotProps.option.value }}
-                                            </div>
-                                        </div>
-                                    </template>
-                                </p-multi-select>
-                            </div>
-                            <p-divider />
-                            <div class="mb-2 text-xl font-bold">Иное</div>
-                            <p-textarea
-                                :disabled="!enableEditing"
-                                :autoResize="true"
-                                :rows="6"
-                                placeholder="Заполняется вручную медицинской сестрой"
-                                class="w-full"
-                            />
                         </div>
                     </template>
-                </p-card>
-            </template>
-        </p-card>
-    </section>
+                </template>
+            </health-component-body>
+            <health-component-body v-if="showIndividualOptions">
+                <template #title> Профилактические и здоровьесберегающие мероприятия </template>
+                <template #content>
+                    <p-multi-select
+                        :disabled="!enableEditing"
+                        v-model="selectedRecommendations"
+                        :options="availableRecommendations"
+                        optionLabel="title"
+                        panelClass="border-1 border-300"
+                        display="chip"
+                        appendTo="self"
+                        placeholder="Профилактические и здоровьесберегающие мероприятия"
+                        class="w-full"
+                    />
+                </template>
+            </health-component-body>
+            <health-component-body v-if="showIndividualOptions">
+                <template #title> Иное </template>
+                <template #content>
+                    <p-textarea
+                        :disabled="!enableEditing"
+                        :autoResize="true"
+                        :rows="6"
+                        v-model="currentSpecialistNotes"
+                        placeholder="Заполняется вручную медицинской сестрой"
+                        class="w-full"
+                    />
+                </template>
+            </health-component-body>
+        </template>
+    </health-component>
 </template>
 
 <script setup lang="ts">
-import { HealthZone, MedicalHealth, PhysicalHealth, SocialHealth, Student } from '@prisma/client'
-import { useToast } from 'primevue/usetoast'
-
-const selectedDisability = ref<{ value: string; healthZone: HealthZone }>()
-const disabilities = ref<{ value: string; healthZone: HealthZone }[]>([
-    { value: 'Нет', healthZone: 'GREEN' },
-    { value: 'Да', healthZone: 'RED' }
-])
-
-const selectedMorbidity = ref<{ value: string; healthZone: HealthZone }>()
-const morbidities = ref<{ value: string; healthZone: HealthZone }[]>([
-    { value: 'Не болеет', healthZone: 'GREEN' },
-    { value: 'Болеет (2-4 раза/год)', healthZone: 'YELLOW' },
-    { value: 'Болеет (более 4 раз/год)', healthZone: 'RED' }
-])
-
-const selectedBalancedDiets = ref<{ value: string; healthZone: HealthZone }>()
-const balancedDiets = ref<{ value: string; healthZone: HealthZone }[]>([
-    { value: 'Регулярно', healthZone: 'GREEN' },
-    { value: 'Не регулярно', healthZone: 'YELLOW' },
-    { value: 'Нет', healthZone: 'RED' }
-])
-
-const selectedChronicDiseases = ref<{ value: string; healthZone: HealthZone }>()
-const chronicDiseases = ref<{ value: string; healthZone: HealthZone }[]>([
-    { value: 'Нет', healthZone: 'GREEN' },
-    { value: 'Проблемная наследственность, риск заболеваний', healthZone: 'YELLOW' },
-    { value: 'Да', healthZone: 'RED' }
-])
-
-const selectedVision = ref<{ value: string; healthZone: HealthZone }[]>()
-const vision = ref<{ value: string; healthZone: HealthZone }[]>([
-    { value: 'общие офтальмо-гигиенические мероприятия', healthZone: 'YELLOW' },
-    { value: 'очковая или контактная коррекция зрения', healthZone: 'YELLOW' },
-    { value: 'курсы плеоптики и ортоптики по показаниям', healthZone: 'YELLOW' },
-
-    { value: 'диспансерное наблюдение врача-офтальмолога', healthZone: 'RED' },
-    { value: 'офтальмо-гигиенические мероприятия', healthZone: 'RED' },
-    { value: 'очковая или контактная коррекция', healthZone: 'RED' },
-    { value: 'курсы плеоптики и ортоптики', healthZone: 'RED' },
-    { value: 'курсы нейротрофической терапии', healthZone: 'RED' },
-    { value: 'использование тифлоприборов', healthZone: 'RED' },
-    { value: 'организация специального рабочего места обучающегося с патологией органов зрения', healthZone: 'RED' },
-    { value: 'обучение на основе применения рельефно-точечной системы обозначений Брайля', healthZone: 'RED' }
-])
-
-const selectedHearing = ref<{ value: string; healthZone: HealthZone }[]>()
-const hearing = ref<{ value: string; healthZone: HealthZone }[]>([
-    { value: 'физиофункциональное лечение', healthZone: 'YELLOW' },
-    { value: 'консультация аллерголога', healthZone: 'YELLOW' },
-
-    { value: 'диспансерное наблюдение врача-оториноларинголога', healthZone: 'RED' },
-    { value: 'физиофункциональное лечение', healthZone: 'RED' },
-    { value: 'консультация сурдолога', healthZone: 'RED' },
-    { value: 'организация специального рабочего места обучающегося с патологией органов слуха', healthZone: 'RED' },
-    { value: 'контроль за ношением слуховых аппаратов', healthZone: 'RED' },
-    { value: 'занятия с сурдопедагогом', healthZone: 'RED' }
-])
-
-const selectedOrthopedia = ref<{ value: string; healthZone: HealthZone }[]>()
-const orthopedia = ref<{ value: string; healthZone: HealthZone }[]>([
-    { value: 'профилактика остеохондроза, спинальной нестабильности (нарушений осанки)', healthZone: 'YELLOW' },
-
-    { value: 'диспансерное наблюдение врача-ортопеда', healthZone: 'RED' },
-    { value: 'занятия адаптивной (лечебной) физкультурой', healthZone: 'RED' },
-    { value: 'специальная физкультурная группа', healthZone: 'RED' },
-    { value: 'физиофункциональное лечение', healthZone: 'RED' },
-    { value: 'соблюдение статодинамического режима (чередование обучения и отдыха)', healthZone: 'RED' },
-    { value: 'ограничение физических нагрузок', healthZone: 'RED' },
-    { value: 'коррегирующее амбулаторное/ стационарное лечение', healthZone: 'RED' },
-    {
-        value: 'организация специального рабочего места обучающегося с патологией опорно-двигательного аппарата',
-        healthZone: 'RED'
-    }
-])
-
-const selectedGastrointestinal = ref<{ value: string; healthZone: HealthZone }[]>()
-const gastrointestinal = ref<{ value: string; healthZone: HealthZone }[]>([
-    { value: 'соблюдение индивидуальной диеты', healthZone: 'YELLOW' },
-    { value: 'организация режима сбалансированного питания', healthZone: 'YELLOW' },
-
-    { value: 'обеспечение полноценного и сбалансированного питания', healthZone: 'RED' },
-    { value: 'соблюдение диеты (№ 1, 3, 4, 5, 15), дробного питания (5-6 раз в сутки)', healthZone: 'RED' },
-    { value: 'соблюдение санитарно-гигиенического режима/дефекации', healthZone: 'RED' },
-    { value: 'освобождение от занятий физической культурой на период обострения', healthZone: 'RED' },
-    { value: 'подготовительная физкультурная группа (в период ремиссии)', healthZone: 'RED' },
-    { value: 'специальная физкультурная группа (в период реконвалесценции)', healthZone: 'RED' },
-    { value: 'основная физкультурная группа (в период стойкой ремиссии)', healthZone: 'RED' },
-    {
-        value: 'ограничение физической нагрузки (исключение глубоких наклонов, длительного пребывания в согнутом положении, поднятия руками тяжестей более 8-10 кг на обе руки, физических упражнений связанных с перенапряжением мышц брюшного пресса)',
-        healthZone: 'RED'
-    },
-    { value: 'специальная организация сна с приподнятым головным концом кровати (не менее чем на 15 см)', healthZone: 'RED' }
-])
-
-const selectedNeurologyAndPsychiatry = ref<{ value: string; healthZone: HealthZone }[]>()
-const neurologyAndPsychiatry = ref<{ value: string; healthZone: HealthZone }[]>([
-    { value: 'регулярный прием витаминов и ноотропов', healthZone: 'YELLOW' },
-    { value: 'профилактика  артериальной гипо- и гипертензии, нарушений сна, других форм неврозов', healthZone: 'YELLOW' },
-    {
-        value: 'физиофункциональное лечение вегетососудистой дистонии, неврозов  (ЛФК, массаж, электрофорез, электросон, лазер, магнит и др.)',
-        healthZone: 'YELLOW'
-    },
-
-    { value: 'диспансерное наблюдение врача-невролога', healthZone: 'RED' },
-    { value: 'диспансерное наблюдение врача-психиатра', healthZone: 'RED' },
-    { value: 'амбулаторное и стационарное обследование и медикаментозное лечение', healthZone: 'RED' },
-    { value: 'прием ноотропов и витаминов', healthZone: 'RED' },
-    {
-        value: 'своевременное проведение реабилитационных и абилитационных процедур (ЛФК, массаж, физиотерапевтическое лечение)',
-        healthZone: 'RED'
-    },
-    { value: 'организация режима правильных физических нагрузок (занятия физкультурой в спецгруппе)', healthZone: 'RED' },
-    { value: 'индивидуальный режим организации учебной нагрузки', healthZone: 'RED' },
-    { value: 'дозированный режим труда и отдыха', healthZone: 'RED' },
-    { value: 'сопровождение профильными специалистами', healthZone: 'RED' }
-])
-
-const currentHealthZone = computed<HealthZone>(() => {
-    const generalOptions = [selectedDisability, selectedMorbidity, selectedBalancedDiets, selectedChronicDiseases]
-
-    if (generalOptions.some((option) => option.value?.healthZone === 'RED')) {
-        return 'RED'
-    }
-    if (generalOptions.some((option) => option.value?.healthZone === 'YELLOW')) {
-        const medicalOptions = [
-            ...(selectedVision.value ?? []),
-            ...(selectedHearing.value ?? []),
-            ...(selectedOrthopedia.value ?? []),
-            ...(selectedGastrointestinal.value ?? []),
-            ...(selectedNeurologyAndPsychiatry.value ?? [])
-        ]
-        if (medicalOptions.some((option) => option.healthZone === 'RED')) return 'RED'
-        return 'YELLOW'
-    }
-    return 'GREEN'
-})
-
-const showDetails = computed(() => currentHealthZone.value === 'YELLOW' || currentHealthZone.value === 'RED')
-
-const yellowRecommendations = [
-    'рациональная физическая нагрузка и исполнение требований гигиенических нормативов',
-    'регулярные занятия физической культурой и соблюдение режима дня',
-    'прогулки на свежем воздухе и закаливание',
-    'полноценное и сбалансированное питание',
-    'Проведение профилактических бесед о пагубном воздействии вредных привычек на здоровье человека'
-]
-
-const redRecommendations = [
-    'рациональная физическая нагрузка и исполнение требований гигиенических нормативов',
-    'регулярные занятия физической культурой и соблюдение режима дня',
-    'прогулки на свежем воздухе и закаливание',
-    'полноценное и сбалансированное питание',
-    'Проведение профилактических бесед о пагубном воздействии вредных привычек на здоровье человека',
-    'Направление на ПМПК для решения вопроса о создании специальных образовательных условий'
-]
-
-const selectedIndividualRecommendations = ref<string>()
-
-const individualRecommendations = computed(() => {
-    if (currentHealthZone.value === 'YELLOW') {
-        return yellowRecommendations
-    }
-    if (currentHealthZone.value === 'RED') {
-        return redRecommendations
-    }
-})
-
-const toast = useToast()
+import { HealthZone, MedicalHealth, MedicalHealthOption, MedicalHealthRecommendation, MedicalType } from '@prisma/client'
+import { Ref, ComputedRef } from 'vue'
 
 const props = defineProps<{
     studentData: HealthComponentData
@@ -586,13 +109,264 @@ const props = defineProps<{
     refreshData: () => Promise<void>
 }>()
 
-const enableEditing = ref<boolean>(false)
-
-function cancelChanges() {
-    enableEditing.value = false
+async function cancelChanges() {
+    await props.refreshData()
 }
 
 async function saveChanges() {
-    enableEditing.value = false
+    const { error } = await useFetch('/api/students/health/medical', {
+        method: 'PATCH',
+        body: {
+            studentId: props.studentData?.id,
+            options: [
+                selectedDisability.value,
+                selectedMorbidity.value,
+                selectedBalancedDiet.value,
+                selectedChronicDiseases.value,
+                ...selectedVision.value,
+                ...selectedHearing.value,
+                ...selectedOrthopedia.value,
+                ...selectedGastrointestinal.value,
+                ...selectedNeurologyAndPsychiatry.value
+            ],
+            recommendations: selectedRecommendations.value.filter(
+                (recommendation) => recommendation.healthZone === currentHealthZone.value
+            ),
+            specialistNotes: currentSpecialistNotes.value
+        } as MedicalHealth & { options: MedicalHealthOption[]; recommendations: MedicalHealthRecommendation[] }
+    })
+
+    if (error.value) {
+        throw new Error(error.value.message)
+    }
+
+    await props.refreshData()
 }
+
+// Data from server
+const { data: medicalOptions } = await useFetch('/api/students/health/medical/options')
+const { data: medicalRecommendations } = useFetch('/api/students/health/medical/recommendations')
+
+// Options
+const disabilityOptions = computed<MedicalHealthOption[]>(
+    () => medicalOptions.value?.filter((option) => option.medicalType === MedicalType.DISABILITY) ?? []
+)
+const morbidityOptions = computed<MedicalHealthOption[]>(
+    () => medicalOptions.value?.filter((option) => option.medicalType === MedicalType.MORBIDITY) ?? []
+)
+const balancedDietOptions = computed<MedicalHealthOption[]>(
+    () => medicalOptions.value?.filter((option) => option.medicalType === MedicalType.BALANCED_DIET) ?? []
+)
+const chronicDiseasesOptions = computed<MedicalHealthOption[]>(
+    () => medicalOptions.value?.filter((option) => option.medicalType === MedicalType.CHRONIC_DISEASES) ?? []
+)
+//
+const visionOptions = computed<MedicalHealthOption[]>(
+    () => medicalOptions.value?.filter((option) => option.medicalType === MedicalType.VISION) ?? []
+)
+const hearingOptions = computed<MedicalHealthOption[]>(
+    () => medicalOptions.value?.filter((option) => option.medicalType === MedicalType.HEARING) ?? []
+)
+const orthopediaOptions = computed<MedicalHealthOption[]>(
+    () => medicalOptions.value?.filter((option) => option.medicalType === MedicalType.ORTHOPEDIA) ?? []
+)
+const gastrointestinalOptions = computed<MedicalHealthOption[]>(
+    () => medicalOptions.value?.filter((option) => option.medicalType === MedicalType.GASTROINTESTINAL) ?? []
+)
+const neurologyAndPsychiatryOptions = computed<MedicalHealthOption[]>(
+    () => medicalOptions.value?.filter((option) => option.medicalType === MedicalType.NEUROLOGY_PSYCHIATRY) ?? []
+)
+
+// Student data
+const studentOptions = computed<MedicalHealthOption[]>(() => props.studentData?.medicalHealth?.options ?? [])
+const studentDisability = computed<MedicalHealthOption>(
+    () =>
+        studentOptions.value?.find((option) => option.medicalType === MedicalType.DISABILITY) ??
+        disabilityOptions.value?.find((option) => option.healthZone === 'GREEN')!
+)
+const studentMorbidity = computed<MedicalHealthOption>(
+    () =>
+        studentOptions.value?.find((option) => option.medicalType === MedicalType.MORBIDITY) ??
+        morbidityOptions.value?.find((option) => option.healthZone === 'GREEN')!
+)
+const studentBalancedDiet = computed<MedicalHealthOption>(
+    () =>
+        studentOptions.value?.find((option) => option.medicalType === MedicalType.BALANCED_DIET) ??
+        balancedDietOptions.value?.find((option) => option.healthZone === 'GREEN')!
+)
+const studentChronicDiseases = computed<MedicalHealthOption>(
+    () =>
+        studentOptions.value?.find((option) => option.medicalType === MedicalType.CHRONIC_DISEASES) ??
+        chronicDiseasesOptions.value?.find((option) => option.healthZone === 'GREEN')!
+)
+//
+const studentVision = computed<MedicalHealthOption[]>(() =>
+    studentOptions.value.filter((option) => option.medicalType === MedicalType.VISION)
+)
+const studentHearing = computed<MedicalHealthOption[]>(() =>
+    studentOptions.value.filter((option) => option.medicalType === MedicalType.HEARING)
+)
+const studentOrthopedia = computed<MedicalHealthOption[]>(() =>
+    studentOptions.value.filter((option) => option.medicalType === MedicalType.ORTHOPEDIA)
+)
+const studentGastrointestinal = computed<MedicalHealthOption[]>(() =>
+    studentOptions.value.filter((option) => option.medicalType === MedicalType.GASTROINTESTINAL)
+)
+const studentNeurologyAndPsychiatry = computed<MedicalHealthOption[]>(() =>
+    studentOptions.value.filter((option) => option.medicalType === MedicalType.NEUROLOGY_PSYCHIATRY)
+)
+//
+const studentRecommendations = computed<MedicalHealthRecommendation[]>(
+    () => props.studentData?.medicalHealth?.recommendations ?? []
+)
+//
+const studentSpecialistNotes = computed<string>(() => props.studentData?.medicalHealth?.specialistNotes ?? '')
+
+// Selected data
+const selectedDisability = ref<MedicalHealthOption>(studentDisability.value)
+const selectedMorbidity = ref<MedicalHealthOption>(studentMorbidity.value)
+const selectedBalancedDiet = ref<MedicalHealthOption>(studentBalancedDiet.value)
+const selectedChronicDiseases = ref<MedicalHealthOption>(studentChronicDiseases.value)
+//
+const selectedVision = ref<MedicalHealthOption[]>(studentVision.value)
+const selectedHearing = ref<MedicalHealthOption[]>(studentHearing.value)
+const selectedOrthopedia = ref<MedicalHealthOption[]>(studentOrthopedia.value)
+const selectedGastrointestinal = ref<MedicalHealthOption[]>(studentGastrointestinal.value)
+const selectedNeurologyAndPsychiatry = ref<MedicalHealthOption[]>(studentNeurologyAndPsychiatry.value)
+//
+const selectedRecommendations = ref<MedicalHealthRecommendation[]>(studentRecommendations.value)
+//
+const currentSpecialistNotes = ref<string>(studentSpecialistNotes.value)
+
+// Watch on student data update
+watch(studentDisability, (value) => (selectedDisability.value = value))
+watch(studentMorbidity, (value) => (selectedMorbidity.value = value))
+watch(studentBalancedDiet, (value) => (selectedBalancedDiet.value = value))
+watch(studentChronicDiseases, (value) => (selectedChronicDiseases.value = value))
+//
+watch(studentVision, (value) => (selectedVision.value = value))
+watch(studentHearing, (value) => (selectedHearing.value = value))
+watch(studentOrthopedia, (value) => (selectedOrthopedia.value = value))
+watch(studentGastrointestinal, (value) => (selectedGastrointestinal.value = value))
+watch(studentNeurologyAndPsychiatry, (value) => (selectedNeurologyAndPsychiatry.value = value))
+//
+watch(studentRecommendations, (value) => (selectedRecommendations.value = value))
+//
+watch(studentSpecialistNotes, (value) => (currentSpecialistNotes.value = value))
+
+// Sorted student data
+const sortedStudentVision = computed(() => studentVision.value.sort((a, b) => a.id - b.id))
+const sortedStudentHearing = computed(() => studentHearing.value.sort((a, b) => a.id - b.id))
+const sortedStudentOrthopedia = computed(() => studentOrthopedia.value.sort((a, b) => a.id - b.id))
+const sortedStudentGastrointestinal = computed(() => studentGastrointestinal.value.sort((a, b) => a.id - b.id))
+const sortedStudentNeurologyAndPsychiatry = computed(() => studentNeurologyAndPsychiatry.value.sort((a, b) => a.id - b.id))
+const sortedStudentRecommendations = computed(() => studentRecommendations.value.sort((a, b) => a.id - b.id))
+
+// Sorted selected data
+const sortedSelectedVision = computed(() => selectedVision.value.sort((a, b) => a.id - b.id))
+const sortedSelectedHearing = computed(() => selectedHearing.value.sort((a, b) => a.id - b.id))
+const sortedSelectedOrthopedia = computed(() => selectedOrthopedia.value.sort((a, b) => a.id - b.id))
+const sortedSelectedGastrointestinal = computed(() => selectedGastrointestinal.value.sort((a, b) => a.id - b.id))
+const sortedSelectedNeurologyAndPsychiatry = computed(() => selectedNeurologyAndPsychiatry.value.sort((a, b) => a.id - b.id))
+const sortedSelectedRecommendations = computed(() => selectedRecommendations.value.sort((a, b) => a.id - b.id))
+
+const hasChanges = computed(
+    () =>
+        JSON.stringify(selectedDisability.value) !== JSON.stringify(studentDisability.value) ||
+        JSON.stringify(selectedMorbidity.value) !== JSON.stringify(studentMorbidity.value) ||
+        JSON.stringify(selectedBalancedDiet.value) !== JSON.stringify(studentBalancedDiet.value) ||
+        JSON.stringify(selectedChronicDiseases.value) !== JSON.stringify(studentChronicDiseases.value) ||
+        JSON.stringify(sortedSelectedVision.value) !== JSON.stringify(sortedStudentVision.value) ||
+        JSON.stringify(sortedSelectedHearing.value) !== JSON.stringify(sortedStudentHearing.value) ||
+        JSON.stringify(sortedSelectedOrthopedia.value) !== JSON.stringify(sortedStudentOrthopedia.value) ||
+        JSON.stringify(sortedSelectedGastrointestinal.value) !== JSON.stringify(sortedStudentGastrointestinal.value) ||
+        JSON.stringify(sortedSelectedNeurologyAndPsychiatry.value) !==
+            JSON.stringify(sortedStudentNeurologyAndPsychiatry.value) ||
+        JSON.stringify(sortedSelectedRecommendations.value) !== JSON.stringify(sortedStudentRecommendations.value) ||
+        JSON.stringify(currentSpecialistNotes.value) !== JSON.stringify(studentSpecialistNotes.value)
+)
+
+const generalOptions = computed<
+    { title: string; options: ComputedRef<MedicalHealthOption[]>; selected: Ref<MedicalHealthOption> }[]
+>(() => [
+    {
+        title: 'Наличие инвалидности',
+        options: disabilityOptions,
+        selected: selectedDisability
+    },
+    {
+        title: 'Сведения о заболеваемости',
+        options: morbidityOptions,
+        selected: selectedMorbidity
+    },
+    {
+        title: 'Сбалансированное питание',
+        options: balancedDietOptions,
+        selected: selectedBalancedDiet
+    },
+    {
+        title: 'Наличие хронических заболеваний',
+        options: chronicDiseasesOptions,
+        selected: selectedChronicDiseases
+    }
+])
+
+const individualOptions = computed<
+    { title: string; options: ComputedRef<MedicalHealthOption[]>; selected: Ref<MedicalHealthOption[]> }[]
+>(() => [
+    {
+        title: 'Зрение',
+        options: visionOptions,
+        selected: selectedVision
+    },
+    {
+        title: 'Слух',
+        options: hearingOptions,
+        selected: selectedHearing
+    },
+    {
+        title: 'Ортопедия',
+        options: orthopediaOptions,
+        selected: selectedOrthopedia
+    },
+    {
+        title: 'ЖКТ',
+        options: gastrointestinalOptions,
+        selected: selectedGastrointestinal
+    },
+    {
+        title: 'Неврология, психиатрия',
+        options: neurologyAndPsychiatryOptions,
+        selected: selectedNeurologyAndPsychiatry
+    }
+])
+
+const currentHealthZone = computed<HealthZone>(() => {
+    const generalOptions = [selectedDisability, selectedMorbidity, selectedBalancedDiet, selectedChronicDiseases]
+    if (generalOptions.some((option) => option.value?.healthZone === HealthZone.RED)) {
+        return HealthZone.RED
+    }
+    if (generalOptions.some((option) => option.value?.healthZone === HealthZone.YELLOW)) {
+        const individualOptions = [
+            ...selectedVision.value,
+            ...selectedHearing.value,
+            ...selectedOrthopedia.value,
+            ...selectedGastrointestinal.value,
+            ...selectedNeurologyAndPsychiatry.value
+        ]
+        if (individualOptions.some((option) => option.healthZone === HealthZone.RED)) {
+            return HealthZone.RED
+        }
+        return HealthZone.YELLOW
+    }
+    return HealthZone.GREEN
+})
+
+const availableRecommendations = computed(() =>
+    medicalRecommendations.value?.filter((recommendation) => recommendation.healthZone === currentHealthZone.value)
+)
+
+const showIndividualOptions = computed(
+    () => currentHealthZone.value === HealthZone.YELLOW || currentHealthZone.value === HealthZone.RED
+)
 </script>
