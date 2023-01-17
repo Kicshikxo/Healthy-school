@@ -54,6 +54,9 @@
     margin: 0.2rem;
     margin-left: 0;
 }
+.p-multiselect-token:has(> .p-multiselect-token-label:empty) {
+    visibility: hidden;
+}
 .p-multiselect-panel .p-multiselect-items {
     padding: 0;
 }
