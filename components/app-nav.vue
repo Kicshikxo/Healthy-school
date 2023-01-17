@@ -24,10 +24,11 @@
 <script setup lang="ts">
 const route = useRoute()
 
-const breadcrumbs = computed(() =>
-    route.path
+const breadcrumbs = computed(() => [
+    '/',
+    ...route.path
         .split('/')
-        .slice(1)
+        .filter((_) => _)
         .reduce((acc, path, index, paths) => acc.concat(`/${paths.slice(0, index + 1).join('/')}`), [] as string[])
-)
+])
 </script>
