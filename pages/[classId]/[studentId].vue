@@ -5,7 +5,7 @@
                 <div class="flex flex-auto gap-5">
                     <nuxt-img src="images/avatars/persona 0-0.png" alt="student avatar" width="96" height="96" />
                     <div class="flex flex-auto flex-column justify-content-between">
-                        <div class="flex align-items-center text-900 text-3xl h-2rem">
+                        <div class="flex align-items-center text-3xl h-2rem">
                             <p-skeleton v-if="loadingData" class="max-w-30rem" />
                             <div v-else class="text-800 font-bold">
                                 {{ studentData?.secondName }}

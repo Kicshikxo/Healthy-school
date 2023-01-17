@@ -8,7 +8,7 @@
             dataKey="id"
             responsiveLayout="scroll"
             row-style="cursor: pointer"
-            @row-click="$router.push(`/class/${$route.params.classId}/${$event.data.id}`)"
+            @row-click="$router.push(`/${$route.params.classId}/${$event.data.id}`)"
             class="p-datatable-lg"
         >
             <template #header>
