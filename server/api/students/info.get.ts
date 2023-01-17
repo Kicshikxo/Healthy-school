@@ -30,7 +30,9 @@ export default defineEventHandler(async (event) => {
             },
             medicalHealth: {
                 select: {
-                    studentId: true
+                    options: true,
+                    recommendations: true,
+                    specialistNotes: true
                 }
             },
             socialHealth: {
