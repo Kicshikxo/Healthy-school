@@ -37,6 +37,7 @@
                 <template #content>
                     <p-multi-select
                         :disabled="!enableEditing"
+                        :loading="loadingRecommendations || loadingData"
                         panelClass="border-1 border-300"
                         v-model="selectedRecommendations"
                         :options="availableRecommendations"
@@ -70,8 +71,8 @@ async function saveChanges() {
         method: 'PATCH',
         body: {
             studentId: props.studentData?.id,
-            indicators: selectedIndicators.value,
-            recommendations: selectedRecommendations.value.filter(
+            indicators: sortedSelectedIndicators.value,
+            recommendations: sortedSelectedRecommendations.value.filter(
                 (recommendation) => recommendation.healthZone === currentHealthZone.value
             )
         } as SocialHealth & { indicators: SocialHealthIndicator[]; recommendations: SocialHealthRecommendation[] }
@@ -86,30 +87,34 @@ async function saveChanges() {
 
 // Data from server
 const { data: socialIndicators } = await useFetch('/api/students/health/social/indicators')
-const { data: socialRecommendations } = await useFetch('/api/students/health/social/recommendations')
+const { data: socialRecommendations, pending: loadingRecommendations } = await useFetch(
+    '/api/students/health/social/recommendations'
+)
 
 // Student data
 const studentIndicators = computed(() => props.studentData?.socialHealth?.indicators ?? [])
 const studentRecommendations = computed(() => props.studentData?.socialHealth?.recommendations ?? [])
 
 // Selected data
-const selectedIndicators = ref<SocialHealthIndicator[]>(studentIndicators.value)
-const selectedRecommendations = ref<SocialHealthRecommendation[]>(studentRecommendations.value)
+const selectedIndicators = ref(studentIndicators.value)
+const selectedRecommendations = ref(studentRecommendations.value)
 
 // Watch on student data update
 watch(studentIndicators, (value) => (selectedIndicators.value = value))
 watch(studentRecommendations, (value) => (selectedRecommendations.value = value))
 
+// Sorted student data
+const sortedStudentIndicators = computed(() => studentIndicators.value.sort((a, b) => a.id - b.id))
+const sortedStudentRecommendations = computed(() => studentRecommendations.value.sort((a, b) => a.id - b.id))
+
 // Sorted selected data
-const sortedSelectedIndicators = computed<SocialHealthIndicator[]>(() => selectedIndicators.value.sort((a, b) => a.id - b.id))
-const sortedSelectedRecommendations = computed<SocialHealthRecommendation[]>(() =>
-    selectedRecommendations.value.sort((a, b) => a.id - b.id)
-)
+const sortedSelectedIndicators = computed(() => selectedIndicators.value.sort((a, b) => a.id - b.id))
+const sortedSelectedRecommendations = computed(() => selectedRecommendations.value.sort((a, b) => a.id - b.id))
 
 const hasChanges = computed(
     () =>
-        JSON.stringify(sortedSelectedIndicators.value) !== JSON.stringify(studentIndicators.value) ||
-        JSON.stringify(sortedSelectedRecommendations.value) !== JSON.stringify(studentRecommendations.value)
+        JSON.stringify(sortedSelectedIndicators.value) !== JSON.stringify(sortedStudentIndicators.value) ||
+        JSON.stringify(sortedSelectedRecommendations.value) !== JSON.stringify(sortedStudentRecommendations.value)
 )
 
 const availableRecommendations = computed(() =>

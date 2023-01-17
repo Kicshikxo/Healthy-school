@@ -27,6 +27,7 @@
                 <template #content>
                     <p-multi-select
                         :disabled="!enableEditing"
+                        :loading="loadingRecommendations || loadingData"
                         v-model="selectedRecommendations"
                         :options="availableRecommendations"
                         optionLabel="title"
@@ -72,7 +73,7 @@ async function saveChanges() {
         body: {
             studentId: props.studentData?.id,
             healthGroup: selectedHealthGroup.value,
-            recommendations: selectedRecommendations.value.filter(
+            recommendations: sortedSelectedRecommendations.value.filter(
                 (recommendation) => recommendation.healthGroup === selectedHealthGroup.value
             ),
             specialistNotes: currentSpecialistNotes.value
@@ -87,7 +88,9 @@ async function saveChanges() {
 }
 
 // Data from server
-const { data: physicalRecommendations } = useFetch('/api/students/health/physical/recommendations')
+const { data: physicalRecommendations, pending: loadingRecommendations } = useFetch(
+    '/api/students/health/physical/recommendations'
+)
 
 // Student data
 const studentHealthGroup = computed(() => props.studentData?.physicalHealth?.healthGroup ?? 'BASIC')
@@ -95,24 +98,25 @@ const studentRecommendations = computed(() => props.studentData?.physicalHealth?
 const studentSpecialistNotes = computed(() => props.studentData?.physicalHealth?.specialistNotes ?? '')
 
 // Selected data
-const selectedHealthGroup = ref<HealthGroup>(studentHealthGroup.value)
-const selectedRecommendations = ref<PhysicalHealthRecommendation[]>(studentRecommendations.value)
-const currentSpecialistNotes = ref<string>(studentSpecialistNotes.value)
+const selectedHealthGroup = ref(studentHealthGroup.value)
+const selectedRecommendations = ref(studentRecommendations.value)
+const currentSpecialistNotes = ref(studentSpecialistNotes.value)
 
 // Watch on student data update
 watch(studentHealthGroup, (value) => (selectedHealthGroup.value = value))
 watch(studentRecommendations, (value) => (selectedRecommendations.value = value))
 watch(studentSpecialistNotes, (value) => (currentSpecialistNotes.value = value))
 
+// Sorted student data
+const sortedStudentRecommendations = computed(() => studentRecommendations.value.sort((a, b) => a.id - b.id))
+
 // Sorted selected data
-const sortedSelectedRecommendations = computed<PhysicalHealthRecommendation[]>(() =>
-    selectedRecommendations.value.sort((a, b) => a.id - b.id)
-)
+const sortedSelectedRecommendations = computed(() => selectedRecommendations.value.sort((a, b) => a.id - b.id))
 
 const hasChanges = computed(
     () =>
         JSON.stringify(selectedHealthGroup.value) !== JSON.stringify(studentHealthGroup.value) ||
-        JSON.stringify(sortedSelectedRecommendations.value) !== JSON.stringify(studentRecommendations.value) ||
+        JSON.stringify(sortedSelectedRecommendations.value) !== JSON.stringify(sortedStudentRecommendations.value) ||
         JSON.stringify(currentSpecialistNotes.value) !== JSON.stringify(studentSpecialistNotes.value)
 )
 

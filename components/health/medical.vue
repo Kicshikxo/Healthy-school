@@ -21,7 +21,7 @@
                                     panelClass="border-1 border-300"
                                 >
                                     <template #value="{ value }">
-                                        <health-zone-indicator :health-zone="value.healthZone" :label="value.title" />
+                                        <health-zone-indicator :health-zone="value?.healthZone" :label="value?.title" />
                                     </template>
                                     <template #option="{ option }">
                                         <health-zone-indicator
