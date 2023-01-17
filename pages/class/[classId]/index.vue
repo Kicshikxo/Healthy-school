@@ -89,7 +89,7 @@
 </template>
 
 <script setup lang="ts">
-import { Student, Class } from '@prisma/client'
+import { Student } from '@prisma/client'
 
 definePageMeta({
     title: 'Список учащихся'
