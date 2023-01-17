@@ -6,7 +6,9 @@ import {
     usersData,
     socialHealthIndicators,
     physicalHealthRecommendations,
-    socialHealthRecommendations
+    socialHealthRecommendations,
+    medicalHealthOptions,
+    medicalHealthRecommendations
 } from './seedData'
 const prisma = new PrismaClient()
 
@@ -69,13 +71,15 @@ async function main() {
             }))
         })
 
-        console.log(`Созданы базовые пользователи для работы с системой`)
-    } catch (e) {}
+        console.log('Созданы базовые пользователи для работы с системой')
+    } catch (e) {
+        console.log('Базовые пользователи для работы с системой уже созданы')
+    }
 
     const socialHealthIndicatorsCount = await prisma.socialHealthIndicator.count()
     if (socialHealthIndicatorsCount === 0) {
         await prisma.socialHealthIndicator.createMany({
-            data: socialHealthIndicators as any
+            data: socialHealthIndicators
         })
 
         console.log(`Создано ${socialHealthIndicators.length} индикаторов социального здоровья`)
@@ -86,7 +90,7 @@ async function main() {
     const physicalHealthRecommendationsCount = await prisma.physicalHealthRecommendation.count()
     if (physicalHealthRecommendationsCount === 0) {
         await prisma.physicalHealthRecommendation.createMany({
-            data: physicalHealthRecommendations as any
+            data: physicalHealthRecommendations
         })
 
         console.log(`Создано ${physicalHealthRecommendations.length} рекомендаций по физическому здоровью`)
@@ -97,12 +101,34 @@ async function main() {
     const socialHealthRecommendationsCount = await prisma.socialHealthRecommendation.count()
     if (socialHealthRecommendationsCount === 0) {
         await prisma.socialHealthRecommendation.createMany({
-            data: socialHealthRecommendations as any
+            data: socialHealthRecommendations
         })
 
         console.log(`Создано ${socialHealthRecommendations.length} рекомендаций по социальному здоровью`)
     } else {
         console.log(`В БД уже хранится ${socialHealthRecommendationsCount} рекомендаций по социальному здоровью`)
+    }
+
+    const medicalHealthOptionsCount = await prisma.medicalHealthOption.count()
+    if (medicalHealthOptionsCount === 0) {
+        await prisma.medicalHealthOption.createMany({
+            data: medicalHealthOptions
+        })
+
+        console.log(`Создано ${medicalHealthOptions.length} опций медицинского здоровья`)
+    } else {
+        console.log(`В БД уже хранится ${medicalHealthOptionsCount} опций медицинского здоровья`)
+    }
+
+    const medicalHealthRecommendationsCount = await prisma.medicalHealthRecommendation.count()
+    if (medicalHealthRecommendationsCount === 0) {
+        await prisma.medicalHealthRecommendation.createMany({
+            data: medicalHealthRecommendations
+        })
+
+        console.log(`Создано ${medicalHealthRecommendations.length} рекомендаций по медицинскому здоровью`)
+    } else {
+        console.log(`В БД уже хранится ${medicalHealthRecommendationsCount} рекомендаций по медицинскому здоровью`)
     }
 }
 

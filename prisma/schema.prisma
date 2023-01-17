@@ -120,10 +120,32 @@ model SocialHealthRecommendation {
 }
 
 model MedicalHealth {
-    studentId String  @id(map: "medical_health_pkey") @map("student_id") @db.Uuid
-    student   Student @relation(fields: [studentId], references: [id], onUpdate: Cascade, onDelete: Cascade)
+    studentId       String                        @id(map: "medical_health_pkey") @map("student_id") @db.Uuid
+    student         Student                       @relation(fields: [studentId], references: [id], onUpdate: Cascade, onDelete: Cascade)
+    options         MedicalHealthOption[]         @relation(name: "student_medical_health_options")
+    recommendations MedicalHealthRecommendation[] @relation(name: "student_medical_health_recommendations")
+    specialistNotes String?                       @map("specialist_notes")
 
     @@map("student_medical_health")
+}
+
+model MedicalHealthOption {
+    id            Int             @id(map: "medical_health_options_pkey") @default(autoincrement()) @map("option_id")
+    title         String          @map("title")
+    medicalType   MedicalType     @map("medical_type")
+    healthZone    HealthZone      @map("health_zone")
+    medicalHealth MedicalHealth[] @relation(name: "student_medical_health_options")
+
+    @@map("medical_health_options")
+}
+
+model MedicalHealthRecommendation {
+    id            Int             @id(map: "medical_health_recommendations_pkey") @default(autoincrement()) @map("recommendation_id")
+    title         String          @map("title")
+    healthZone    HealthZone      @map("health_zone")
+    medicalHealth MedicalHealth[] @relation(name: "student_medical_health_recommendations")
+
+    @@map("medical_health_recommendations")
 }
 
 enum Role {
@@ -146,4 +168,17 @@ enum HealthZone {
     GREEN
     YELLOW
     RED
+}
+
+enum MedicalType {
+    DISABILITY
+    MORBIDITY
+    BALANCED_DIET
+    CHRONIC_DISEASES
+
+    VISION
+    HEARING
+    ORTHOPEDIA
+    GASTROINTESTINAL
+    NEUROLOGY_PSYCHIATRY
 }
