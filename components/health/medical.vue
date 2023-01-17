@@ -12,6 +12,7 @@
                             <div class="col-6 border-left-1 border-300 pl-4">
                                 <p-dropdown
                                     :disabled="!enableEditing"
+                                    :loading="loadingOptions || loadingData"
                                     :options="options.value"
                                     optionLabel="title"
                                     v-model="selected.value"
@@ -45,6 +46,7 @@
                             <div class="col-6 border-left-1 border-300 pl-4">
                                 <p-multi-select
                                     :disabled="!enableEditing"
+                                    :loading="loadingOptions || loadingData"
                                     :options="options.value"
                                     optionLabel="value"
                                     v-model="selected.value"
@@ -71,6 +73,7 @@
                 <template #content>
                     <p-multi-select
                         :disabled="!enableEditing"
+                        :loading="loadingRecommendations || loadingData"
                         v-model="selectedRecommendations"
                         :options="availableRecommendations"
                         optionLabel="title"
@@ -100,7 +103,7 @@
 </template>
 
 <script setup lang="ts">
-import { HealthZone, MedicalHealth, MedicalHealthOption, MedicalHealthRecommendation, MedicalType } from '@prisma/client'
+import { HealthZone, MedicalHealth, MedicalHealthOption, MedicalHealthRecommendation } from '@prisma/client'
 import { Ref, ComputedRef } from 'vue'
 
 const props = defineProps<{
@@ -119,15 +122,8 @@ async function saveChanges() {
         body: {
             studentId: props.studentData?.id,
             options: [
-                selectedDisability.value,
-                selectedMorbidity.value,
-                selectedBalancedDiet.value,
-                selectedChronicDiseases.value,
-                ...selectedVision.value,
-                ...selectedHearing.value,
-                ...selectedOrthopedia.value,
-                ...selectedGastrointestinal.value,
-                ...selectedNeurologyAndPsychiatry.value
+                ...generalOptions.value.map((option) => option.selected.value),
+                ...individualOptions.value.map((option) => option.selected.value).flat()
             ],
             recommendations: selectedRecommendations.value.filter(
                 (recommendation) => recommendation.healthZone === currentHealthZone.value
@@ -144,8 +140,10 @@ async function saveChanges() {
 }
 
 // Data from server
-const { data: medicalOptions } = await useFetch('/api/students/health/medical/options')
-const { data: medicalRecommendations } = useFetch('/api/students/health/medical/recommendations')
+const { data: medicalOptions, pending: loadingOptions } = useFetch('/api/students/health/medical/options')
+const { data: medicalRecommendations, pending: loadingRecommendations } = useFetch(
+    '/api/students/health/medical/recommendations'
+)
 
 // Options
 const disabilityOptions = computed<MedicalHealthOption[]>(
@@ -366,5 +364,5 @@ const availableRecommendations = computed(() =>
     medicalRecommendations.value?.filter((recommendation) => recommendation.healthZone === currentHealthZone.value)
 )
 
-const showIndividualOptions = computed(() => currentHealthZone.value === 'YELLOW' || currentHealthZone.value === 'RED')
+const showIndividualOptions = computed(() => (['YELLOW', 'RED'] as HealthZone[]).includes(currentHealthZone.value))
 </script>
