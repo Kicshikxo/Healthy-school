@@ -8,7 +8,7 @@
             dataKey="id"
             responsiveLayout="scroll"
             row-style="cursor: pointer"
-            @row-click="$router.push(`/${$event.data.id}`)"
+            @row-click="$router.push(`/${translator.fromUUID($event.data.id)}`)"
             class="p-datatable-lg"
         >
             <template #header>
@@ -38,9 +38,13 @@
 </template>
 
 <script setup lang="ts">
+import shortUUID from 'short-uuid'
+
 definePageMeta({
     title: 'Список классов'
 })
+
+const translator = shortUUID()
 
 const {
     data: classes,

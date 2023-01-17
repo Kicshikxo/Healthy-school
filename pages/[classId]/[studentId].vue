@@ -66,6 +66,7 @@
 import { useToast } from 'primevue/usetoast'
 import jsPDF from 'jspdf'
 import html2canvas from 'html2canvas'
+import shortUUID from 'short-uuid'
 
 definePageMeta({
     title: `Информация по учащемуся`
@@ -76,6 +77,7 @@ const route = useRoute()
 const router = useRouter()
 
 const studentPage = ref<HTMLElement>()
+const translator = shortUUID()
 
 async function deleteStudent() {
     const { error } = await useFetch('/api/students/remove', {
@@ -149,8 +151,8 @@ const {
 } = useFetch('/api/students/info', {
     headers: useRequestHeaders() as HeadersInit,
     query: {
-        studentId: route.params.studentId,
-        classId: route.params.classId
+        studentId: translator.toUUID(route.params.studentId as string),
+        classId: translator.toUUID(route.params.classId as string)
     }
 })
 </script>

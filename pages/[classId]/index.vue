@@ -8,7 +8,7 @@
             dataKey="id"
             responsiveLayout="scroll"
             row-style="cursor: pointer"
-            @row-click="$router.push(`/${$route.params.classId}/${$event.data.id}`)"
+            @row-click="$router.push(`/${$route.params.classId}/${translator.fromUUID($event.data.id)}`)"
             class="p-datatable-lg"
         >
             <template #header>
@@ -90,6 +90,7 @@
 
 <script setup lang="ts">
 import { Student } from '@prisma/client'
+import shortUUID from 'short-uuid'
 
 definePageMeta({
     title: 'Список учащихся'
@@ -99,6 +100,7 @@ const route = useRoute()
 
 const newStudent = ref<Student>({} as Student)
 const showDialog = ref(false)
+const translator = shortUUID()
 
 async function addStudent() {
     const { error } = await useFetch('/api/students/add', {
@@ -124,7 +126,7 @@ const {
 } = useFetch('/api/students/list', {
     headers: useRequestHeaders() as HeadersInit,
     query: {
-        classId: route.params.classId
+        classId: translator.toUUID(route.params.classId as string)
     }
 })
 </script>

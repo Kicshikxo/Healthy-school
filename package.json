@@ -22,7 +22,8 @@
         "pinia": "^2.0.29",
         "primeflex": "^3.3.0",
         "primeicons": "^6.0.1",
-        "primevue": "^3.22.2"
+        "primevue": "^3.22.2",
+        "short-uuid": "^4.2.2"
     },
     "devDependencies": {
         "@nuxt/image-edge": "^1.0.0-27840416.dc1ed65",
