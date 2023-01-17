@@ -90,7 +90,7 @@ async function saveChanges() {
 const { data: physicalRecommendations } = useFetch('/api/students/health/physical/recommendations')
 
 // Student data
-const studentHealthGroup = computed(() => props.studentData?.physicalHealth?.healthGroup ?? HealthGroup.BASIC)
+const studentHealthGroup = computed(() => props.studentData?.physicalHealth?.healthGroup ?? 'BASIC')
 const studentRecommendations = computed(() => props.studentData?.physicalHealth?.recommendations ?? [])
 const studentSpecialistNotes = computed(() => props.studentData?.physicalHealth?.specialistNotes ?? '')
 

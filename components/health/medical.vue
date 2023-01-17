@@ -20,14 +20,14 @@
                                     panelClass="border-1 border-300"
                                 >
                                     <template #value="{ value }">
-                                        <health-zone-indicator :health-zone="value.healthZone" :label="value.title" />
+                                        <!-- <health-zone-indicator :health-zone="value.healthZone" :label="value.title" /> -->
                                     </template>
                                     <template #option="{ option }">
-                                        <health-zone-indicator
+                                        <!-- <health-zone-indicator
                                             :health-zone="option.healthZone"
                                             :label="option.title"
                                             :gap="3"
-                                        />
+                                        /> -->
                                     </template>
                                 </p-dropdown>
                             </div>
@@ -55,10 +55,10 @@
                                     panelClass="border-1 border-300"
                                 >
                                     <template #chip="{ value }">
-                                        <health-zone-indicator :health-zone="value.healthZone" :label="value.title" />
+                                        <!-- <health-zone-indicator :health-zone="value.healthZone" :label="value.title" /> -->
                                     </template>
                                     <template #option="{ option }">
-                                        <health-zone-indicator :health-zone="option.healthZone" :label="option.title" />
+                                        <!-- <health-zone-indicator :health-zone="option.healthZone" :label="option.title" /> -->
                                     </template>
                                 </p-multi-select>
                             </div>
@@ -149,71 +149,71 @@ const { data: medicalRecommendations } = useFetch('/api/students/health/medical/
 
 // Options
 const disabilityOptions = computed<MedicalHealthOption[]>(
-    () => medicalOptions.value?.filter((option) => option.medicalType === MedicalType.DISABILITY) ?? []
+    () => medicalOptions.value?.filter((option) => option.medicalType === 'DISABILITY') ?? []
 )
 const morbidityOptions = computed<MedicalHealthOption[]>(
-    () => medicalOptions.value?.filter((option) => option.medicalType === MedicalType.MORBIDITY) ?? []
+    () => medicalOptions.value?.filter((option) => option.medicalType === 'MORBIDITY') ?? []
 )
 const balancedDietOptions = computed<MedicalHealthOption[]>(
-    () => medicalOptions.value?.filter((option) => option.medicalType === MedicalType.BALANCED_DIET) ?? []
+    () => medicalOptions.value?.filter((option) => option.medicalType === 'BALANCED_DIET') ?? []
 )
 const chronicDiseasesOptions = computed<MedicalHealthOption[]>(
-    () => medicalOptions.value?.filter((option) => option.medicalType === MedicalType.CHRONIC_DISEASES) ?? []
+    () => medicalOptions.value?.filter((option) => option.medicalType === 'CHRONIC_DISEASES') ?? []
 )
 //
 const visionOptions = computed<MedicalHealthOption[]>(
-    () => medicalOptions.value?.filter((option) => option.medicalType === MedicalType.VISION) ?? []
+    () => medicalOptions.value?.filter((option) => option.medicalType === 'VISION') ?? []
 )
 const hearingOptions = computed<MedicalHealthOption[]>(
-    () => medicalOptions.value?.filter((option) => option.medicalType === MedicalType.HEARING) ?? []
+    () => medicalOptions.value?.filter((option) => option.medicalType === 'HEARING') ?? []
 )
 const orthopediaOptions = computed<MedicalHealthOption[]>(
-    () => medicalOptions.value?.filter((option) => option.medicalType === MedicalType.ORTHOPEDIA) ?? []
+    () => medicalOptions.value?.filter((option) => option.medicalType === 'ORTHOPEDIA') ?? []
 )
 const gastrointestinalOptions = computed<MedicalHealthOption[]>(
-    () => medicalOptions.value?.filter((option) => option.medicalType === MedicalType.GASTROINTESTINAL) ?? []
+    () => medicalOptions.value?.filter((option) => option.medicalType === 'GASTROINTESTINAL') ?? []
 )
 const neurologyAndPsychiatryOptions = computed<MedicalHealthOption[]>(
-    () => medicalOptions.value?.filter((option) => option.medicalType === MedicalType.NEUROLOGY_PSYCHIATRY) ?? []
+    () => medicalOptions.value?.filter((option) => option.medicalType === 'NEUROLOGY_PSYCHIATRY') ?? []
 )
 
 // Student data
 const studentOptions = computed<MedicalHealthOption[]>(() => props.studentData?.medicalHealth?.options ?? [])
 const studentDisability = computed<MedicalHealthOption>(
     () =>
-        studentOptions.value?.find((option) => option.medicalType === MedicalType.DISABILITY) ??
+        studentOptions.value?.find((option) => option.medicalType === 'DISABILITY') ??
         disabilityOptions.value?.find((option) => option.healthZone === 'GREEN')!
 )
 const studentMorbidity = computed<MedicalHealthOption>(
     () =>
-        studentOptions.value?.find((option) => option.medicalType === MedicalType.MORBIDITY) ??
+        studentOptions.value?.find((option) => option.medicalType === 'MORBIDITY') ??
         morbidityOptions.value?.find((option) => option.healthZone === 'GREEN')!
 )
 const studentBalancedDiet = computed<MedicalHealthOption>(
     () =>
-        studentOptions.value?.find((option) => option.medicalType === MedicalType.BALANCED_DIET) ??
+        studentOptions.value?.find((option) => option.medicalType === 'BALANCED_DIET') ??
         balancedDietOptions.value?.find((option) => option.healthZone === 'GREEN')!
 )
 const studentChronicDiseases = computed<MedicalHealthOption>(
     () =>
-        studentOptions.value?.find((option) => option.medicalType === MedicalType.CHRONIC_DISEASES) ??
+        studentOptions.value?.find((option) => option.medicalType === 'CHRONIC_DISEASES') ??
         chronicDiseasesOptions.value?.find((option) => option.healthZone === 'GREEN')!
 )
 //
 const studentVision = computed<MedicalHealthOption[]>(() =>
-    studentOptions.value.filter((option) => option.medicalType === MedicalType.VISION)
+    studentOptions.value.filter((option) => option.medicalType === 'VISION')
 )
 const studentHearing = computed<MedicalHealthOption[]>(() =>
-    studentOptions.value.filter((option) => option.medicalType === MedicalType.HEARING)
+    studentOptions.value.filter((option) => option.medicalType === 'HEARING')
 )
 const studentOrthopedia = computed<MedicalHealthOption[]>(() =>
-    studentOptions.value.filter((option) => option.medicalType === MedicalType.ORTHOPEDIA)
+    studentOptions.value.filter((option) => option.medicalType === 'ORTHOPEDIA')
 )
 const studentGastrointestinal = computed<MedicalHealthOption[]>(() =>
-    studentOptions.value.filter((option) => option.medicalType === MedicalType.GASTROINTESTINAL)
+    studentOptions.value.filter((option) => option.medicalType === 'GASTROINTESTINAL')
 )
 const studentNeurologyAndPsychiatry = computed<MedicalHealthOption[]>(() =>
-    studentOptions.value.filter((option) => option.medicalType === MedicalType.NEUROLOGY_PSYCHIATRY)
+    studentOptions.value.filter((option) => option.medicalType === 'NEUROLOGY_PSYCHIATRY')
 )
 //
 const studentRecommendations = computed<MedicalHealthRecommendation[]>(
@@ -343,10 +343,10 @@ const individualOptions = computed<
 
 const currentHealthZone = computed<HealthZone>(() => {
     const generalOptions = [selectedDisability, selectedMorbidity, selectedBalancedDiet, selectedChronicDiseases]
-    if (generalOptions.some((option) => option.value?.healthZone === HealthZone.RED)) {
-        return HealthZone.RED
+    if (generalOptions.some((option) => option.value?.healthZone === 'RED')) {
+        return 'RED'
     }
-    if (generalOptions.some((option) => option.value?.healthZone === HealthZone.YELLOW)) {
+    if (generalOptions.some((option) => option.value?.healthZone === 'YELLOW')) {
         const individualOptions = [
             ...selectedVision.value,
             ...selectedHearing.value,
@@ -354,19 +354,17 @@ const currentHealthZone = computed<HealthZone>(() => {
             ...selectedGastrointestinal.value,
             ...selectedNeurologyAndPsychiatry.value
         ]
-        if (individualOptions.some((option) => option.healthZone === HealthZone.RED)) {
-            return HealthZone.RED
+        if (individualOptions.some((option) => option.healthZone === 'RED')) {
+            return 'RED'
         }
-        return HealthZone.YELLOW
+        return 'YELLOW'
     }
-    return HealthZone.GREEN
+    return 'GREEN'
 })
 
 const availableRecommendations = computed(() =>
     medicalRecommendations.value?.filter((recommendation) => recommendation.healthZone === currentHealthZone.value)
 )
 
-const showIndividualOptions = computed(
-    () => currentHealthZone.value === HealthZone.YELLOW || currentHealthZone.value === HealthZone.RED
-)
+const showIndividualOptions = computed(() => currentHealthZone.value === 'YELLOW' || currentHealthZone.value === 'RED')
 </script>
