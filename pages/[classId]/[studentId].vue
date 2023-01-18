@@ -22,6 +22,13 @@
                                 </div>
                             </div>
                             <div class="flex flex-column">
+                                <div class="text-500">Пол</div>
+                                <div class="flex align-items-end h-1rem mt-2 text-700">
+                                    <p-skeleton v-if="loadingData" class="max-w-30rem" />
+                                    <div v-else>{{ genderLocalization[studentData?.gender!] }}</div>
+                                </div>
+                            </div>
+                            <div class="flex flex-column">
                                 <div class="text-500">Класс</div>
                                 <div class="flex align-items-end h-1rem mt-2 text-700">
                                     <p-skeleton v-if="loadingData" class="max-w-30rem" />
@@ -56,6 +63,9 @@
         <role-access role="SOCIAL_PEDAGOGUE">
             <health-social :student-data="studentData" :loading-data="loadingData" :refresh-data="refreshData" />
         </role-access>
+        <role-access role="PEDAGOGUE">
+            <health-pedagogue :student-data="studentData" :loading-data="loadingData" :refresh-data="refreshData" />
+        </role-access>
         <role-access role="CLASS_TEACHER">
             <health-route :student-data="studentData" :loading-data="loadingData" :refresh-data="refreshData" />
         </role-access>
@@ -67,6 +77,7 @@ import { useToast } from 'primevue/usetoast'
 import jsPDF from 'jspdf'
 import html2canvas from 'html2canvas'
 import shortUUID from 'short-uuid'
+import { Gender } from '@prisma/client'
 
 definePageMeta({
     title: `Информация по учащемуся`
@@ -78,6 +89,11 @@ const router = useRouter()
 
 const studentPage = ref<HTMLElement>()
 const translator = shortUUID()
+
+const genderLocalization: { [key in Gender]: string } = {
+    MALE: 'Мужской',
+    FEMALE: 'Женский'
+}
 
 async function deleteStudent() {
     const { error } = await useFetch('/api/students/remove', {

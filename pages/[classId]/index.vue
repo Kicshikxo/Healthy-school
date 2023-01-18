@@ -41,6 +41,11 @@
             <p-column field="secondName" header="Фамилия"></p-column>
             <p-column field="firstName" header="Имя"></p-column>
             <p-column field="middleName" header="Отчество"></p-column>
+            <p-column field="gender" header="Пол">
+                <template #body="{ data }">
+                    {{ genderLocalization[data.gender as Gender] }}
+                </template>
+            </p-column>
             <p-column field="birthdate" header="Дата рождения">
                 <template #body="{ data }">
                     {{ new Date(data.birthdate).toLocaleDateString() }}
@@ -73,11 +78,22 @@
             <div class="formgrid grid">
                 <div class="field col">
                     <label for="birthdate">Дата рождения</label>
-                    <p-calendar inputId="birthdate" v-model="newStudent.birthdate" />
+                    <p-calendar inputId="birthdate" v-model="newStudent.birthdate" appendTo="self" />
                 </div>
                 <div class="field col">
-                    <label for="class">Ничего...</label>
-                    <p-input-text id="class" />
+                    <label>Пол</label>
+                    <p-dropdown
+                        v-model="newStudent.gender"
+                        :options="[
+                            { label: 'Мужской', value: 'MALE' },
+                            { label: 'Женский', value: 'FEMALE' }
+                        ]"
+                        optionLabel="label"
+                        optionValue="value"
+                        placeholder="Пол"
+                        panelClass="border-1 border-300"
+                        appendTo="self"
+                    />
                 </div>
             </div>
             <template #footer>
@@ -89,7 +105,7 @@
 </template>
 
 <script setup lang="ts">
-import { Student } from '@prisma/client'
+import { Gender, Student } from '@prisma/client'
 import shortUUID from 'short-uuid'
 
 definePageMeta({
@@ -102,13 +118,18 @@ const newStudent = ref<Student>({} as Student)
 const showDialog = ref(false)
 const translator = shortUUID()
 
+const genderLocalization: { [key in Gender]: string } = {
+    MALE: 'Мужской',
+    FEMALE: 'Женский'
+}
+
 async function addStudent() {
     const { error } = await useFetch('/api/students/add', {
         method: 'POST',
         body: {
             studentData: {
                 ...newStudent.value,
-                classId: route.params.classId
+                classId: translator.toUUID(route.params.classId as string)
             }
         }
     })

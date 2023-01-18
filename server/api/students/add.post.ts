@@ -11,6 +11,7 @@ export default defineEventHandler(async (event) => {
             firstName: studentData.firstName,
             middleName: studentData.middleName,
 
+            gender: studentData.gender,
             birthdate: studentData.birthdate,
             classId: studentData.classId,
 
