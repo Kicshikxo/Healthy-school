@@ -13,15 +13,21 @@
   opacity: 0;
 }
 
-/* Text slide animation */
-.text-slide-enter-active, .text-slide-down-leave-active {
-	transition: transform .25s ease-in-out, opacity .25s ease-in-out;
+/* Slide animation */
+.slide-enter-active, .slide-leave-active {
+	transition: transform .25s ease-in-out, opacity .25s ease-in-out, color .5s;
 }
-.text-slide-enter-from {
+.slide-enter-active i, .slide-leave-active i {
+	transition: transform .5s ease-in-out;
+}
+.slide-enter-from {
 	opacity: 0;
-	transform: translateY(-100%);
+	transform: translateX(100%);
 }
-.text-slide-leave-to {
+.slide-enter-from i {
+	transform: translateX(-200%);
+}
+.slide-leave-to {
 	opacity: 0;
 	transform: translateY(100%);
 }
