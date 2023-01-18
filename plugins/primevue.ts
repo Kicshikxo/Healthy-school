@@ -20,6 +20,8 @@ import Divider from 'primevue/divider/Divider.vue'
 import Card from 'primevue/card/Card.vue'
 import Chart from 'primevue/chart/Chart.vue'
 import Calendar from 'primevue/calendar/Calendar.vue'
+import TabView from 'primevue/tabview/TabView.vue'
+import TabPanel from 'primevue/tabpanel/TabPanel.vue'
 
 export default defineNuxtPlugin((nuxtApp) => {
     nuxtApp.vueApp.use(PrimeVue, { locale, ripple: false })
@@ -44,6 +46,8 @@ export default defineNuxtPlugin((nuxtApp) => {
     nuxtApp.vueApp.component('p-card', Card)
     nuxtApp.vueApp.component('p-chart', Chart)
     nuxtApp.vueApp.component('p-calendar', Calendar)
+    nuxtApp.vueApp.component('p-tab-view', TabView)
+    nuxtApp.vueApp.component('p-tab-panel', TabPanel)
 })
 
 const locale = {
