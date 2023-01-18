@@ -7,9 +7,23 @@
             </div>
 
             <div class="flex flex-column justify-content-center align-items-center">
-                <p-input-text v-model="username" type="text" placeholder="Логин" class="w-full mb-3" />
+                <p-input-text
+                    ref="usernameInput"
+                    v-model="username"
+                    type="text"
+                    placeholder="Логин"
+                    class="w-full mb-3"
+                    @keyup.enter="passwordInput?.$el.focus()"
+                />
 
-                <p-input-text v-model="password" type="password" placeholder="Пароль" class="w-full mb-3" />
+                <p-input-text
+                    ref="passwordInput"
+                    v-model="password"
+                    type="password"
+                    placeholder="Пароль"
+                    class="w-full mb-3"
+                    @keyup.enter="tryLogin"
+                />
 
                 <p-button label="Войти" icon="pi pi-user w-1rem" class="w-5" :loading="loading" @click="tryLogin"></p-button>
             </div>
@@ -26,6 +40,9 @@ const { signIn } = useSession()
 
 const router = useRouter()
 const toast = useToast()
+
+const usernameInput = ref()
+const passwordInput = ref()
 
 const username = ref<string>()
 const password = ref<string>()
