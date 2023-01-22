@@ -70,7 +70,7 @@ model Student {
     physicalHealth  PhysicalHealth?
     medicalHealth   MedicalHealth?
     socialHealth    SocialHealth?
-    PedagogueHealth PedagogueHealth?
+    pedagogueHealth PedagogueHealth?
 
     @@map("students")
 }
@@ -88,6 +88,7 @@ model PhysicalHealth {
 model PhysicalHealthRecommendation {
     id             Int              @id(map: "physical_health_recommendations_pkey") @default(autoincrement()) @map("recommendation_id")
     title          String           @map("title")
+    healthZone     HealthZone       @map("health_zone")
     healthGroup    HealthGroup      @map("health_group")
     physicalHealth PhysicalHealth[] @relation(name: "student_physical_health_recommendations")
 
@@ -159,25 +160,14 @@ model PedagogueHealth {
 }
 
 model PedagogueHealthOption {
-    id              Int                        @id(map: "pedagogue_health_options_pkey") @default(autoincrement()) @map("option_id")
-    title           String                     @map("title")
-    healthZone      HealthZone                 @map("health_zone")
-    pedagogueTab    PedagogueTab               @map("pedagogue_tab")
-    pedagogueType   PedagogueType              @map("pedagogue_type")
-    pedagogueHealth PedagogueHealth[]          @relation(name: "student_pedagogue_health_options")
-    suboptions      PedagogueHealthSuboption[]
+    id              Int               @id(map: "pedagogue_health_options_pkey") @default(autoincrement()) @map("option_id")
+    title           String            @map("title")
+    healthZone      HealthZone        @map("health_zone")
+    pedagogueTab    PedagogueTab      @map("pedagogue_tab")
+    pedagogueType   PedagogueType     @map("pedagogue_type")
+    pedagogueHealth PedagogueHealth[] @relation(name: "student_pedagogue_health_options")
 
     @@map("pedagogue_health_options")
-}
-
-model PedagogueHealthSuboption {
-    id         Int                    @id(map: "pedagogue_health_suboptions_pkey") @default(autoincrement()) @map("suboption_id")
-    title      String                 @map("title")
-    healthZone HealthZone             @map("health_zone")
-    option     PedagogueHealthOption? @relation(fields: [optionId], references: [id], onUpdate: Cascade, onDelete: Cascade)
-    optionId   Int?                   @map("option_id")
-
-    @@map("pedagogue_health_suboptions")
 }
 
 enum Role {
@@ -227,5 +217,19 @@ enum PedagogueTab {
 
 enum PedagogueType {
     UNDERSTANDING_INSTRUCTIONS
+    MASTERING_EDUCATION
     WORK_PACE
+    ACTIVITY_SPECIFICS
+    WORKABILITY
+    HEALTH_LIMITATIONS
+    DISABILITY
+
+    VOICE_DISORDERS
+    TEMPO_RHYTHMIC_DISORDERS
+    SPELLING_DISORDERS
+    ANATOMO_PHYSIOLOGICAL_DEFECTS
+    INNERVATION_DISORDERS
+    STRUCTURAL_SEMANTIC_DISORDERS
+    WRITING_DISORDERS
+    READING_DISORDERS
 }
