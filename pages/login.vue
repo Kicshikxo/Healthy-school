@@ -22,6 +22,7 @@
                     type="password"
                     placeholder="Пароль"
                     class="w-full mb-3"
+                    @keyup.delete="!password?.length && usernameInput.$el.focus()"
                     @keyup.enter="tryLogin"
                 />
 
