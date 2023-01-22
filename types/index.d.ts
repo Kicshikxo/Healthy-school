@@ -8,10 +8,15 @@ import {
     SocialHealth,
     SocialHealthIndicator,
     SocialHealthRecommendation,
-    Student
+    Student,
+    PedagogueHealthOption,
+    PedagogueHealthSuboption
 } from '@prisma/client'
 
 declare global {
+    type Without<T, U> = { [P in Exclude<keyof T, keyof U>]?: never }
+    type XOR<T, U> = T | U extends object ? (Without<T, U> & U) | (Without<U, T> & T) : T | U
+
     type HealthComponentData =
         | (Student & {
               physicalHealth: {
@@ -27,6 +32,9 @@ declare global {
               socialHealth: {
                   indicators: SocialHealthIndicator[]
                   recommendations: SocialHealthRecommendation[]
+              } | null
+              pedagogueHealth: {
+                  options: PedagogueHealthOption[]
               } | null
           })
         | null
