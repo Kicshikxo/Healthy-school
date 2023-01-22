@@ -35,17 +35,13 @@
             <health-component-body v-if="showRecommendations">
                 <template #title> Профилактические и здоровьесберегающие рекомендации </template>
                 <template #content>
-                    <p-multi-select
+                    <health-multi-select
                         :disabled="!enableEditing"
-                        :loading="loadingRecommendations || loadingData"
-                        panelClass="border-1 border-300"
-                        v-model="selectedRecommendations"
+                        :loading="loadingData"
                         :options="availableRecommendations"
-                        optionLabel="title"
-                        display="chip"
-                        appendTo="self"
                         placeholder="Индивидуальные рекомендации"
-                        class="w-full"
+                        optionLabel="title"
+                        v-model="selectedRecommendations"
                     />
                 </template>
             </health-component-body>
@@ -87,9 +83,7 @@ async function saveChanges() {
 
 // Data from server
 const { data: socialIndicators } = await useFetch('/api/students/health/social/indicators')
-const { data: socialRecommendations, pending: loadingRecommendations } = await useFetch(
-    '/api/students/health/social/recommendations'
-)
+const { data: socialRecommendations } = await useFetch('/api/students/health/social/recommendations')
 
 // Student data
 const studentIndicators = computed(() => props.studentData?.socialHealth?.indicators ?? [])
@@ -117,12 +111,6 @@ const hasChanges = computed(
         JSON.stringify(sortedSelectedRecommendations.value) !== JSON.stringify(sortedStudentRecommendations.value)
 )
 
-const availableRecommendations = computed(() =>
-    socialRecommendations.value?.filter((recommendation) => recommendation.healthZone === currentHealthZone.value)
-)
-
-const showRecommendations = computed(() => (['YELLOW', 'RED'] as HealthZone[]).includes(currentHealthZone.value))
-
 const currentHealthZone = computed<HealthZone>(() => {
     const healthZones = selectedIndicators.value.map((indicator) => indicator.healthZone)
 
@@ -134,4 +122,10 @@ const currentHealthZone = computed<HealthZone>(() => {
     }
     return 'GREEN'
 })
+
+const availableRecommendations = computed(() =>
+    socialRecommendations.value?.filter((recommendation) => recommendation.healthZone === currentHealthZone.value)
+)
+
+const showRecommendations = computed(() => (['YELLOW', 'RED'] as HealthZone[]).includes(currentHealthZone.value))
 </script>

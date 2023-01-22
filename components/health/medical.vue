@@ -5,32 +5,19 @@
             <health-component-body :padding-top="false">
                 <template #title> Основные показатели </template>
                 <template #content>
-                    <template v-for="{ title, options, selected } in generalOptions">
+                    <template v-for="{ title, type } in singleOptions">
                         <p-divider />
                         <div class="grid grid-nogutter">
                             <div class="col-6 flex justify-content-start align-items-center text-lg">{{ title }}</div>
                             <div class="col-6 border-left-1 border-300 pl-4">
-                                <p-dropdown
+                                <health-dropdown
                                     :disabled="!enableEditing"
-                                    :loading="loadingOptions || loadingData"
-                                    :options="options.value"
-                                    optionLabel="title"
-                                    v-model="selected.value"
+                                    :loading="loadingData"
+                                    :options="options[type]"
                                     :placeholder="title"
-                                    class="w-full"
-                                    panelClass="border-1 border-300"
-                                >
-                                    <template #value="{ value }">
-                                        <health-zone-indicator :health-zone="value?.healthZone" :label="value?.title" />
-                                    </template>
-                                    <template #option="{ option }">
-                                        <health-zone-indicator
-                                            :health-zone="option.healthZone"
-                                            :label="option.title"
-                                            :gap="3"
-                                        />
-                                    </template>
-                                </p-dropdown>
+                                    option-label="title"
+                                    v-model="selectedOptions.SINGLE[type]"
+                                />
                             </div>
                         </div>
                     </template>
@@ -39,30 +26,19 @@
             <health-component-body v-if="showIndividualOptions" :padding-top="false">
                 <template #title>Индивидуальные рекомендации и назначения профильных медицинских специалистов</template>
                 <template #content>
-                    <template v-for="{ title, options, selected } in individualOptions">
+                    <template v-for="{ title, type } in multipleOptions">
                         <p-divider />
                         <div class="grid grid-nogutter">
                             <div class="col-6 flex justify-content-start align-items-center text-lg">{{ title }}</div>
                             <div class="col-6 border-left-1 border-300 pl-4">
-                                <p-multi-select
+                                <health-multi-select
                                     :disabled="!enableEditing"
-                                    :loading="loadingOptions || loadingData"
-                                    :options="options.value"
-                                    optionLabel="value"
-                                    v-model="selected.value"
-                                    display="chip"
-                                    appendTo="self"
+                                    :loading="loadingData"
+                                    :options="options[type]"
                                     :placeholder="title"
-                                    class="w-full"
-                                    panelClass="border-1 border-300"
-                                >
-                                    <template #chip="{ value }">
-                                        <health-zone-indicator :health-zone="value.healthZone" :label="value.title" />
-                                    </template>
-                                    <template #option="{ option }">
-                                        <health-zone-indicator :health-zone="option.healthZone" :label="option.title" />
-                                    </template>
-                                </p-multi-select>
+                                    optionLabel="title"
+                                    v-model="selectedOptions.MULTIPLE[type]"
+                                />
                             </div>
                         </div>
                     </template>
@@ -71,17 +47,13 @@
             <health-component-body v-if="showIndividualOptions">
                 <template #title> Профилактические и здоровьесберегающие мероприятия </template>
                 <template #content>
-                    <p-multi-select
+                    <health-multi-select
                         :disabled="!enableEditing"
-                        :loading="loadingRecommendations || loadingData"
-                        v-model="selectedRecommendations"
+                        :loading="loadingData"
                         :options="availableRecommendations"
-                        optionLabel="title"
-                        panelClass="border-1 border-300"
-                        display="chip"
-                        appendTo="self"
                         placeholder="Профилактические и здоровьесберегающие мероприятия"
-                        class="w-full"
+                        optionLabel="title"
+                        v-model="selectedRecommendations"
                     />
                 </template>
             </health-component-body>
@@ -103,8 +75,7 @@
 </template>
 
 <script setup lang="ts">
-import { HealthZone, MedicalHealth, MedicalHealthOption, MedicalHealthRecommendation } from '@prisma/client'
-import { Ref, ComputedRef } from 'vue'
+import { HealthZone, MedicalHealth, MedicalHealthOption, MedicalHealthRecommendation, MedicalType } from '@prisma/client'
 
 const props = defineProps<{
     studentData: HealthComponentData
@@ -115,16 +86,12 @@ const props = defineProps<{
 async function cancelChanges() {
     await props.refreshData()
 }
-
 async function saveChanges() {
     const { error } = await useFetch('/api/students/health/medical', {
         method: 'PATCH',
         body: {
             studentId: props.studentData?.id,
-            options: [
-                ...generalOptions.value.map((option) => option.selected.value),
-                ...individualOptions.value.map((option) => option.selected.value).flat()
-            ],
+            options: [...Object.values(selectedOptions.value.SINGLE), ...Object.values(selectedOptions.value.MULTIPLE).flat()],
             recommendations: selectedRecommendations.value.filter(
                 (recommendation) => recommendation.healthZone === currentHealthZone.value
             ),
@@ -140,219 +107,97 @@ async function saveChanges() {
 }
 
 // Data from server
-const { data: medicalOptions, pending: loadingOptions } = useFetch('/api/students/health/medical/options')
-const { data: medicalRecommendations, pending: loadingRecommendations } = useFetch(
-    '/api/students/health/medical/recommendations'
-)
+const { data: medicalOptions } = await useFetch('/api/students/health/medical/options')
+const { data: medicalRecommendations } = await useFetch('/api/students/health/medical/recommendations')
+
+enum SelectionType {
+    SINGLE = 'SINGLE',
+    MULTIPLE = 'MULTIPLE'
+}
+const optionSelectionTypes: { [key in SelectionType]: MedicalType[] } = {
+    SINGLE: ['DISABILITY', 'MORBIDITY', 'BALANCED_DIET', 'CHRONIC_DISEASES'],
+    MULTIPLE: ['VISION', 'HEARING', 'ORTHOPEDIA', 'GASTROINTESTINAL', 'NEUROLOGY_PSYCHIATRY']
+}
 
 // Options
-const disabilityOptions = computed<MedicalHealthOption[]>(
-    () => medicalOptions.value?.filter((option) => option.medicalType === 'DISABILITY') ?? []
-)
-const morbidityOptions = computed<MedicalHealthOption[]>(
-    () => medicalOptions.value?.filter((option) => option.medicalType === 'MORBIDITY') ?? []
-)
-const balancedDietOptions = computed<MedicalHealthOption[]>(
-    () => medicalOptions.value?.filter((option) => option.medicalType === 'BALANCED_DIET') ?? []
-)
-const chronicDiseasesOptions = computed<MedicalHealthOption[]>(
-    () => medicalOptions.value?.filter((option) => option.medicalType === 'CHRONIC_DISEASES') ?? []
-)
-//
-const visionOptions = computed<MedicalHealthOption[]>(
-    () => medicalOptions.value?.filter((option) => option.medicalType === 'VISION') ?? []
-)
-const hearingOptions = computed<MedicalHealthOption[]>(
-    () => medicalOptions.value?.filter((option) => option.medicalType === 'HEARING') ?? []
-)
-const orthopediaOptions = computed<MedicalHealthOption[]>(
-    () => medicalOptions.value?.filter((option) => option.medicalType === 'ORTHOPEDIA') ?? []
-)
-const gastrointestinalOptions = computed<MedicalHealthOption[]>(
-    () => medicalOptions.value?.filter((option) => option.medicalType === 'GASTROINTESTINAL') ?? []
-)
-const neurologyAndPsychiatryOptions = computed<MedicalHealthOption[]>(
-    () => medicalOptions.value?.filter((option) => option.medicalType === 'NEUROLOGY_PSYCHIATRY') ?? []
+const options = computed(() =>
+    (medicalOptions.value ?? []).reduce((acc, option) => {
+        acc[option.medicalType] = (acc[option.medicalType] ?? []).concat(option)
+        return acc
+    }, {} as { [key in MedicalType]: MedicalHealthOption[] })
 )
 
 // Student data
-const studentOptions = computed<MedicalHealthOption[]>(() => props.studentData?.medicalHealth?.options ?? [])
-const studentDisability = computed<MedicalHealthOption>(
-    () =>
-        studentOptions.value?.find((option) => option.medicalType === 'DISABILITY') ??
-        disabilityOptions.value?.find((option) => option.healthZone === 'GREEN')!
+const studentOptions = computed(() =>
+    (Object.keys(MedicalType) as MedicalType[]).reduce(
+        (acc, type) => {
+            if (optionSelectionTypes.SINGLE.includes(type)) {
+                acc.SINGLE[type] =
+                    props.studentData?.medicalHealth?.options.find((option) => option.medicalType === type) ??
+                    options.value[type].find((option) => option.healthZone === 'GREEN')!
+            } else if (optionSelectionTypes.MULTIPLE.includes(type)) {
+                acc.MULTIPLE[type] =
+                    props.studentData?.medicalHealth?.options.filter((option) => option.medicalType === type) ?? []
+            }
+            return acc
+        },
+        { SINGLE: {}, MULTIPLE: {} } as {
+            SINGLE: { [key in MedicalType]: MedicalHealthOption }
+            MULTIPLE: { [key in MedicalType]: MedicalHealthOption[] }
+        }
+    )
 )
-const studentMorbidity = computed<MedicalHealthOption>(
-    () =>
-        studentOptions.value?.find((option) => option.medicalType === 'MORBIDITY') ??
-        morbidityOptions.value?.find((option) => option.healthZone === 'GREEN')!
-)
-const studentBalancedDiet = computed<MedicalHealthOption>(
-    () =>
-        studentOptions.value?.find((option) => option.medicalType === 'BALANCED_DIET') ??
-        balancedDietOptions.value?.find((option) => option.healthZone === 'GREEN')!
-)
-const studentChronicDiseases = computed<MedicalHealthOption>(
-    () =>
-        studentOptions.value?.find((option) => option.medicalType === 'CHRONIC_DISEASES') ??
-        chronicDiseasesOptions.value?.find((option) => option.healthZone === 'GREEN')!
-)
-//
-const studentVision = computed<MedicalHealthOption[]>(() =>
-    studentOptions.value.filter((option) => option.medicalType === 'VISION')
-)
-const studentHearing = computed<MedicalHealthOption[]>(() =>
-    studentOptions.value.filter((option) => option.medicalType === 'HEARING')
-)
-const studentOrthopedia = computed<MedicalHealthOption[]>(() =>
-    studentOptions.value.filter((option) => option.medicalType === 'ORTHOPEDIA')
-)
-const studentGastrointestinal = computed<MedicalHealthOption[]>(() =>
-    studentOptions.value.filter((option) => option.medicalType === 'GASTROINTESTINAL')
-)
-const studentNeurologyAndPsychiatry = computed<MedicalHealthOption[]>(() =>
-    studentOptions.value.filter((option) => option.medicalType === 'NEUROLOGY_PSYCHIATRY')
-)
-//
-const studentRecommendations = computed<MedicalHealthRecommendation[]>(
-    () => props.studentData?.medicalHealth?.recommendations ?? []
-)
-//
-const studentSpecialistNotes = computed<string>(() => props.studentData?.medicalHealth?.specialistNotes ?? '')
+const studentRecommendations = computed(() => props.studentData?.medicalHealth?.recommendations ?? [])
+const studentSpecialistNotes = computed(() => props.studentData?.medicalHealth?.specialistNotes ?? '')
 
 // Selected data
-const selectedDisability = ref<MedicalHealthOption>(studentDisability.value)
-const selectedMorbidity = ref<MedicalHealthOption>(studentMorbidity.value)
-const selectedBalancedDiet = ref<MedicalHealthOption>(studentBalancedDiet.value)
-const selectedChronicDiseases = ref<MedicalHealthOption>(studentChronicDiseases.value)
-//
-const selectedVision = ref<MedicalHealthOption[]>(studentVision.value)
-const selectedHearing = ref<MedicalHealthOption[]>(studentHearing.value)
-const selectedOrthopedia = ref<MedicalHealthOption[]>(studentOrthopedia.value)
-const selectedGastrointestinal = ref<MedicalHealthOption[]>(studentGastrointestinal.value)
-const selectedNeurologyAndPsychiatry = ref<MedicalHealthOption[]>(studentNeurologyAndPsychiatry.value)
-//
-const selectedRecommendations = ref<MedicalHealthRecommendation[]>(studentRecommendations.value)
-//
-const currentSpecialistNotes = ref<string>(studentSpecialistNotes.value)
+const selectedOptions = ref(useCloneDeep(studentOptions.value))
+const selectedRecommendations = ref(studentRecommendations.value)
+const currentSpecialistNotes = ref(studentSpecialistNotes.value)
 
 // Watch on student data update
-watch(studentDisability, (value) => (selectedDisability.value = value))
-watch(studentMorbidity, (value) => (selectedMorbidity.value = value))
-watch(studentBalancedDiet, (value) => (selectedBalancedDiet.value = value))
-watch(studentChronicDiseases, (value) => (selectedChronicDiseases.value = value))
-//
-watch(studentVision, (value) => (selectedVision.value = value))
-watch(studentHearing, (value) => (selectedHearing.value = value))
-watch(studentOrthopedia, (value) => (selectedOrthopedia.value = value))
-watch(studentGastrointestinal, (value) => (selectedGastrointestinal.value = value))
-watch(studentNeurologyAndPsychiatry, (value) => (selectedNeurologyAndPsychiatry.value = value))
-//
+watch(studentOptions, (value) => (selectedOptions.value = useCloneDeep(value)))
 watch(studentRecommendations, (value) => (selectedRecommendations.value = value))
-//
 watch(studentSpecialistNotes, (value) => (currentSpecialistNotes.value = value))
-
-// Sorted student data
-const sortedStudentVision = computed(() => studentVision.value.sort((a, b) => a.id - b.id))
-const sortedStudentHearing = computed(() => studentHearing.value.sort((a, b) => a.id - b.id))
-const sortedStudentOrthopedia = computed(() => studentOrthopedia.value.sort((a, b) => a.id - b.id))
-const sortedStudentGastrointestinal = computed(() => studentGastrointestinal.value.sort((a, b) => a.id - b.id))
-const sortedStudentNeurologyAndPsychiatry = computed(() => studentNeurologyAndPsychiatry.value.sort((a, b) => a.id - b.id))
-const sortedStudentRecommendations = computed(() => studentRecommendations.value.sort((a, b) => a.id - b.id))
-
-// Sorted selected data
-const sortedSelectedVision = computed(() => selectedVision.value.sort((a, b) => a.id - b.id))
-const sortedSelectedHearing = computed(() => selectedHearing.value.sort((a, b) => a.id - b.id))
-const sortedSelectedOrthopedia = computed(() => selectedOrthopedia.value.sort((a, b) => a.id - b.id))
-const sortedSelectedGastrointestinal = computed(() => selectedGastrointestinal.value.sort((a, b) => a.id - b.id))
-const sortedSelectedNeurologyAndPsychiatry = computed(() => selectedNeurologyAndPsychiatry.value.sort((a, b) => a.id - b.id))
-const sortedSelectedRecommendations = computed(() => selectedRecommendations.value.sort((a, b) => a.id - b.id))
 
 const hasChanges = computed(
     () =>
-        JSON.stringify(selectedDisability.value) !== JSON.stringify(studentDisability.value) ||
-        JSON.stringify(selectedMorbidity.value) !== JSON.stringify(studentMorbidity.value) ||
-        JSON.stringify(selectedBalancedDiet.value) !== JSON.stringify(studentBalancedDiet.value) ||
-        JSON.stringify(selectedChronicDiseases.value) !== JSON.stringify(studentChronicDiseases.value) ||
-        JSON.stringify(sortedSelectedVision.value) !== JSON.stringify(sortedStudentVision.value) ||
-        JSON.stringify(sortedSelectedHearing.value) !== JSON.stringify(sortedStudentHearing.value) ||
-        JSON.stringify(sortedSelectedOrthopedia.value) !== JSON.stringify(sortedStudentOrthopedia.value) ||
-        JSON.stringify(sortedSelectedGastrointestinal.value) !== JSON.stringify(sortedStudentGastrointestinal.value) ||
-        JSON.stringify(sortedSelectedNeurologyAndPsychiatry.value) !==
-            JSON.stringify(sortedStudentNeurologyAndPsychiatry.value) ||
-        JSON.stringify(sortedSelectedRecommendations.value) !== JSON.stringify(sortedStudentRecommendations.value) ||
+        JSON.stringify(selectedOptions.value) !== JSON.stringify(studentOptions.value) ||
+        JSON.stringify(selectedRecommendations.value) !== JSON.stringify(studentRecommendations.value) ||
         JSON.stringify(currentSpecialistNotes.value) !== JSON.stringify(studentSpecialistNotes.value)
 )
 
-const generalOptions = computed<
-    { title: string; options: ComputedRef<MedicalHealthOption[]>; selected: Ref<MedicalHealthOption> }[]
->(() => [
-    {
-        title: 'Наличие инвалидности',
-        options: disabilityOptions,
-        selected: selectedDisability
-    },
-    {
-        title: 'Сведения о заболеваемости',
-        options: morbidityOptions,
-        selected: selectedMorbidity
-    },
-    {
-        title: 'Сбалансированное питание',
-        options: balancedDietOptions,
-        selected: selectedBalancedDiet
-    },
-    {
-        title: 'Наличие хронических заболеваний',
-        options: chronicDiseasesOptions,
-        selected: selectedChronicDiseases
-    }
-])
+const typeTitles: { [key in MedicalType]: string } = {
+    DISABILITY: 'Наличие инвалидности',
+    MORBIDITY: 'Сведения о заболеваемости',
+    BALANCED_DIET: 'Сбалансированное питание',
+    CHRONIC_DISEASES: 'Наличие хронических заболеваний',
 
-const individualOptions = computed<
-    { title: string; options: ComputedRef<MedicalHealthOption[]>; selected: Ref<MedicalHealthOption[]> }[]
->(() => [
-    {
-        title: 'Зрение',
-        options: visionOptions,
-        selected: selectedVision
-    },
-    {
-        title: 'Слух',
-        options: hearingOptions,
-        selected: selectedHearing
-    },
-    {
-        title: 'Ортопедия',
-        options: orthopediaOptions,
-        selected: selectedOrthopedia
-    },
-    {
-        title: 'ЖКТ',
-        options: gastrointestinalOptions,
-        selected: selectedGastrointestinal
-    },
-    {
-        title: 'Неврология, психиатрия',
-        options: neurologyAndPsychiatryOptions,
-        selected: selectedNeurologyAndPsychiatry
-    }
-])
+    VISION: 'Зрение',
+    HEARING: 'Слух',
+    ORTHOPEDIA: 'Ортопедия',
+    GASTROINTESTINAL: 'ЖКТ',
+    NEUROLOGY_PSYCHIATRY: 'Неврология, психиатрия'
+}
+
+const singleOptions = computed<{ title: string; type: MedicalType }[]>(() =>
+    optionSelectionTypes.SINGLE.map((type) => ({ title: typeTitles[type], type }))
+)
+
+const multipleOptions = computed<{ title: string; type: MedicalType }[]>(() =>
+    optionSelectionTypes.MULTIPLE.map((type) => ({ title: typeTitles[type], type }))
+)
 
 const currentHealthZone = computed<HealthZone>(() => {
-    const generalOptions = [selectedDisability, selectedMorbidity, selectedBalancedDiet, selectedChronicDiseases]
-    if (generalOptions.some((option) => option.value?.healthZone === 'RED')) {
+    if (Object.values(selectedOptions.value.SINGLE).some((option) => option.healthZone === 'RED')) {
         return 'RED'
     }
-    if (generalOptions.some((option) => option.value?.healthZone === 'YELLOW')) {
-        const individualOptions = [
-            ...selectedVision.value,
-            ...selectedHearing.value,
-            ...selectedOrthopedia.value,
-            ...selectedGastrointestinal.value,
-            ...selectedNeurologyAndPsychiatry.value
-        ]
-        if (individualOptions.some((option) => option.healthZone === 'RED')) {
+    if (Object.values(selectedOptions.value.SINGLE).some((option) => option.healthZone === 'YELLOW')) {
+        if (
+            Object.values(selectedOptions.value.MULTIPLE)
+                .flat()
+                .some((option) => option.healthZone === 'RED')
+        ) {
             return 'RED'
         }
         return 'YELLOW'

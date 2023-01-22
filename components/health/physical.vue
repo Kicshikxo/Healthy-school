@@ -25,17 +25,13 @@
             <health-component-body v-if="showRecommendations">
                 <template #title> Индивидуальные рекомендации и назначения </template>
                 <template #content>
-                    <p-multi-select
+                    <health-multi-select
                         :disabled="!enableEditing"
-                        :loading="loadingRecommendations || loadingData"
-                        v-model="selectedRecommendations"
+                        :loading="loadingData"
                         :options="availableRecommendations"
-                        optionLabel="title"
-                        panelClass="border-1 border-300"
-                        display="chip"
-                        appendTo="self"
                         placeholder="Индивидуальные рекомендации"
-                        class="w-full"
+                        optionLabel="title"
+                        v-model="selectedRecommendations"
                     />
                 </template>
                 <template #footer>
@@ -88,9 +84,7 @@ async function saveChanges() {
 }
 
 // Data from server
-const { data: physicalRecommendations, pending: loadingRecommendations } = useFetch(
-    '/api/students/health/physical/recommendations'
-)
+const { data: physicalRecommendations } = await useFetch('/api/students/health/physical/recommendations')
 
 // Student data
 const studentHealthGroup = computed(() => props.studentData?.physicalHealth?.healthGroup ?? 'BASIC')
