@@ -1,4 +1,4 @@
-import { Role, HealthZone, HealthGroup, MedicalType } from '@prisma/client'
+import { Role, HealthZone, HealthGroup, MedicalType, PedagogueTab, PedagogueType } from '@prisma/client'
 
 export const municipality: { name: string } = {
     name: 'Курский район'
@@ -41,51 +41,66 @@ export const usersData: { username: string; password: string; role: Role }[] = [
     }
 ]
 
-export const physicalHealthRecommendations: { title: string; healthGroup: HealthGroup }[] = [
+export const physicalHealthRecommendations: { title: string; healthZone: HealthZone; healthGroup: HealthGroup }[] = [
     {
         title: 'выполнение программы физического воспитания с ограничениями по рекомендации врача',
+        healthZone: HealthZone.YELLOW,
         healthGroup: HealthGroup.PREPARATORY
     },
     {
         title: 'сдача индивидуальных нормативов и участие в массовых физкультурных мероприятиях при наличии медицинского заключения по результатам дополнительного осмотра',
+        healthZone: HealthZone.YELLOW,
         healthGroup: HealthGroup.PREPARATORY
     },
-    { title: 'не допущение к занятиям спортом и участию в соревнованиях', healthGroup: HealthGroup.PREPARATORY },
+    {
+        title: 'не допущение к занятиям спортом и участию в соревнованиях',
+        healthZone: HealthZone.YELLOW,
+        healthGroup: HealthGroup.PREPARATORY
+    },
     {
         title: 'проведение дополнительных занятий для повышения общей физической подготовки',
+        healthZone: HealthZone.YELLOW,
         healthGroup: HealthGroup.PREPARATORY
     },
 
     {
         title: 'обучение умению и навыкам элементов ЗОЖ',
+        healthZone: HealthZone.RED,
         healthGroup: HealthGroup.SPECIAL
     },
     {
         title: 'осуществление самоконтроля здоровья и функциональных возможностей',
+        healthZone: HealthZone.RED,
         healthGroup: HealthGroup.SPECIAL
     },
     {
         title: 'организация физкультурных занятий по особой программе, снижение нормативов, строгое дозирование физической нагрузки',
+        healthZone: HealthZone.RED,
         healthGroup: HealthGroup.SPECIAL
     },
     {
         title: 'включение лечебной физкультуры в программу занятий',
+        healthZone: HealthZone.RED,
         healthGroup: HealthGroup.SPECIAL
     },
     {
         title: 'широкое использование дыхательных, корригирующих и общеразвивающих упражнений',
+        healthZone: HealthZone.RED,
         healthGroup: HealthGroup.SPECIAL
     },
     {
         title: 'проявление повышенной осторожности при использовании физических упражнений',
+        healthZone: HealthZone.RED,
         healthGroup: HealthGroup.SPECIAL
     },
     {
         title: 'исключение физических упражнений, противопоказанных по состоянию здоровья',
+        healthZone: HealthZone.RED,
         healthGroup: HealthGroup.SPECIAL
     },
     {
         title: 'включение в занятия подвижных игр умеренной интенсивности',
+        healthZone: HealthZone.RED,
         healthGroup: HealthGroup.SPECIAL
     }
 ]
@@ -619,5 +634,327 @@ export const medicalHealthRecommendations: { title: string; healthZone: HealthZo
     {
         title: 'направление на ПМПК для решения вопроса о создании специальных образовательных условий',
         healthZone: HealthZone.RED
+    }
+]
+
+export const pedagogueHealthOptions: {
+    title: string
+    healthZone: HealthZone
+    pedagogueTab: PedagogueTab
+    pedagogueType: PedagogueType
+}[] = [
+    {
+        title: 'Понимает',
+        healthZone: HealthZone.GREEN,
+        pedagogueTab: PedagogueTab.PEDAGOGUE,
+        pedagogueType: PedagogueType.UNDERSTANDING_INSTRUCTIONS
+    },
+    {
+        title: 'Частично понимает',
+        healthZone: HealthZone.YELLOW,
+        pedagogueTab: PedagogueTab.PEDAGOGUE,
+        pedagogueType: PedagogueType.UNDERSTANDING_INSTRUCTIONS
+    },
+    {
+        title: 'Не понимает',
+        healthZone: HealthZone.RED,
+        pedagogueTab: PedagogueTab.PEDAGOGUE,
+        pedagogueType: PedagogueType.UNDERSTANDING_INSTRUCTIONS
+    },
+
+    {
+        title: 'Освоено',
+        healthZone: HealthZone.GREEN,
+        pedagogueTab: PedagogueTab.PEDAGOGUE,
+        pedagogueType: PedagogueType.MASTERING_EDUCATION
+    },
+    {
+        title: 'Освоено не в полном объёме',
+        healthZone: HealthZone.YELLOW,
+        pedagogueTab: PedagogueTab.PEDAGOGUE,
+        pedagogueType: PedagogueType.MASTERING_EDUCATION
+    },
+    {
+        title: 'Не освоено',
+        healthZone: HealthZone.RED,
+        pedagogueTab: PedagogueTab.PEDAGOGUE,
+        pedagogueType: PedagogueType.MASTERING_EDUCATION
+    },
+
+    {
+        title: 'Высокий',
+        healthZone: HealthZone.GREEN,
+        pedagogueTab: PedagogueTab.PEDAGOGUE,
+        pedagogueType: PedagogueType.WORK_PACE
+    },
+    {
+        title: 'Средний',
+        healthZone: HealthZone.YELLOW,
+        pedagogueTab: PedagogueTab.PEDAGOGUE,
+        pedagogueType: PedagogueType.WORK_PACE
+    },
+    {
+        title: 'Низкий',
+        healthZone: HealthZone.RED,
+        pedagogueTab: PedagogueTab.PEDAGOGUE,
+        pedagogueType: PedagogueType.WORK_PACE
+    },
+
+    {
+        title: 'Действует самостоятельно',
+        healthZone: HealthZone.GREEN,
+        pedagogueTab: PedagogueTab.PEDAGOGUE,
+        pedagogueType: PedagogueType.ACTIVITY_SPECIFICS
+    },
+    {
+        title: 'Действует с незначительной помощью',
+        healthZone: HealthZone.YELLOW,
+        pedagogueTab: PedagogueTab.PEDAGOGUE,
+        pedagogueType: PedagogueType.ACTIVITY_SPECIFICS
+    },
+    {
+        title: 'Действует с существенной помощью',
+        healthZone: HealthZone.RED,
+        pedagogueTab: PedagogueTab.PEDAGOGUE,
+        pedagogueType: PedagogueType.ACTIVITY_SPECIFICS
+    },
+
+    {
+        title: 'Высокая',
+        healthZone: HealthZone.GREEN,
+        pedagogueTab: PedagogueTab.PEDAGOGUE,
+        pedagogueType: PedagogueType.WORKABILITY
+    },
+    {
+        title: 'Средняя',
+        healthZone: HealthZone.YELLOW,
+        pedagogueTab: PedagogueTab.PEDAGOGUE,
+        pedagogueType: PedagogueType.WORKABILITY
+    },
+    {
+        title: 'Низкая',
+        healthZone: HealthZone.RED,
+        pedagogueTab: PedagogueTab.PEDAGOGUE,
+        pedagogueType: PedagogueType.WORKABILITY
+    },
+
+    {
+        title: 'Нет',
+        healthZone: HealthZone.GREEN,
+        pedagogueTab: PedagogueTab.PEDAGOGUE,
+        pedagogueType: PedagogueType.HEALTH_LIMITATIONS
+    },
+    {
+        title: 'Да, рекомендации реализуются',
+        healthZone: HealthZone.YELLOW,
+        pedagogueTab: PedagogueTab.PEDAGOGUE,
+        pedagogueType: PedagogueType.HEALTH_LIMITATIONS
+    },
+    {
+        title: 'Да, рекомендации не реализуются',
+        healthZone: HealthZone.RED,
+        pedagogueTab: PedagogueTab.PEDAGOGUE,
+        pedagogueType: PedagogueType.HEALTH_LIMITATIONS
+    },
+
+    {
+        title: 'Нет',
+        healthZone: HealthZone.GREEN,
+        pedagogueTab: PedagogueTab.PEDAGOGUE,
+        pedagogueType: PedagogueType.DISABILITY
+    },
+    {
+        title: 'Да, мероприятия реализуются',
+        healthZone: HealthZone.YELLOW,
+        pedagogueTab: PedagogueTab.PEDAGOGUE,
+        pedagogueType: PedagogueType.DISABILITY
+    },
+    {
+        title: 'Да, мероприятия не реализуются',
+        healthZone: HealthZone.RED,
+        pedagogueTab: PedagogueTab.PEDAGOGUE,
+        pedagogueType: PedagogueType.DISABILITY
+    },
+
+    {
+        title: 'Отсутствуют',
+        healthZone: HealthZone.GREEN,
+        pedagogueTab: PedagogueTab.SPEECH_THERAPIST,
+        pedagogueType: PedagogueType.VOICE_DISORDERS
+    },
+    {
+        title: 'Незначительные нарушения',
+        healthZone: HealthZone.YELLOW,
+        pedagogueTab: PedagogueTab.SPEECH_THERAPIST,
+        pedagogueType: PedagogueType.VOICE_DISORDERS
+    },
+    {
+        title: 'Ринофония',
+        healthZone: HealthZone.RED,
+        pedagogueTab: PedagogueTab.SPEECH_THERAPIST,
+        pedagogueType: PedagogueType.VOICE_DISORDERS
+    },
+    {
+        title: 'Дисфония',
+        healthZone: HealthZone.RED,
+        pedagogueTab: PedagogueTab.SPEECH_THERAPIST,
+        pedagogueType: PedagogueType.VOICE_DISORDERS
+    },
+    {
+        title: 'Афония',
+        healthZone: HealthZone.RED,
+        pedagogueTab: PedagogueTab.SPEECH_THERAPIST,
+        pedagogueType: PedagogueType.VOICE_DISORDERS
+    },
+
+    {
+        title: 'Отсутствуют',
+        healthZone: HealthZone.GREEN,
+        pedagogueTab: PedagogueTab.SPEECH_THERAPIST,
+        pedagogueType: PedagogueType.TEMPO_RHYTHMIC_DISORDERS
+    },
+    {
+        title: 'Незначительные нарушения',
+        healthZone: HealthZone.YELLOW,
+        pedagogueTab: PedagogueTab.SPEECH_THERAPIST,
+        pedagogueType: PedagogueType.TEMPO_RHYTHMIC_DISORDERS
+    },
+    {
+        title: 'Заикание',
+        healthZone: HealthZone.RED,
+        pedagogueTab: PedagogueTab.SPEECH_THERAPIST,
+        pedagogueType: PedagogueType.TEMPO_RHYTHMIC_DISORDERS
+    },
+    {
+        title: 'Брадилалия',
+        healthZone: HealthZone.RED,
+        pedagogueTab: PedagogueTab.SPEECH_THERAPIST,
+        pedagogueType: PedagogueType.TEMPO_RHYTHMIC_DISORDERS
+    },
+    {
+        title: 'Тахилалия',
+        healthZone: HealthZone.RED,
+        pedagogueTab: PedagogueTab.SPEECH_THERAPIST,
+        pedagogueType: PedagogueType.TEMPO_RHYTHMIC_DISORDERS
+    },
+
+    {
+        title: 'Отсутствуют',
+        healthZone: HealthZone.GREEN,
+        pedagogueTab: PedagogueTab.SPEECH_THERAPIST,
+        pedagogueType: PedagogueType.SPELLING_DISORDERS
+    },
+    {
+        title: 'Мономорфная дислалия (ФН, ФФН, ОНР (III уровень речевого развития), НВОНР)',
+        healthZone: HealthZone.YELLOW,
+        pedagogueTab: PedagogueTab.SPEECH_THERAPIST,
+        pedagogueType: PedagogueType.SPELLING_DISORDERS
+    },
+    {
+        title: 'Полиморфная дислалия (ОНР (II, III уровень речевого развития))',
+        healthZone: HealthZone.RED,
+        pedagogueTab: PedagogueTab.SPEECH_THERAPIST,
+        pedagogueType: PedagogueType.SPELLING_DISORDERS
+    },
+
+    {
+        title: 'Отсутствуют',
+        healthZone: HealthZone.GREEN,
+        pedagogueTab: PedagogueTab.SPEECH_THERAPIST,
+        pedagogueType: PedagogueType.ANATOMO_PHYSIOLOGICAL_DEFECTS
+    },
+    {
+        title: 'Нарушения, не влияющие на произносительную сторону речи',
+        healthZone: HealthZone.YELLOW,
+        pedagogueTab: PedagogueTab.SPEECH_THERAPIST,
+        pedagogueType: PedagogueType.ANATOMO_PHYSIOLOGICAL_DEFECTS
+    },
+    {
+        title: 'Ринолалия различной формы и этиологии',
+        healthZone: HealthZone.RED,
+        pedagogueTab: PedagogueTab.SPEECH_THERAPIST,
+        pedagogueType: PedagogueType.ANATOMO_PHYSIOLOGICAL_DEFECTS
+    },
+
+    {
+        title: 'Отсутствуют',
+        healthZone: HealthZone.GREEN,
+        pedagogueTab: PedagogueTab.SPEECH_THERAPIST,
+        pedagogueType: PedagogueType.INNERVATION_DISORDERS
+    },
+    {
+        title: 'Стертая дизартрия',
+        healthZone: HealthZone.YELLOW,
+        pedagogueTab: PedagogueTab.SPEECH_THERAPIST,
+        pedagogueType: PedagogueType.INNERVATION_DISORDERS
+    },
+    {
+        title: 'Выраженные дизартрические проявления',
+        healthZone: HealthZone.RED,
+        pedagogueTab: PedagogueTab.SPEECH_THERAPIST,
+        pedagogueType: PedagogueType.INNERVATION_DISORDERS
+    },
+
+    {
+        title: 'Отсутствуют',
+        healthZone: HealthZone.GREEN,
+        pedagogueTab: PedagogueTab.SPEECH_THERAPIST,
+        pedagogueType: PedagogueType.STRUCTURAL_SEMANTIC_DISORDERS
+    },
+    {
+        title: 'Незначительные нарушения',
+        healthZone: HealthZone.YELLOW,
+        pedagogueTab: PedagogueTab.SPEECH_THERAPIST,
+        pedagogueType: PedagogueType.STRUCTURAL_SEMANTIC_DISORDERS
+    },
+    {
+        title: 'Афазия',
+        healthZone: HealthZone.RED,
+        pedagogueTab: PedagogueTab.SPEECH_THERAPIST,
+        pedagogueType: PedagogueType.STRUCTURAL_SEMANTIC_DISORDERS
+    },
+
+    {
+        title: 'Отсутствуют',
+        healthZone: HealthZone.GREEN,
+        pedagogueTab: PedagogueTab.SPEECH_THERAPIST,
+        pedagogueType: PedagogueType.WRITING_DISORDERS
+    },
+    {
+        title: 'Незначительные проявления',
+        healthZone: HealthZone.YELLOW,
+        pedagogueTab: PedagogueTab.SPEECH_THERAPIST,
+        pedagogueType: PedagogueType.WRITING_DISORDERS
+    },
+    {
+        title: 'Дисграфия',
+        healthZone: HealthZone.RED,
+        pedagogueTab: PedagogueTab.SPEECH_THERAPIST,
+        pedagogueType: PedagogueType.WRITING_DISORDERS
+    },
+    {
+        title: 'Дизорфография',
+        healthZone: HealthZone.RED,
+        pedagogueTab: PedagogueTab.SPEECH_THERAPIST,
+        pedagogueType: PedagogueType.WRITING_DISORDERS
+    },
+
+    {
+        title: 'Отсутствуют',
+        healthZone: HealthZone.GREEN,
+        pedagogueTab: PedagogueTab.SPEECH_THERAPIST,
+        pedagogueType: PedagogueType.READING_DISORDERS
+    },
+    {
+        title: 'Незначительные проявления',
+        healthZone: HealthZone.YELLOW,
+        pedagogueTab: PedagogueTab.SPEECH_THERAPIST,
+        pedagogueType: PedagogueType.READING_DISORDERS
+    },
+    {
+        title: 'Дислексия',
+        healthZone: HealthZone.RED,
+        pedagogueTab: PedagogueTab.SPEECH_THERAPIST,
+        pedagogueType: PedagogueType.READING_DISORDERS
     }
 ]
