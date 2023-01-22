@@ -1,7 +1,11 @@
-import { PrismaClient, Student } from '@prisma/client'
+import { PrismaClient, Role, Student } from '@prisma/client'
+import checkRole from '~~/server/utils/checkRole'
+
 const prisma = new PrismaClient()
 
 export default defineEventHandler(async (event) => {
+    if (!checkRole(event, { role: Role.CLASS_TEACHER })) return
+
     const studentData: Student = (await readBody(event)).studentData
     return await prisma.student.create({
         data: {
@@ -17,7 +21,8 @@ export default defineEventHandler(async (event) => {
 
             physicalHealth: { create: {} },
             medicalHealth: { create: {} },
-            socialHealth: { create: {} }
+            socialHealth: { create: {} },
+            pedagogueHealth: { create: {} }
         }
     })
 })
