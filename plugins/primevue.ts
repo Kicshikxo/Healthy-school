@@ -24,7 +24,7 @@ import TabView from 'primevue/tabview/TabView.vue'
 import TabPanel from 'primevue/tabpanel/TabPanel.vue'
 
 export default defineNuxtPlugin((nuxtApp) => {
-    nuxtApp.vueApp.use(PrimeVue, { locale, ripple: false })
+    nuxtApp.vueApp.use(PrimeVue, { locale, ripple: true })
     nuxtApp.vueApp.use(ToastService)
     nuxtApp.vueApp.component('p-button', Button)
     nuxtApp.vueApp.component('p-toggle-button', ToggleButton)
