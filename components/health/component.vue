@@ -37,7 +37,7 @@
                 </div>
             </template>
             <template v-if="$slots.body" #content>
-                <slot :enable-editing="enableEditing" name="body"></slot>
+                <slot :enable-editing="enableEditing" :loading="isLoading" name="body"></slot>
             </template>
         </p-card>
     </section>
