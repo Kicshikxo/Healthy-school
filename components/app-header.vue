@@ -60,7 +60,5 @@ const roleLocalization: { [key in Role]: string } = {
     PHYSICAL_EDUCATION_TEACHER: 'Учитель физической культуры'
 }
 
-const { data: organization } = useFetch('/api/organization/info', { query: { organizationId: data.value?.organizationId } })
-
 const avatarSrc = `images/avatars/persona ${~~(Math.random() * 4)}-${~~(Math.random() * 3)}.png`
 </script>
