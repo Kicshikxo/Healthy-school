@@ -3,7 +3,16 @@
         <section class="p-5">
             <div class="flex justify-content-between gap-8">
                 <div class="flex flex-auto gap-5">
-                    <nuxt-img src="images/avatars/persona 0-0.png" alt="student avatar" width="96" height="96" />
+                    <p-skeleton v-if="loadingData" width="96px" height="96px" />
+                    <nuxt-img
+                        v-else
+                        :src="
+                            studentData?.gender === 'MALE' ? 'images/avatars/persona 0-0.png' : 'images/avatars/persona 0-1.png'
+                        "
+                        alt="student avatar"
+                        width="96"
+                        height="96"
+                    />
                     <div class="flex flex-auto flex-column justify-content-between">
                         <div class="flex align-items-center text-3xl h-2rem">
                             <p-skeleton v-if="loadingData" class="max-w-30rem" />
@@ -21,7 +30,7 @@
                                     <div v-else>{{ new Date(studentData?.birthdate!).toLocaleDateString() }}</div>
                                 </div>
                             </div>
-                            <div class="flex flex-column">
+                            <div class="flex flex-column w-5rem">
                                 <div class="text-500">Пол</div>
                                 <div class="flex align-items-end h-1rem mt-2 text-700">
                                     <p-skeleton v-if="loadingData" class="max-w-30rem" />
