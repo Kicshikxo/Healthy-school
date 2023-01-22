@@ -1,5 +1,5 @@
 <template>
-    <div class="flex align-items-center" :class="`gap-${gap}`">
+    <div class="flex align-items-center" :class="{ [`gap-${gap}`]: healthZone }">
         <div
             class="border-round"
             :class="{
