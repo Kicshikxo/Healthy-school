@@ -8,18 +8,16 @@
             <i class="pi pi-users w-1rem text-xl"></i>
         </nuxt-link>
 
-        <transition-group name="slide">
-            <div v-for="path in breadcrumbs" :key="path" class="flex align-items-center gap-3">
-                <i class="pi pi-angle-right w-1rem text-primary-200"></i>
-                <nuxt-link
-                    :to="$router.resolve({ path }).meta.to ?? path"
-                    :class="$route.path == path ? 'text-primary-50' : 'text-primary-200 hover:text-primary-100'"
-                    class="no-underline"
-                >
-                    {{ $router.resolve({ path }).meta.title ?? $route.path }}
-                </nuxt-link>
-            </div>
-        </transition-group>
+        <div v-for="path in breadcrumbs" :key="path" class="flex align-items-center gap-3">
+            <i class="pi pi-angle-right w-1rem text-primary-200"></i>
+            <nuxt-link
+                :to="$router.resolve({ path }).meta.to ?? path"
+                :class="$route.path == path ? 'text-primary-50' : 'text-primary-200 hover:text-primary-100'"
+                class="no-underline"
+            >
+                {{ $router.resolve({ path }).meta.title ?? $route.path }}
+            </nuxt-link>
+        </div>
     </nav>
 </template>
 
