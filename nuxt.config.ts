@@ -39,6 +39,12 @@ export default defineNuxtConfig({
 
     modules: ['@nuxt/image-edge', '@pinia/nuxt', 'nuxt-lodash'],
 
+    vite: {
+        resolve: {
+            alias: { '.prisma/client/index-browser': './node_modules/.prisma/client/index-browser.js' }
+        }
+    },
+
     build: {
         transpile: ['primevue']
     }
