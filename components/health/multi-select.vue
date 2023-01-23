@@ -9,7 +9,7 @@
         display="chip"
         class="w-full"
         appendTo="self"
-        panelClass="border-1 border-300"
+        panelClass="border-1 surface-border"
     >
         <template #chip="{ value }">
             <health-zone-indicator

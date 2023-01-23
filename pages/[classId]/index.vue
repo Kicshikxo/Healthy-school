@@ -91,7 +91,7 @@
                         optionLabel="label"
                         optionValue="value"
                         placeholder="Пол"
-                        panelClass="border-1 border-300"
+                        panelClass="border-1 surface-border"
                         appendTo="self"
                     />
                 </div>

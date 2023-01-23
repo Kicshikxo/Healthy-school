@@ -7,7 +7,7 @@
         :modelValue="modelValue"
         @update:modelValue="$emit('update:modelValue', $event)"
         class="w-full"
-        panelClass="border-1 border-300"
+        panelClass="border-1 surface-border"
     >
         <template #value="{ value }">
             <health-zone-indicator

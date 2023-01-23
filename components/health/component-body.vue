@@ -1,6 +1,6 @@
 <template>
     <p-card
-        class="health-component-body border-1 border-300 shadow-none"
+        class="health-component-body border-1 surface-border shadow-none"
         :class="{
             'p-card-content-pb-0': !paddingBottom,
             'p-card-content-pt-0': !paddingTop
