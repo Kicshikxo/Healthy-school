@@ -9,7 +9,7 @@
                         <p-divider />
                         <div class="grid grid-nogutter">
                             <div class="col-6 flex justify-content-start align-items-center text-lg">{{ title }}</div>
-                            <div class="col-6 border-left-1 border-300 pl-4">
+                            <div class="col-6 border-left-1 surface-border pl-4">
                                 <health-dropdown
                                     :disabled="!enableEditing"
                                     :loading="loadingData"
@@ -30,7 +30,7 @@
                         <p-divider />
                         <div class="grid grid-nogutter">
                             <div class="col-6 flex justify-content-start align-items-center text-lg">{{ title }}</div>
-                            <div class="col-6 border-left-1 border-300 pl-4">
+                            <div class="col-6 border-left-1 surface-border pl-4">
                                 <health-multi-select
                                     :disabled="!enableEditing"
                                     :loading="loadingData"
@@ -134,7 +134,7 @@ const studentOptions = computed(() =>
             if (optionSelectionTypes.SINGLE.includes(type)) {
                 acc.SINGLE[type] =
                     props.studentData?.medicalHealth?.options.find((option) => option.medicalType === type) ??
-                    options.value[type].find((option) => option.healthZone === 'GREEN')!
+                    options.value[type].find((option) => option.healthZone === HealthZone.GREEN)!
             } else if (optionSelectionTypes.MULTIPLE.includes(type)) {
                 acc.MULTIPLE[type] =
                     props.studentData?.medicalHealth?.options.filter((option) => option.medicalType === type) ?? []
@@ -152,13 +152,13 @@ const studentSpecialistNotes = computed(() => props.studentData?.medicalHealth?.
 
 // Selected data
 const selectedOptions = ref(useCloneDeep(studentOptions.value))
-const selectedRecommendations = ref(studentRecommendations.value)
-const currentSpecialistNotes = ref(studentSpecialistNotes.value)
+const selectedRecommendations = ref(useCloneDeep(studentRecommendations.value))
+const currentSpecialistNotes = ref(useCloneDeep(studentSpecialistNotes.value))
 
 // Watch on student data update
 watch(studentOptions, (value) => (selectedOptions.value = useCloneDeep(value)))
-watch(studentRecommendations, (value) => (selectedRecommendations.value = value))
-watch(studentSpecialistNotes, (value) => (currentSpecialistNotes.value = value))
+watch(studentRecommendations, (value) => (selectedRecommendations.value = useCloneDeep(value)))
+watch(studentSpecialistNotes, (value) => (currentSpecialistNotes.value = useCloneDeep(value)))
 
 const hasChanges = computed(
     () =>
@@ -189,25 +189,27 @@ const multipleOptions = computed<{ title: string; type: MedicalType }[]>(() =>
 )
 
 const currentHealthZone = computed<HealthZone>(() => {
-    if (Object.values(selectedOptions.value.SINGLE).some((option) => option.healthZone === 'RED')) {
-        return 'RED'
+    if (Object.values(selectedOptions.value.SINGLE).some((option) => option.healthZone === HealthZone.RED)) {
+        return HealthZone.RED
     }
-    if (Object.values(selectedOptions.value.SINGLE).some((option) => option.healthZone === 'YELLOW')) {
+    if (Object.values(selectedOptions.value.SINGLE).some((option) => option.healthZone === HealthZone.YELLOW)) {
         if (
             Object.values(selectedOptions.value.MULTIPLE)
                 .flat()
-                .some((option) => option.healthZone === 'RED')
+                .some((option) => option.healthZone === HealthZone.RED)
         ) {
-            return 'RED'
+            return HealthZone.RED
         }
-        return 'YELLOW'
+        return HealthZone.YELLOW
     }
-    return 'GREEN'
+    return HealthZone.GREEN
 })
 
 const availableRecommendations = computed(() =>
     medicalRecommendations.value?.filter((recommendation) => recommendation.healthZone === currentHealthZone.value)
 )
 
-const showIndividualOptions = computed(() => (['YELLOW', 'RED'] as HealthZone[]).includes(currentHealthZone.value))
+const showIndividualOptions = computed(() =>
+    ([HealthZone.YELLOW, HealthZone.RED] as HealthZone[]).includes(currentHealthZone.value)
+)
 </script>

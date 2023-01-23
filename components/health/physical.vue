@@ -9,9 +9,9 @@
                         <p-select-button
                             v-model="selectedHealthGroup"
                             :options="[
-                                { label: 'Основная', value: 'BASIC' },
-                                { label: 'Подготовительная', value: 'PREPARATORY' },
-                                { label: 'Специальная', value: 'SPECIAL' }
+                                { label: 'Основная', value: HealthGroup.BASIC },
+                                { label: 'Подготовительная', value: HealthGroup.PREPARATORY },
+                                { label: 'Специальная', value: HealthGroup.SPECIAL }
                             ]"
                             optionLabel="label"
                             optionValue="value"
@@ -92,14 +92,14 @@ const studentRecommendations = computed(() => props.studentData?.physicalHealth?
 const studentSpecialistNotes = computed(() => props.studentData?.physicalHealth?.specialistNotes ?? '')
 
 // Selected data
-const selectedHealthGroup = ref(studentHealthGroup.value)
-const selectedRecommendations = ref(studentRecommendations.value)
-const currentSpecialistNotes = ref(studentSpecialistNotes.value)
+const selectedHealthGroup = ref(useCloneDeep(studentHealthGroup.value))
+const selectedRecommendations = ref(useCloneDeep(studentRecommendations.value))
+const currentSpecialistNotes = ref(useCloneDeep(studentSpecialistNotes.value))
 
 // Watch on student data update
-watch(studentHealthGroup, (value) => (selectedHealthGroup.value = value))
-watch(studentRecommendations, (value) => (selectedRecommendations.value = value))
-watch(studentSpecialistNotes, (value) => (currentSpecialistNotes.value = value))
+watch(studentHealthGroup, (value) => (selectedHealthGroup.value = useCloneDeep(value)))
+watch(studentRecommendations, (value) => (selectedRecommendations.value = useCloneDeep(value)))
+watch(studentSpecialistNotes, (value) => (currentSpecialistNotes.value = useCloneDeep(value)))
 
 // Sorted student data
 const sortedStudentRecommendations = computed(() => studentRecommendations.value.sort((a, b) => a.id - b.id))
@@ -118,5 +118,7 @@ const availableRecommendations = computed(() =>
     physicalRecommendations.value?.filter((recommendation) => recommendation.healthGroup === selectedHealthGroup.value)
 )
 
-const showRecommendations = computed(() => (['PREPARATORY', 'SPECIAL'] as HealthGroup[]).includes(selectedHealthGroup.value))
+const showRecommendations = computed(() =>
+    ([HealthGroup.PREPARATORY, HealthGroup.SPECIAL] as HealthGroup[]).includes(selectedHealthGroup.value)
+)
 </script>

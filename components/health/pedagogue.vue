@@ -11,7 +11,7 @@
                                 <p-divider />
                                 <div class="grid grid-nogutter">
                                     <div class="col-6 flex justify-content-start align-items-center text-lg">{{ title }}</div>
-                                    <div class="col-6 border-left-1 border-300 pl-4">
+                                    <div class="col-6 border-left-1 surface-border pl-4">
                                         <health-dropdown
                                             :disabled="!enableEditing"
                                             :loading="loadingData"
@@ -34,7 +34,7 @@
                                 <p-divider />
                                 <div class="grid grid-nogutter">
                                     <div class="col-6 flex justify-content-start align-items-center text-lg">{{ title }}</div>
-                                    <div class="col-6 border-left-1 border-300 pl-4">
+                                    <div class="col-6 border-left-1 surface-border pl-4">
                                         <health-dropdown
                                             :disabled="!enableEditing"
                                             :loading="loadingData"
@@ -55,7 +55,7 @@
 </template>
 
 <script setup lang="ts">
-import { PedagogueHealth, PedagogueHealthOption, PedagogueTab, PedagogueType } from '@prisma/client'
+import { HealthZone, PedagogueHealth, PedagogueHealthOption, PedagogueTab, PedagogueType } from '@prisma/client'
 
 const props = defineProps<{
     studentData: HealthComponentData
@@ -114,7 +114,7 @@ const studentOptions = computed(() =>
     (Object.keys(PedagogueType) as PedagogueType[]).reduce((acc, type) => {
         acc[type] =
             props.studentData?.pedagogueHealth?.options.find((option) => option.pedagogueType === type) ??
-            options.value[type].find((option) => option.healthZone === 'GREEN')!
+            options.value[type].find((option) => option.healthZone === HealthZone.GREEN)!
         return acc
     }, {} as { [key in PedagogueType]: PedagogueHealthOption })
 )

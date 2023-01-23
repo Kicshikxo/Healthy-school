@@ -90,12 +90,12 @@ const studentIndicators = computed(() => props.studentData?.socialHealth?.indica
 const studentRecommendations = computed(() => props.studentData?.socialHealth?.recommendations ?? [])
 
 // Selected data
-const selectedIndicators = ref(studentIndicators.value)
-const selectedRecommendations = ref(studentRecommendations.value)
+const selectedIndicators = ref(useCloneDeep(studentIndicators.value))
+const selectedRecommendations = ref(useCloneDeep(studentRecommendations.value))
 
 // Watch on student data update
-watch(studentIndicators, (value) => (selectedIndicators.value = value))
-watch(studentRecommendations, (value) => (selectedRecommendations.value = value))
+watch(studentIndicators, (value) => (selectedIndicators.value = useCloneDeep(value)))
+watch(studentRecommendations, (value) => (selectedRecommendations.value = useCloneDeep(value)))
 
 // Sorted student data
 const sortedStudentIndicators = computed(() => studentIndicators.value.sort((a, b) => a.id - b.id))
@@ -114,18 +114,20 @@ const hasChanges = computed(
 const currentHealthZone = computed<HealthZone>(() => {
     const healthZones = selectedIndicators.value.map((indicator) => indicator.healthZone)
 
-    if (healthZones.some((healthZone) => healthZone === 'RED')) {
-        return 'RED'
+    if (healthZones.some((healthZone) => healthZone === HealthZone.RED)) {
+        return HealthZone.RED
     }
-    if (healthZones.some((healthZone) => healthZone === 'YELLOW')) {
-        return 'YELLOW'
+    if (healthZones.some((healthZone) => healthZone === HealthZone.YELLOW)) {
+        return HealthZone.YELLOW
     }
-    return 'GREEN'
+    return HealthZone.GREEN
 })
 
 const availableRecommendations = computed(() =>
     socialRecommendations.value?.filter((recommendation) => recommendation.healthZone === currentHealthZone.value)
 )
 
-const showRecommendations = computed(() => (['YELLOW', 'RED'] as HealthZone[]).includes(currentHealthZone.value))
+const showRecommendations = computed(() =>
+    ([HealthZone.YELLOW, HealthZone.RED] as HealthZone[]).includes(currentHealthZone.value)
+)
 </script>
