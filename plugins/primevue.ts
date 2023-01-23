@@ -5,6 +5,7 @@ import ToggleButton from 'primevue/togglebutton/ToggleButton.vue'
 import Checkbox from 'primevue/checkbox/Checkbox.vue'
 import SelectButton from 'primevue/selectbutton/SelectButton.vue'
 import InputText from 'primevue/inputtext/InputText.vue'
+import Password from 'primevue/password/Password.vue'
 import Textarea from 'primevue/textarea/Textarea.vue'
 import InputNumber from 'primevue/inputnumber/InputNumber.vue'
 import InputMask from 'primevue/inputmask/InputMask.vue'
@@ -31,6 +32,7 @@ export default defineNuxtPlugin((nuxtApp) => {
     nuxtApp.vueApp.component('p-checkbox', Checkbox)
     nuxtApp.vueApp.component('p-select-button', SelectButton)
     nuxtApp.vueApp.component('p-input-text', InputText)
+    nuxtApp.vueApp.component('p-password', Password)
     nuxtApp.vueApp.component('p-textarea', Textarea)
     nuxtApp.vueApp.component('p-input-number', InputNumber)
     nuxtApp.vueApp.component('p-input-mask', InputMask)
