@@ -17,6 +17,14 @@ export default defineEventHandler(async (event) => {
                     students: true
                 }
             }
-        }
+        },
+        orderBy: [
+            {
+                number: 'asc'
+            },
+            {
+                liter: 'asc'
+            }
+        ]
     })
 })
