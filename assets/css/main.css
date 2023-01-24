@@ -51,6 +51,26 @@
     border-top-right-radius: 0;
 }
 
+/* joinable cards border joining */
+.p-cards-joinable .p-card:not(:last-child) {
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+}
+.p-cards-joinable .p-card:not(:first-child) {
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+}
+.p-cards-joinable .p-card:only-child {
+    border-top: 0;
+    border-bottom: 0;
+}
+
+/* Remove horizontal paddins in p-tab-panel */
+.p-tabview .p-tabview-panels {
+    padding: 0 !important;
+    padding-top: 1.25rem !important;
+}
+
 /* Enabling wrap in p-multiselect */
 .p-multiselect-item,
 .p-multiselect-label {
