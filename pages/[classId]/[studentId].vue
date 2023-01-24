@@ -75,6 +75,9 @@
         <role-access role="PEDAGOGUE">
             <health-pedagogue :student-data="studentData" :loading-data="loadingData" :refresh-data="refreshData" />
         </role-access>
+        <role-access role="PSYCHOLOGIST">
+            <health-psychological :student-data="studentData" :loading-data="loadingData" :refresh-data="refreshData" />
+        </role-access>
         <role-access role="CLASS_TEACHER">
             <health-route :student-data="studentData" :loading-data="loadingData" :refresh-data="refreshData" />
         </role-access>

@@ -22,7 +22,8 @@ export default defineEventHandler(async (event) => {
             physicalHealth: { create: {} },
             medicalHealth: { create: {} },
             socialHealth: { create: {} },
-            pedagogueHealth: { create: {} }
+            pedagogueHealth: { create: {} },
+            psychologicalHealth: { create: {} }
         }
     })
 })

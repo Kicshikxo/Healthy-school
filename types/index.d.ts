@@ -9,6 +9,7 @@ import {
     SocialHealthIndicator,
     SocialHealthRecommendation,
     Student,
+    Class,
     PedagogueHealthOption,
     PedagogueHealthSuboption
 } from '@prisma/client'
@@ -19,6 +20,7 @@ declare global {
 
     type HealthComponentData =
         | (Student & {
+              class: Class | null
               physicalHealth: {
                   healthGroup: HealthGroup | null
                   recommendations: PhysicalHealthRecommendation[]
@@ -35,6 +37,9 @@ declare global {
               } | null
               pedagogueHealth: {
                   options: PedagogueHealthOption[]
+              } | null
+              psychologicalHealth: {
+                  options: PsychologicalHealthOption[]
               } | null
           })
         | null

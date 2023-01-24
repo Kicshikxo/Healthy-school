@@ -39,6 +39,11 @@ export default defineEventHandler(async (event) => {
                 select: {
                     options: true
                 }
+            },
+            psychologicalHealth: {
+                select: {
+                    options: true
+                }
             }
         }
     })
