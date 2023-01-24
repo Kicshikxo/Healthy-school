@@ -67,10 +67,11 @@ model Student {
     createdAt  DateTime @default(now()) @map("created_at")
     updatedAt  DateTime @default(now()) @updatedAt @map("updated_at")
 
-    physicalHealth  PhysicalHealth?
-    medicalHealth   MedicalHealth?
-    socialHealth    SocialHealth?
-    pedagogueHealth PedagogueHealth?
+    physicalHealth      PhysicalHealth?
+    medicalHealth       MedicalHealth?
+    socialHealth        SocialHealth?
+    pedagogueHealth     PedagogueHealth?
+    psychologicalHealth PsychologicalHealth?
 
     @@map("students")
 }
@@ -170,6 +171,25 @@ model PedagogueHealthOption {
     @@map("pedagogue_health_options")
 }
 
+model PsychologicalHealth {
+    studentId String                      @id(map: "psychological_health_pkey") @map("student_id") @db.Uuid
+    student   Student                     @relation(fields: [studentId], references: [id], onUpdate: Cascade, onDelete: Cascade)
+    options   PsychologicalHealthOption[] @relation(name: "student_psychological_health_options")
+
+    @@map("student_psychological_health")
+}
+
+model PsychologicalHealthOption {
+    id                  Int                   @id(map: "psychological_health_options_pkey") @default(autoincrement()) @map("option_id")
+    title               String                @map("title")
+    healthZone          HealthZone            @map("health_zone")
+    educationType       EducationType         @map("education_type")
+    psychologicalType   PsychologicalType     @map("psychological_type")
+    psychologicalHealth PsychologicalHealth[] @relation(name: "student_psychological_health_options")
+
+    @@map("psychological_health_options")
+}
+
 enum Role {
     OPERATOR
     CLASS_TEACHER
@@ -185,16 +205,22 @@ enum Gender {
     FEMALE
 }
 
+enum HealthZone {
+    GREEN
+    YELLOW
+    RED
+}
+
 enum HealthGroup {
     BASIC
     PREPARATORY
     SPECIAL
 }
 
-enum HealthZone {
-    GREEN
-    YELLOW
-    RED
+enum EducationType {
+    PRIMARY
+    BASIC
+    MIDDLE
 }
 
 enum MedicalType {
@@ -232,4 +258,21 @@ enum PedagogueType {
     STRUCTURAL_SEMANTIC_DISORDERS
     WRITING_DISORDERS
     READING_DISORDERS
+}
+
+enum PsychologicalType {
+    CULTURAL_VALUES
+    MOTIVATION
+    ADAPTATION
+    SOCIOMETRY
+    SELF_ASSESSMENT
+    ACCENTUATIONS
+    ANXIETY
+    PERSONAL_ANXIETY
+    AGGRESSIVITY
+    EXTRACURRICULAR_ABILITIES
+    DEVIANT_BEHAVIOR
+    PROFESSIONAL_INTERESTS
+    BULLYING
+    CONFLICTUALITY
 }
