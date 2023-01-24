@@ -154,10 +154,3 @@ const speechTab = computed<{ title: string; type: PedagogueType }[]>(() =>
     tabTypes.value.SPEECH_THERAPIST.map((type) => ({ title: typeTitles[type], type }))
 )
 </script>
-
-<style>
-.p-tabview .p-tabview-panels {
-    padding: 0 !important;
-    padding-top: 1.25rem !important;
-}
-</style>
