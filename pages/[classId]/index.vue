@@ -78,7 +78,7 @@
             <div class="formgrid grid">
                 <div class="field col">
                     <label for="birthdate">Дата рождения</label>
-                    <p-calendar inputId="birthdate" v-model="newStudent.birthdate" appendTo="self" />
+                    <p-calendar inputId="birthdate" v-model="newStudent.birthdate" />
                 </div>
                 <div class="field col">
                     <label>Пол</label>
@@ -92,7 +92,6 @@
                         optionValue="value"
                         placeholder="Пол"
                         panelClass="border-1 surface-border"
-                        appendTo="self"
                     />
                 </div>
             </div>
