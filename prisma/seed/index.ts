@@ -10,7 +10,8 @@ import {
     medicalHealthOptions,
     medicalHealthRecommendations,
     pedagogueHealthOptions,
-    psychologicalHealthOptions
+    psychologicalHealthOptions,
+    conclusions
 } from './data'
 const prisma = new PrismaClient()
 
@@ -153,6 +154,17 @@ async function main() {
         console.log(`Создано ${psychologicalHealthOptions.length} опций психологического здоровья`)
     } else {
         console.log(`В БД уже хранится ${psychologicalHealthOptionsCount} опций психологического здоровья`)
+    }
+
+    const conclusionsCount = await prisma.conclusion.count()
+    if (conclusionsCount === 0) {
+        await prisma.conclusion.createMany({
+            data: conclusions
+        })
+
+        console.log(`Создано ${conclusions.length} медицинских заключений`)
+    } else {
+        console.log(`В БД уже хранится ${conclusionsCount} медицинских заключений`)
     }
 }
 

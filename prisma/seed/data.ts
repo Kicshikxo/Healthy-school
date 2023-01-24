@@ -6,7 +6,8 @@ import {
     PedagogueTab,
     PedagogueType,
     EducationType,
-    PsychologicalType
+    PsychologicalType,
+    ConclusionType
 } from '@prisma/client'
 
 export const municipality: { name: string } = {
@@ -1554,5 +1555,113 @@ export const psychologicalHealthOptions: {
         healthZone: HealthZone.RED,
         educationType: EducationType.MIDDLE,
         psychologicalType: PsychologicalType.CONFLICTUALITY
+    }
+]
+
+export const conclusions: { title: string; conclusionType: ConclusionType; healthZone: HealthZone }[] = [
+    {
+        title: 'Нет ограничений по здоровью',
+        conclusionType: ConclusionType.MEDICAL,
+        healthZone: HealthZone.GREEN
+    },
+    {
+        title: 'Подвержен риску развития частых/хронических заболеваний, обладает пониженным иммунитетом/проблемной наследственностью',
+        conclusionType: ConclusionType.MEDICAL,
+        healthZone: HealthZone.YELLOW
+    },
+    {
+        title: 'Наблюдается значительное ухудшение здоровья, нарушение функционирования некоторых органов и систем',
+        conclusionType: ConclusionType.MEDICAL,
+        healthZone: HealthZone.RED
+    },
+    {
+        title: 'Сниженная сопротивляемость организма',
+        conclusionType: ConclusionType.MEDICAL,
+        healthZone: HealthZone.RED
+    },
+    {
+        title: 'Требуется лечение/реабилитация',
+        conclusionType: ConclusionType.MEDICAL,
+        healthZone: HealthZone.RED
+    },
+
+    {
+        title: 'Нет особенностей по педагогическим показателям',
+        conclusionType: ConclusionType.PEDAGOGUE,
+        healthZone: HealthZone.GREEN
+    },
+    {
+        title: 'Наличие риска по педагогическим показателям',
+        conclusionType: ConclusionType.PEDAGOGUE,
+        healthZone: HealthZone.YELLOW
+    },
+    {
+        title: 'Выявлены нарушения по педагогическим показателям',
+        conclusionType: ConclusionType.PEDAGOGUE,
+        healthZone: HealthZone.RED
+    },
+
+    {
+        title: 'Отсутствие речевых нарушений',
+        conclusionType: ConclusionType.SPEECH,
+        healthZone: HealthZone.GREEN
+    },
+    {
+        title: 'Наличие риска по логопедическим показателям',
+        conclusionType: ConclusionType.SPEECH,
+        healthZone: HealthZone.YELLOW
+    },
+    {
+        title: 'Нарушения речевого развития',
+        conclusionType: ConclusionType.SPEECH,
+        healthZone: HealthZone.RED
+    },
+
+    {
+        title: 'Основная группа для занятий физической культурой',
+        conclusionType: ConclusionType.PHYSICAL,
+        healthZone: HealthZone.GREEN
+    },
+    {
+        title: 'Подготовительная группа для занятий физической культурой',
+        conclusionType: ConclusionType.PHYSICAL,
+        healthZone: HealthZone.YELLOW
+    },
+    {
+        title: 'Впециальная группа для занятий физической культурой',
+        conclusionType: ConclusionType.PHYSICAL,
+        healthZone: HealthZone.RED
+    },
+
+    {
+        title: 'Нет ограничений по психологическому здоровью',
+        conclusionType: ConclusionType.PSYCHOLOGICAL,
+        healthZone: HealthZone.GREEN
+    },
+    {
+        title: 'Наличие риска по показателям психологического здоровья',
+        conclusionType: ConclusionType.PSYCHOLOGICAL,
+        healthZone: HealthZone.YELLOW
+    },
+    {
+        title: 'Наблюдается значительное ухудшение показателей психологического здоровья',
+        conclusionType: ConclusionType.PSYCHOLOGICAL,
+        healthZone: HealthZone.RED
+    },
+
+    {
+        title: 'Нет ограничений по социальному здоровью',
+        conclusionType: ConclusionType.SOCIAL,
+        healthZone: HealthZone.GREEN
+    },
+    {
+        title: 'Группа риска по показателям социального здоровья',
+        conclusionType: ConclusionType.SOCIAL,
+        healthZone: HealthZone.YELLOW
+    },
+    {
+        title: 'Наблюдаются значительные ухудшения по показателям социального здоровья',
+        conclusionType: ConclusionType.SOCIAL,
+        healthZone: HealthZone.RED
     }
 ]
