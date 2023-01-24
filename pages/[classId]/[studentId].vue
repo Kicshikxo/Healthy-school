@@ -55,31 +55,35 @@
                     </div>
                 </div>
                 <div class="flex gap-2">
-                    <p-button icon="pi pi-print" class="p-button-rounded p-button-secondary" @click="printStudent" />
-                    <p-button icon="pi pi-file-pdf" class="p-button-rounded p-button-secondary" @click="saveToPDF" />
+                    <role-access role="CLASS_TEACHER">
+                        <p-button icon="pi pi-print" class="p-button-rounded p-button-secondary" @click="printStudent" />
+                    </role-access>
+                    <role-access role="CLASS_TEACHER">
+                        <p-button icon="pi pi-file-pdf" class="p-button-rounded p-button-secondary" @click="saveToPDF" />
+                    </role-access>
                     <role-access role="CLASS_TEACHER">
                         <p-button icon="pi pi-trash" class="p-button-rounded p-button-danger" @click="deleteStudent" />
                     </role-access>
                 </div>
             </div>
         </section>
-        <role-access role="PHYSICAL_EDUCATION_TEACHER">
-            <health-physical :student-data="studentData" :loading-data="loadingData" :refresh-data="refreshData" />
-        </role-access>
         <role-access role="HEALTH_WORKER">
             <health-medical :student-data="studentData" :loading-data="loadingData" :refresh-data="refreshData" />
-        </role-access>
-        <role-access role="SOCIAL_PEDAGOGUE">
-            <health-social :student-data="studentData" :loading-data="loadingData" :refresh-data="refreshData" />
         </role-access>
         <role-access role="PEDAGOGUE">
             <health-pedagogue :student-data="studentData" :loading-data="loadingData" :refresh-data="refreshData" />
         </role-access>
+        <role-access role="PHYSICAL_EDUCATION_TEACHER">
+            <health-physical :student-data="studentData" :loading-data="loadingData" :refresh-data="refreshData" />
+        </role-access>
         <role-access role="PSYCHOLOGIST">
             <health-psychological :student-data="studentData" :loading-data="loadingData" :refresh-data="refreshData" />
         </role-access>
+        <role-access role="SOCIAL_PEDAGOGUE">
+            <health-social :student-data="studentData" :loading-data="loadingData" :refresh-data="refreshData" />
+        </role-access>
         <role-access role="CLASS_TEACHER">
-            <health-route :student-data="studentData" :loading-data="loadingData" :refresh-data="refreshData" />
+            <health-class-teacher :student-data="studentData" :loading-data="loadingData" :refresh-data="refreshData" />
         </role-access>
     </div>
 </template>
