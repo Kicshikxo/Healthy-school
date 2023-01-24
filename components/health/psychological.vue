@@ -45,7 +45,9 @@ async function saveChanges() {
         method: 'PATCH',
         body: {
             studentId: props.studentData?.id,
-            options: Object.values(selectedOptions.value)
+            options: Object.values(selectedOptions.value).filter(
+                (option) => option.educationType === studentEducationType.value
+            )
         } as PsychologicalHealth & { options: PsychologicalHealthOption[] }
     })
 
