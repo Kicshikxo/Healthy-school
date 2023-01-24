@@ -41,10 +41,7 @@ export default defineNuxtConfig({
 
     vite: {
         resolve: {
-            alias:
-                process.env.NODE_ENV === 'production'
-                    ? { '.prisma/client/index-browser': './node_modules/.prisma/client/index-browser.js' }
-                    : undefined
+            alias: { '.prisma/client/index-browser': './node_modules/.prisma/client/index-browser.js' }
         }
     },
 
