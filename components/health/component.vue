@@ -8,7 +8,15 @@
                     </div>
                     <div class="flex gap-2 align-self-end">
                         <p-button
-                            v-if="!enableEditing"
+                            v-if="reloadable"
+                            :loading="isLoading"
+                            icon="pi pi-refresh"
+                            label="Обновить"
+                            class="p-button-primary"
+                            @click="reload"
+                        />
+                        <p-button
+                            v-if="!enableEditing && editable"
                             :loading="isLoading"
                             icon="pi pi-pencil"
                             label="Редактировать"
@@ -17,7 +25,7 @@
                             @click="startEditing"
                         />
                         <p-button
-                            v-if="enableEditing"
+                            v-if="enableEditing && editable"
                             icon="pi pi-times"
                             label="Отменить"
                             :disabled="!enableEditing || isLoading"
@@ -25,7 +33,7 @@
                             @click="cancelChanges"
                         />
                         <p-button
-                            v-if="enableEditing"
+                            v-if="enableEditing && editable"
                             :loading="isLoading"
                             icon="pi pi-save"
                             label="Сохранить"
@@ -46,12 +54,21 @@
 <script setup lang="ts">
 import { useToast } from 'primevue/usetoast'
 
-const props = defineProps<{
-    loading?: boolean
-    allowSave?: boolean
-    onCancel?: () => Promise<void> | void
-    onSave?: () => Promise<void> | void
-}>()
+const props = withDefaults(
+    defineProps<{
+        loading?: boolean
+        editable?: boolean
+        reloadable?: boolean
+        allowSave?: boolean
+        onCancel?: () => Promise<void> | void
+        onSave?: () => Promise<void> | void
+        onReload?: () => Promise<void> | void
+    }>(),
+    {
+        editable: true,
+        reloadable: false
+    }
+)
 
 const emit = defineEmits<{
     (event: 'start-editing'): void
@@ -107,6 +124,12 @@ async function saveChanges() {
             life: 3000
         })
     }
+    innerLoading.value = false
+}
+
+async function reload() {
+    innerLoading.value = true
+    if (props.onReload) await props.onReload()
     innerLoading.value = false
 }
 </script>
