@@ -9,8 +9,9 @@ import {
     socialHealthRecommendations,
     medicalHealthOptions,
     medicalHealthRecommendations,
-    pedagogueHealthOptions
-} from './seedData'
+    pedagogueHealthOptions,
+    psychologicalHealthOptions
+} from './data'
 const prisma = new PrismaClient()
 
 async function main() {
@@ -141,6 +142,17 @@ async function main() {
         console.log(`Создано ${pedagogueHealthOptions.length} опций педагогического здоровья`)
     } else {
         console.log(`В БД уже хранится ${pedagogueHealthOptionsCount} опций педагогического здоровья`)
+    }
+
+    const psychologicalHealthOptionsCount = await prisma.psychologicalHealthOption.count()
+    if (psychologicalHealthOptionsCount === 0) {
+        await prisma.psychologicalHealthOption.createMany({
+            data: psychologicalHealthOptions
+        })
+
+        console.log(`Создано ${psychologicalHealthOptions.length} опций психологического здоровья`)
+    } else {
+        console.log(`В БД уже хранится ${psychologicalHealthOptionsCount} опций психологического здоровья`)
     }
 }
 

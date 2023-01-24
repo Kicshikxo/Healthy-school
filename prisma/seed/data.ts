@@ -1,4 +1,13 @@
-import { Role, HealthZone, HealthGroup, MedicalType, PedagogueTab, PedagogueType } from '@prisma/client'
+import {
+    Role,
+    HealthZone,
+    HealthGroup,
+    MedicalType,
+    PedagogueTab,
+    PedagogueType,
+    EducationType,
+    PsychologicalType
+} from '@prisma/client'
 
 export const municipality: { name: string } = {
     name: 'Курский район'
@@ -38,6 +47,11 @@ export const usersData: { username: string; password: string; role: Role }[] = [
         username: 'ped',
         password: 'test',
         role: Role.PEDAGOGUE
+    },
+    {
+        username: 'psycho',
+        password: 'test',
+        role: Role.PSYCHOLOGIST
     }
 ]
 
@@ -956,5 +970,589 @@ export const pedagogueHealthOptions: {
         healthZone: HealthZone.RED,
         pedagogueTab: PedagogueTab.SPEECH_THERAPIST,
         pedagogueType: PedagogueType.READING_DISORDERS
+    }
+]
+
+export const psychologicalHealthOptions: {
+    title: string
+    healthZone: HealthZone
+    educationType: EducationType
+    psychologicalType: PsychologicalType
+}[] = [
+    {
+        title: 'Высокая',
+        healthZone: HealthZone.GREEN,
+        educationType: EducationType.PRIMARY,
+        psychologicalType: PsychologicalType.MOTIVATION
+    },
+    {
+        title: 'Внешняя',
+        healthZone: HealthZone.YELLOW,
+        educationType: EducationType.PRIMARY,
+        psychologicalType: PsychologicalType.MOTIVATION
+    },
+    {
+        title: 'Низкая',
+        healthZone: HealthZone.RED,
+        educationType: EducationType.PRIMARY,
+        psychologicalType: PsychologicalType.MOTIVATION
+    },
+
+    {
+        title: 'Адаптирован',
+        healthZone: HealthZone.GREEN,
+        educationType: EducationType.PRIMARY,
+        psychologicalType: PsychologicalType.ADAPTATION
+    },
+    {
+        title: 'Требуется помощь',
+        healthZone: HealthZone.YELLOW,
+        educationType: EducationType.PRIMARY,
+        psychologicalType: PsychologicalType.ADAPTATION
+    },
+    {
+        title: 'Дезадаптация',
+        healthZone: HealthZone.RED,
+        educationType: EducationType.PRIMARY,
+        psychologicalType: PsychologicalType.ADAPTATION
+    },
+
+    {
+        title: 'Лидер, предпочитаемый',
+        healthZone: HealthZone.GREEN,
+        educationType: EducationType.PRIMARY,
+        psychologicalType: PsychologicalType.SOCIOMETRY
+    },
+    {
+        title: 'Принятый',
+        healthZone: HealthZone.YELLOW,
+        educationType: EducationType.PRIMARY,
+        psychologicalType: PsychologicalType.SOCIOMETRY
+    },
+    {
+        title: 'Аутсайдер',
+        healthZone: HealthZone.RED,
+        educationType: EducationType.PRIMARY,
+        psychologicalType: PsychologicalType.SOCIOMETRY
+    },
+
+    {
+        title: 'Адекватная',
+        healthZone: HealthZone.GREEN,
+        educationType: EducationType.PRIMARY,
+        psychologicalType: PsychologicalType.SELF_ASSESSMENT
+    },
+    {
+        title: 'Тенденция к заниженной/завышенной',
+        healthZone: HealthZone.YELLOW,
+        educationType: EducationType.PRIMARY,
+        psychologicalType: PsychologicalType.SELF_ASSESSMENT
+    },
+    {
+        title: 'Заниженная/завышенная',
+        healthZone: HealthZone.RED,
+        educationType: EducationType.PRIMARY,
+        psychologicalType: PsychologicalType.SELF_ASSESSMENT
+    },
+
+    {
+        title: 'Нормальный уровень – менее 50%',
+        healthZone: HealthZone.GREEN,
+        educationType: EducationType.PRIMARY,
+        psychologicalType: PsychologicalType.ANXIETY
+    },
+    {
+        title: 'Умеренный уровень – от 50% до 75%',
+        healthZone: HealthZone.YELLOW,
+        educationType: EducationType.PRIMARY,
+        psychologicalType: PsychologicalType.ANXIETY
+    },
+    {
+        title: 'Высокий уровень – от 75% или ее отсутствие',
+        healthZone: HealthZone.RED,
+        educationType: EducationType.PRIMARY,
+        psychologicalType: PsychologicalType.ANXIETY
+    },
+
+    {
+        title: 'Отсутствует',
+        healthZone: HealthZone.GREEN,
+        educationType: EducationType.PRIMARY,
+        psychologicalType: PsychologicalType.AGGRESSIVITY
+    },
+    {
+        title: 'Слабо выражена',
+        healthZone: HealthZone.YELLOW,
+        educationType: EducationType.PRIMARY,
+        psychologicalType: PsychologicalType.AGGRESSIVITY
+    },
+    {
+        title: 'Выраженная',
+        healthZone: HealthZone.RED,
+        educationType: EducationType.PRIMARY,
+        psychologicalType: PsychologicalType.AGGRESSIVITY
+    },
+
+    {
+        title: 'Да',
+        healthZone: HealthZone.GREEN,
+        educationType: EducationType.PRIMARY,
+        psychologicalType: PsychologicalType.EXTRACURRICULAR_ABILITIES
+    },
+    {
+        title: 'Слабо выражены',
+        healthZone: HealthZone.YELLOW,
+        educationType: EducationType.PRIMARY,
+        psychologicalType: PsychologicalType.EXTRACURRICULAR_ABILITIES
+    },
+    {
+        title: 'Отсутствуют',
+        healthZone: HealthZone.RED,
+        educationType: EducationType.PRIMARY,
+        psychologicalType: PsychologicalType.EXTRACURRICULAR_ABILITIES
+    },
+
+    {
+        title: 'Нет',
+        healthZone: HealthZone.GREEN,
+        educationType: EducationType.PRIMARY,
+        psychologicalType: PsychologicalType.BULLYING
+    },
+    {
+        title: 'Риск',
+        healthZone: HealthZone.YELLOW,
+        educationType: EducationType.PRIMARY,
+        psychologicalType: PsychologicalType.BULLYING
+    },
+    {
+        title: 'Да',
+        healthZone: HealthZone.RED,
+        educationType: EducationType.PRIMARY,
+        psychologicalType: PsychologicalType.BULLYING
+    },
+
+    {
+        title: 'Избегает',
+        healthZone: HealthZone.GREEN,
+        educationType: EducationType.PRIMARY,
+        psychologicalType: PsychologicalType.CONFLICTUALITY
+    },
+    {
+        title: 'Эпизодически участвует',
+        healthZone: HealthZone.YELLOW,
+        educationType: EducationType.PRIMARY,
+        psychologicalType: PsychologicalType.CONFLICTUALITY
+    },
+    {
+        title: 'Выраженная конфликтная позиция',
+        healthZone: HealthZone.RED,
+        educationType: EducationType.PRIMARY,
+        psychologicalType: PsychologicalType.CONFLICTUALITY
+    },
+
+    //
+
+    {
+        title: 'Высокая',
+        healthZone: HealthZone.GREEN,
+        educationType: EducationType.BASIC,
+        psychologicalType: PsychologicalType.MOTIVATION
+    },
+    {
+        title: 'Внешняя',
+        healthZone: HealthZone.YELLOW,
+        educationType: EducationType.BASIC,
+        psychologicalType: PsychologicalType.MOTIVATION
+    },
+    {
+        title: 'Низкая',
+        healthZone: HealthZone.RED,
+        educationType: EducationType.BASIC,
+        psychologicalType: PsychologicalType.MOTIVATION
+    },
+
+    {
+        title: 'Адаптирован',
+        healthZone: HealthZone.GREEN,
+        educationType: EducationType.BASIC,
+        psychologicalType: PsychologicalType.ADAPTATION
+    },
+    {
+        title: 'Требуется помощь',
+        healthZone: HealthZone.YELLOW,
+        educationType: EducationType.BASIC,
+        psychologicalType: PsychologicalType.ADAPTATION
+    },
+    {
+        title: 'Дезадаптация',
+        healthZone: HealthZone.RED,
+        educationType: EducationType.BASIC,
+        psychologicalType: PsychologicalType.ADAPTATION
+    },
+
+    {
+        title: 'Лидер, предпочитаемый',
+        healthZone: HealthZone.GREEN,
+        educationType: EducationType.BASIC,
+        psychologicalType: PsychologicalType.SOCIOMETRY
+    },
+    {
+        title: 'Принятый',
+        healthZone: HealthZone.YELLOW,
+        educationType: EducationType.BASIC,
+        psychologicalType: PsychologicalType.SOCIOMETRY
+    },
+    {
+        title: 'Аутсайдер',
+        healthZone: HealthZone.RED,
+        educationType: EducationType.BASIC,
+        psychologicalType: PsychologicalType.SOCIOMETRY
+    },
+
+    {
+        title: 'Адекватная',
+        healthZone: HealthZone.GREEN,
+        educationType: EducationType.BASIC,
+        psychologicalType: PsychologicalType.SELF_ASSESSMENT
+    },
+    {
+        title: 'Тенденция к заниженной/завышенной',
+        healthZone: HealthZone.YELLOW,
+        educationType: EducationType.BASIC,
+        psychologicalType: PsychologicalType.SELF_ASSESSMENT
+    },
+    {
+        title: 'Заниженная/завышенная',
+        healthZone: HealthZone.RED,
+        educationType: EducationType.BASIC,
+        psychologicalType: PsychologicalType.SELF_ASSESSMENT
+    },
+
+    {
+        title: 'Отсутствуют',
+        healthZone: HealthZone.GREEN,
+        educationType: EducationType.BASIC,
+        psychologicalType: PsychologicalType.ACCENTUATIONS
+    },
+    {
+        title: 'Тенденция к акцентуациям',
+        healthZone: HealthZone.YELLOW,
+        educationType: EducationType.BASIC,
+        psychologicalType: PsychologicalType.ACCENTUATIONS
+    },
+    {
+        title: 'Наличие акцентуаций',
+        healthZone: HealthZone.RED,
+        educationType: EducationType.BASIC,
+        psychologicalType: PsychologicalType.ACCENTUATIONS
+    },
+
+    {
+        title: 'Низкая',
+        healthZone: HealthZone.GREEN,
+        educationType: EducationType.BASIC,
+        psychologicalType: PsychologicalType.PERSONAL_ANXIETY
+    },
+    {
+        title: 'Умеренная – 31-45%',
+        healthZone: HealthZone.YELLOW,
+        educationType: EducationType.BASIC,
+        psychologicalType: PsychologicalType.PERSONAL_ANXIETY
+    },
+    {
+        title: 'Высокая – от 46%',
+        healthZone: HealthZone.RED,
+        educationType: EducationType.BASIC,
+        psychologicalType: PsychologicalType.PERSONAL_ANXIETY
+    },
+
+    {
+        title: 'Отсутствует',
+        healthZone: HealthZone.GREEN,
+        educationType: EducationType.BASIC,
+        psychologicalType: PsychologicalType.AGGRESSIVITY
+    },
+    {
+        title: 'Слабо выражена',
+        healthZone: HealthZone.YELLOW,
+        educationType: EducationType.BASIC,
+        psychologicalType: PsychologicalType.AGGRESSIVITY
+    },
+    {
+        title: 'Выраженная',
+        healthZone: HealthZone.RED,
+        educationType: EducationType.BASIC,
+        psychologicalType: PsychologicalType.AGGRESSIVITY
+    },
+
+    {
+        title: 'Да',
+        healthZone: HealthZone.GREEN,
+        educationType: EducationType.BASIC,
+        psychologicalType: PsychologicalType.EXTRACURRICULAR_ABILITIES
+    },
+    {
+        title: 'Слабо выражены',
+        healthZone: HealthZone.YELLOW,
+        educationType: EducationType.BASIC,
+        psychologicalType: PsychologicalType.EXTRACURRICULAR_ABILITIES
+    },
+    {
+        title: 'Отсутствуют',
+        healthZone: HealthZone.RED,
+        educationType: EducationType.BASIC,
+        psychologicalType: PsychologicalType.EXTRACURRICULAR_ABILITIES
+    },
+
+    {
+        title: 'Отсутствует',
+        healthZone: HealthZone.GREEN,
+        educationType: EducationType.BASIC,
+        psychologicalType: PsychologicalType.DEVIANT_BEHAVIOR
+    },
+    {
+        title: 'Ситуативная предрасположенность',
+        healthZone: HealthZone.YELLOW,
+        educationType: EducationType.BASIC,
+        psychologicalType: PsychologicalType.DEVIANT_BEHAVIOR
+    },
+    {
+        title: 'СОП – социально обусловленное поведение',
+        healthZone: HealthZone.RED,
+        educationType: EducationType.BASIC,
+        psychologicalType: PsychologicalType.DEVIANT_BEHAVIOR
+    },
+    {
+        title: 'ДП – делинквентное поведение',
+        healthZone: HealthZone.RED,
+        educationType: EducationType.BASIC,
+        psychologicalType: PsychologicalType.DEVIANT_BEHAVIOR
+    },
+    {
+        title: 'ЗП – зависимое (аддиктивное) поведение',
+        healthZone: HealthZone.RED,
+        educationType: EducationType.BASIC,
+        psychologicalType: PsychologicalType.DEVIANT_BEHAVIOR
+    },
+    {
+        title: 'АП – агрессивное поведение',
+        healthZone: HealthZone.RED,
+        educationType: EducationType.BASIC,
+        psychologicalType: PsychologicalType.DEVIANT_BEHAVIOR
+    },
+    {
+        title: 'СП – суицидальное (аутоагрессивное) поведение',
+        healthZone: HealthZone.RED,
+        educationType: EducationType.BASIC,
+        psychologicalType: PsychologicalType.DEVIANT_BEHAVIOR
+    },
+
+    {
+        title: 'Да',
+        healthZone: HealthZone.GREEN,
+        educationType: EducationType.BASIC,
+        psychologicalType: PsychologicalType.PROFESSIONAL_INTERESTS
+    },
+    {
+        title: 'Слабо выражены',
+        healthZone: HealthZone.YELLOW,
+        educationType: EducationType.BASIC,
+        psychologicalType: PsychologicalType.PROFESSIONAL_INTERESTS
+    },
+    {
+        title: 'Нет',
+        healthZone: HealthZone.RED,
+        educationType: EducationType.BASIC,
+        psychologicalType: PsychologicalType.PROFESSIONAL_INTERESTS
+    },
+
+    {
+        title: 'Нет',
+        healthZone: HealthZone.GREEN,
+        educationType: EducationType.BASIC,
+        psychologicalType: PsychologicalType.BULLYING
+    },
+    {
+        title: 'Риск',
+        healthZone: HealthZone.YELLOW,
+        educationType: EducationType.BASIC,
+        psychologicalType: PsychologicalType.BULLYING
+    },
+    {
+        title: 'Да',
+        healthZone: HealthZone.RED,
+        educationType: EducationType.BASIC,
+        psychologicalType: PsychologicalType.BULLYING
+    },
+
+    {
+        title: 'Избегает',
+        healthZone: HealthZone.GREEN,
+        educationType: EducationType.BASIC,
+        psychologicalType: PsychologicalType.CONFLICTUALITY
+    },
+    {
+        title: 'Эпизодически участвует',
+        healthZone: HealthZone.YELLOW,
+        educationType: EducationType.BASIC,
+        psychologicalType: PsychologicalType.CONFLICTUALITY
+    },
+    {
+        title: 'Выраженная конфликтная позиция',
+        healthZone: HealthZone.RED,
+        educationType: EducationType.BASIC,
+        psychologicalType: PsychologicalType.CONFLICTUALITY
+    },
+
+    {
+        title: 'Высокий',
+        healthZone: HealthZone.GREEN,
+        educationType: EducationType.MIDDLE,
+        psychologicalType: PsychologicalType.CULTURAL_VALUES
+    },
+    {
+        title: 'Средний',
+        healthZone: HealthZone.YELLOW,
+        educationType: EducationType.MIDDLE,
+        psychologicalType: PsychologicalType.CULTURAL_VALUES
+    },
+    {
+        title: 'Низкий',
+        healthZone: HealthZone.RED,
+        educationType: EducationType.MIDDLE,
+        psychologicalType: PsychologicalType.CULTURAL_VALUES
+    },
+
+    {
+        title: 'Адаптирован',
+        healthZone: HealthZone.GREEN,
+        educationType: EducationType.MIDDLE,
+        psychologicalType: PsychologicalType.ADAPTATION
+    },
+    {
+        title: 'Требуется помощь',
+        healthZone: HealthZone.YELLOW,
+        educationType: EducationType.MIDDLE,
+        psychologicalType: PsychologicalType.ADAPTATION
+    },
+    {
+        title: 'Дезадаптация',
+        healthZone: HealthZone.RED,
+        educationType: EducationType.MIDDLE,
+        psychologicalType: PsychologicalType.ADAPTATION
+    },
+
+    {
+        title: 'Лидер, предпочитаемый',
+        healthZone: HealthZone.GREEN,
+        educationType: EducationType.MIDDLE,
+        psychologicalType: PsychologicalType.SOCIOMETRY
+    },
+    {
+        title: 'Принятый',
+        healthZone: HealthZone.YELLOW,
+        educationType: EducationType.MIDDLE,
+        psychologicalType: PsychologicalType.SOCIOMETRY
+    },
+    {
+        title: 'Аутсайдер',
+        healthZone: HealthZone.RED,
+        educationType: EducationType.MIDDLE,
+        psychologicalType: PsychologicalType.SOCIOMETRY
+    },
+
+    {
+        title: 'Адекватная',
+        healthZone: HealthZone.GREEN,
+        educationType: EducationType.MIDDLE,
+        psychologicalType: PsychologicalType.SELF_ASSESSMENT
+    },
+    {
+        title: 'Тенденция к заниженной/завышенной',
+        healthZone: HealthZone.YELLOW,
+        educationType: EducationType.MIDDLE,
+        psychologicalType: PsychologicalType.SELF_ASSESSMENT
+    },
+    {
+        title: 'Заниженная/завышенная',
+        healthZone: HealthZone.RED,
+        educationType: EducationType.MIDDLE,
+        psychologicalType: PsychologicalType.SELF_ASSESSMENT
+    },
+
+    {
+        title: 'Отсутствует',
+        healthZone: HealthZone.GREEN,
+        educationType: EducationType.MIDDLE,
+        psychologicalType: PsychologicalType.AGGRESSIVITY
+    },
+    {
+        title: 'Слабо выражена',
+        healthZone: HealthZone.YELLOW,
+        educationType: EducationType.MIDDLE,
+        psychologicalType: PsychologicalType.AGGRESSIVITY
+    },
+    {
+        title: 'Выраженная',
+        healthZone: HealthZone.RED,
+        educationType: EducationType.MIDDLE,
+        psychologicalType: PsychologicalType.AGGRESSIVITY
+    },
+
+    {
+        title: 'Низкая',
+        healthZone: HealthZone.GREEN,
+        educationType: EducationType.MIDDLE,
+        psychologicalType: PsychologicalType.PERSONAL_ANXIETY
+    },
+    {
+        title: 'Умеренная – 31-45%',
+        healthZone: HealthZone.YELLOW,
+        educationType: EducationType.MIDDLE,
+        psychologicalType: PsychologicalType.PERSONAL_ANXIETY
+    },
+    {
+        title: 'Высокая – от 46%',
+        healthZone: HealthZone.RED,
+        educationType: EducationType.MIDDLE,
+        psychologicalType: PsychologicalType.PERSONAL_ANXIETY
+    },
+
+    {
+        title: 'Нет',
+        healthZone: HealthZone.GREEN,
+        educationType: EducationType.MIDDLE,
+        psychologicalType: PsychologicalType.BULLYING
+    },
+    {
+        title: 'Риск',
+        healthZone: HealthZone.YELLOW,
+        educationType: EducationType.MIDDLE,
+        psychologicalType: PsychologicalType.BULLYING
+    },
+    {
+        title: 'Да',
+        healthZone: HealthZone.RED,
+        educationType: EducationType.MIDDLE,
+        psychologicalType: PsychologicalType.BULLYING
+    },
+
+    {
+        title: 'Избегает',
+        healthZone: HealthZone.GREEN,
+        educationType: EducationType.MIDDLE,
+        psychologicalType: PsychologicalType.CONFLICTUALITY
+    },
+    {
+        title: 'Эпизодически участвует',
+        healthZone: HealthZone.YELLOW,
+        educationType: EducationType.MIDDLE,
+        psychologicalType: PsychologicalType.CONFLICTUALITY
+    },
+    {
+        title: 'Выраженная конфликтная позиция',
+        healthZone: HealthZone.RED,
+        educationType: EducationType.MIDDLE,
+        psychologicalType: PsychologicalType.CONFLICTUALITY
     }
 ]
