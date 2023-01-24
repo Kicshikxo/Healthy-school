@@ -23,6 +23,7 @@ import Chart from 'primevue/chart/Chart.vue'
 import Calendar from 'primevue/calendar/Calendar.vue'
 import TabView from 'primevue/tabview/TabView.vue'
 import TabPanel from 'primevue/tabpanel/TabPanel.vue'
+import Chip from 'primevue/chip/Chip.vue'
 
 export default defineNuxtPlugin((nuxtApp) => {
     nuxtApp.vueApp.use(PrimeVue, { locale, ripple: true })
@@ -50,6 +51,7 @@ export default defineNuxtPlugin((nuxtApp) => {
     nuxtApp.vueApp.component('p-calendar', Calendar)
     nuxtApp.vueApp.component('p-tab-view', TabView)
     nuxtApp.vueApp.component('p-tab-panel', TabPanel)
+    nuxtApp.vueApp.component('p-chip', Chip)
 })
 
 const locale = {
