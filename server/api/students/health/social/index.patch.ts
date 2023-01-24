@@ -9,11 +9,14 @@ export default defineEventHandler(async (event) => {
     const body: SocialHealth & { indicators: SocialHealthIndicator[]; recommendations: SocialHealthRecommendation[] } =
         await readBody(event)
 
-    return await prisma.socialHealth.update({
+    return await prisma.socialHealth.upsert({
         where: {
             studentId: body.studentId
         },
-        data: {
+        create: {
+            studentId: body.studentId
+        },
+        update: {
             indicators: {
                 set: body.indicators.map((indicator) => ({ id: indicator.id }))
             },

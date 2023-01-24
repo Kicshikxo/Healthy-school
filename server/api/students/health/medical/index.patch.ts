@@ -9,11 +9,14 @@ export default defineEventHandler(async (event) => {
     const body: MedicalHealth & { options: MedicalHealthOption[]; recommendations: MedicalHealthRecommendation[] } =
         await readBody(event)
 
-    return await prisma.medicalHealth.update({
+    return await prisma.medicalHealth.upsert({
         where: {
             studentId: body.studentId
         },
-        data: {
+        create: {
+            studentId: body.studentId
+        },
+        update: {
             options: {
                 set: body.options.map((option) => ({ id: option.id }))
             },

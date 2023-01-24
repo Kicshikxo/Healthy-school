@@ -9,7 +9,9 @@ export default defineEventHandler(async (event) => {
     const body: PsychologicalHealth & { options: PsychologicalHealthOption[] } = await readBody(event)
 
     return await prisma.psychologicalHealth.upsert({
-        where: { studentId: body.studentId },
+        where: {
+            studentId: body.studentId
+        },
         create: {
             studentId: body.studentId
         },
