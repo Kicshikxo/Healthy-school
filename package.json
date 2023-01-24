@@ -22,11 +22,11 @@
         "pinia": "^2.0.29",
         "primeflex": "^3.3.0",
         "primeicons": "^6.0.1",
-        "primevue": "^3.22.3",
+        "primevue": "^3.22.4",
         "short-uuid": "^4.2.2"
     },
     "devDependencies": {
-        "@nuxt/image-edge": "^1.0.0-27840416.dc1ed65",
+        "@nuxt/image-edge": "^1.0.0-27907872.f4dd19d",
         "@types/bcrypt": "^5.0.0",
         "@types/jsonwebtoken": "^9.0.1",
         "nuxt": "^3.0.0",
