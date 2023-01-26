@@ -75,7 +75,14 @@
 </template>
 
 <script setup lang="ts">
-import { HealthZone, MedicalHealth, MedicalHealthOption, MedicalHealthRecommendation, MedicalType } from '@prisma/client'
+import {
+    HealthZone,
+    MedicalHealth,
+    MedicalHealthOption,
+    MedicalHealthRecommendation,
+    MedicalType,
+    SelectionType
+} from '@prisma/client'
 
 const props = defineProps<{
     studentData: HealthComponentData
@@ -110,14 +117,18 @@ async function saveChanges() {
 const { data: medicalOptions } = await useFetch('/api/students/health/medical/options')
 const { data: medicalRecommendations } = await useFetch('/api/students/health/medical/recommendations')
 
-enum SelectionType {
-    SINGLE = 'SINGLE',
-    MULTIPLE = 'MULTIPLE'
-}
-const optionSelectionTypes: { [key in SelectionType]: MedicalType[] } = {
-    SINGLE: ['DISABILITY', 'MORBIDITY', 'BALANCED_DIET', 'CHRONIC_DISEASES'],
-    MULTIPLE: ['VISION', 'HEARING', 'ORTHOPEDIA', 'GASTROINTESTINAL', 'NEUROLOGY_PSYCHIATRY']
-}
+const optionSelectionTypes = computed(() =>
+    (Object.keys(SelectionType) as SelectionType[]).reduce((acc, type) => {
+        acc[type] = [
+            ...new Set(
+                (medicalOptions.value ?? [])
+                    .filter((option) => option.selectionType === type)
+                    .map((option) => option.medicalType)
+            )
+        ]
+        return acc
+    }, {} as { [key in SelectionType]: MedicalType[] })
+)
 
 // Options
 const options = computed(() =>
@@ -131,11 +142,11 @@ const options = computed(() =>
 const studentOptions = computed(() =>
     (Object.keys(MedicalType) as MedicalType[]).reduce(
         (acc, type) => {
-            if (optionSelectionTypes.SINGLE.includes(type)) {
+            if (optionSelectionTypes.value.SINGLE.includes(type)) {
                 acc.SINGLE[type] =
                     props.studentData?.medicalHealth?.options.find((option) => option.medicalType === type) ??
                     options.value[type].find((option) => option.healthZone === HealthZone.GREEN)!
-            } else if (optionSelectionTypes.MULTIPLE.includes(type)) {
+            } else if (optionSelectionTypes.value.MULTIPLE.includes(type)) {
                 acc.MULTIPLE[type] =
                     props.studentData?.medicalHealth?.options.filter((option) => option.medicalType === type) ?? []
             }
@@ -181,11 +192,11 @@ const typeTitles: { [key in MedicalType]: string } = {
 }
 
 const singleOptions = computed<{ title: string; type: MedicalType }[]>(() =>
-    optionSelectionTypes.SINGLE.map((type) => ({ title: typeTitles[type], type }))
+    optionSelectionTypes.value.SINGLE.map((type) => ({ title: typeTitles[type], type }))
 )
 
 const multipleOptions = computed<{ title: string; type: MedicalType }[]>(() =>
-    optionSelectionTypes.MULTIPLE.map((type) => ({ title: typeTitles[type], type }))
+    optionSelectionTypes.value.MULTIPLE.map((type) => ({ title: typeTitles[type], type }))
 )
 
 const currentHealthZone = computed<HealthZone>(() => {
