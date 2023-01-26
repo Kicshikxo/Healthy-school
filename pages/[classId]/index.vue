@@ -80,7 +80,7 @@
                     <label for="birthdate">Дата рождения</label>
                     <p-calendar inputId="birthdate" v-model="newStudent.birthdate" />
                 </div>
-                <div class="field col">
+                <div class="field col w-15rem">
                     <label>Пол</label>
                     <p-dropdown
                         v-model="newStudent.gender"
