@@ -136,9 +136,19 @@ async function main() {
 
     const pedagogueHealthOptionsCount = await prisma.pedagogueHealthOption.count()
     if (pedagogueHealthOptionsCount === 0) {
-        await prisma.pedagogueHealthOption.createMany({
-            data: pedagogueHealthOptions
-        })
+        for (const option of pedagogueHealthOptions) {
+            await prisma.pedagogueHealthOption.create({
+                data: {
+                    ...option,
+                    recommendations: {
+                        create: option.recommendations
+                    }
+                }
+            })
+        }
+        // await prisma.pedagogueHealthOption.createMany({
+        //     data: pedagogueHealthOptions
+        // })
 
         console.log(`Создано ${pedagogueHealthOptions.length} опций педагогического здоровья`)
     } else {
@@ -147,9 +157,19 @@ async function main() {
 
     const psychologicalHealthOptionsCount = await prisma.psychologicalHealthOption.count()
     if (psychologicalHealthOptionsCount === 0) {
-        await prisma.psychologicalHealthOption.createMany({
-            data: psychologicalHealthOptions
-        })
+        for (const option of psychologicalHealthOptions) {
+            await prisma.psychologicalHealthOption.create({
+                data: {
+                    ...option,
+                    recommendations: {
+                        create: option.recommendations
+                    }
+                }
+            })
+        }
+        // await prisma.psychologicalHealthOption.createMany({
+        //     data: psychologicalHealthOptions
+        // })
 
         console.log(`Создано ${psychologicalHealthOptions.length} опций психологического здоровья`)
     } else {
