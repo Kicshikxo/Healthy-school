@@ -21,11 +21,6 @@
         </nav>
         <nav class="flex align-items-center">
             <nuxt-link
-                class="flex p-3 mr-2 align-items-center text-primary-100 hover:text-primary-50 hover:bg-primary-600 font-medium border-round transition-colors transition-duration-150 cursor-pointer no-underline"
-            >
-                <i class="pi pi-bell text-xl" />
-            </nuxt-link>
-            <nuxt-link
                 to="/profile"
                 class="flex px-3 py-1 align-items-center hover:bg-primary-600 font-medium border-round transition-colors transition-duration-150 cursor-pointer no-underline"
             >
