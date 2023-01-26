@@ -56,14 +56,11 @@
                                                 studentOverallRecommendations[conclusionType]?.length ||
                                                 studentNamedRecommendations[conclusionType]?.length
                                             "
-                                            class="shadow-none text-white border-bottom-2"
+                                            class="shadow-none text-white"
                                             :class="{
-                                                'bg-green-500 border-green-400':
-                                                    studentHealthZones[conclusionType] === HealthZone.GREEN,
-                                                'bg-yellow-500 border-yellow-400':
-                                                    studentHealthZones[conclusionType] === HealthZone.YELLOW,
-                                                'bg-red-500 border-red-400':
-                                                    studentHealthZones[conclusionType] === HealthZone.RED
+                                                'bg-green-500': studentHealthZones[conclusionType] === HealthZone.GREEN,
+                                                'bg-yellow-500': studentHealthZones[conclusionType] === HealthZone.YELLOW,
+                                                'bg-red-500': studentHealthZones[conclusionType] === HealthZone.RED
                                             }"
                                         >
                                             <template #title>Рекомендации</template>

@@ -60,10 +60,6 @@
     border-top-left-radius: 0;
     border-top-right-radius: 0;
 }
-.p-cards-joinable .p-card:only-child {
-    border-top: 0;
-    border-bottom: 0;
-}
 
 /* Remove horizontal paddins in p-tab-panel */
 .p-tabview .p-tabview-panels {
