@@ -3,7 +3,7 @@
         <template #title>Компонент медицинского здоровья</template>
         <template #body="{ enableEditing }">
             <health-component-body :padding-top="false">
-                <template #title> Основные показатели </template>
+                <template #title> Показатели </template>
                 <template #content>
                     <template v-for="{ title, type } in singleOptions">
                         <p-divider />
@@ -23,41 +23,30 @@
                     </template>
                 </template>
             </health-component-body>
-            <health-component-body v-if="showIndividualOptions" :padding-top="false">
-                <template #title>Индивидуальные рекомендации и назначения профильных медицинских специалистов</template>
+            <health-component-body
+                v-if="selectedOptions.SINGLE.HEALTH_GROUP?.healthZone !== HealthZone.GREEN"
+                :padding-top="false"
+            >
                 <template #content>
-                    <template v-for="{ title, type } in multipleOptions">
-                        <p-divider />
-                        <div class="grid grid-nogutter">
-                            <div class="col-6 flex justify-content-start align-items-center text-lg">{{ title }}</div>
-                            <div class="col-6 border-left-1 surface-border pl-4">
-                                <health-multi-select
-                                    :disabled="!enableEditing"
-                                    :loading="loadingData"
-                                    :options="options[type]"
-                                    :placeholder="title"
-                                    optionLabel="title"
-                                    v-model="selectedOptions.MULTIPLE[type]"
-                                />
-                            </div>
-                        </div>
-                    </template>
+                    <div v-for="{ title, type } in checkboxOptions" class="field-checkbox">
+                        <p-checkbox
+                            :disabled="!enableEditing"
+                            :inputId="`indicator${type}`"
+                            :value="options[type].find((option) => option.healthZone === currentHealthZone)?.id"
+                            v-model="selectedOptions.CHECKBOX"
+                            :class="{
+                                'p-checkbox-green': currentHealthZone === HealthZone.GREEN,
+                                'p-checkbox-yellow': currentHealthZone === HealthZone.YELLOW,
+                                'p-checkbox-red': currentHealthZone === HealthZone.RED
+                            }"
+                        />
+                        <label :for="`indicator${type}`">
+                            {{ title }}
+                        </label>
+                    </div>
                 </template>
             </health-component-body>
-            <health-component-body v-if="showIndividualOptions">
-                <template #title> Профилактические и здоровьесберегающие мероприятия </template>
-                <template #content>
-                    <health-multi-select
-                        :disabled="!enableEditing"
-                        :loading="loadingData"
-                        :options="availableRecommendations"
-                        placeholder="Профилактические и здоровьесберегающие мероприятия"
-                        optionLabel="title"
-                        v-model="selectedRecommendations"
-                    />
-                </template>
-            </health-component-body>
-            <health-component-body v-if="showIndividualOptions">
+            <health-component-body v-if="selectedOptions.SINGLE.HEALTH_GROUP?.healthZone !== HealthZone.GREEN">
                 <template #title> Иное </template>
                 <template #content>
                     <p-textarea
@@ -75,14 +64,7 @@
 </template>
 
 <script setup lang="ts">
-import {
-    HealthZone,
-    MedicalHealth,
-    MedicalHealthOption,
-    MedicalHealthRecommendation,
-    MedicalType,
-    SelectionType
-} from '@prisma/client'
+import { HealthZone, MedicalHealth, MedicalHealthOption, MedicalType, SelectionType } from '@prisma/client'
 
 const props = defineProps<{
     studentData: HealthComponentData
@@ -98,12 +80,14 @@ async function saveChanges() {
         method: 'PATCH',
         body: {
             studentId: props.studentData?.id,
-            options: [...Object.values(selectedOptions.value.SINGLE), ...Object.values(selectedOptions.value.MULTIPLE).flat()],
-            recommendations: selectedRecommendations.value.filter(
-                (recommendation) => recommendation.healthZone === currentHealthZone.value
-            ),
+            options: [
+                ...Object.values(selectedOptions.value.SINGLE).flat(),
+                ...Object.values(selectedOptions.value.CHECKBOX)
+                    .flat()
+                    .map((id) => medicalOptions.value?.find((option) => option.id === id))
+            ],
             specialistNotes: currentSpecialistNotes.value
-        } as MedicalHealth & { options: MedicalHealthOption[]; recommendations: MedicalHealthRecommendation[] }
+        } as MedicalHealth & { options: MedicalHealthOption[] }
     })
 
     if (error.value) {
@@ -115,7 +99,6 @@ async function saveChanges() {
 
 // Data from server
 const { data: medicalOptions } = await useFetch('/api/students/health/medical/options')
-const { data: medicalRecommendations } = await useFetch('/api/students/health/medical/recommendations')
 
 const optionSelectionTypes = computed(() =>
     (Object.keys(SelectionType) as SelectionType[]).reduce((acc, type) => {
@@ -146,39 +129,38 @@ const studentOptions = computed(() =>
                 acc.SINGLE[type] =
                     props.studentData?.medicalHealth?.options.find((option) => option.medicalType === type) ??
                     options.value[type].find((option) => option.healthZone === HealthZone.GREEN)!
-            } else if (optionSelectionTypes.value.MULTIPLE.includes(type)) {
-                acc.MULTIPLE[type] =
-                    props.studentData?.medicalHealth?.options.filter((option) => option.medicalType === type) ?? []
+            } else if (optionSelectionTypes.value.CHECKBOX.includes(type)) {
+                const option = props.studentData?.medicalHealth?.options.find((option) => option.medicalType === type)
+                if (option) {
+                    acc.CHECKBOX = (acc.CHECKBOX ?? []).concat(option.id)
+                }
             }
             return acc
         },
-        { SINGLE: {}, MULTIPLE: {} } as {
+        { SINGLE: {}, CHECKBOX: [] as number[] } as {
             SINGLE: { [key in MedicalType]: MedicalHealthOption }
-            MULTIPLE: { [key in MedicalType]: MedicalHealthOption[] }
+            CHECKBOX: number[]
         }
     )
 )
-const studentRecommendations = computed(() => props.studentData?.medicalHealth?.recommendations ?? [])
 const studentSpecialistNotes = computed(() => props.studentData?.medicalHealth?.specialistNotes ?? '')
 
 // Selected data
 const selectedOptions = ref(useCloneDeep(studentOptions.value))
-const selectedRecommendations = ref(useCloneDeep(studentRecommendations.value))
 const currentSpecialistNotes = ref(useCloneDeep(studentSpecialistNotes.value))
 
 // Watch on student data update
 watch(studentOptions, (value) => (selectedOptions.value = useCloneDeep(value)))
-watch(studentRecommendations, (value) => (selectedRecommendations.value = useCloneDeep(value)))
 watch(studentSpecialistNotes, (value) => (currentSpecialistNotes.value = useCloneDeep(value)))
 
 const hasChanges = computed(
     () =>
         JSON.stringify(selectedOptions.value) !== JSON.stringify(studentOptions.value) ||
-        JSON.stringify(selectedRecommendations.value) !== JSON.stringify(studentRecommendations.value) ||
         JSON.stringify(currentSpecialistNotes.value) !== JSON.stringify(studentSpecialistNotes.value)
 )
 
 const typeTitles: { [key in MedicalType]: string } = {
+    HEALTH_GROUP: 'Группа здоровья',
     DISABILITY: 'Наличие инвалидности',
     MORBIDITY: 'Сведения о заболеваемости',
     BALANCED_DIET: 'Сбалансированное питание',
@@ -192,11 +174,15 @@ const typeTitles: { [key in MedicalType]: string } = {
 }
 
 const singleOptions = computed<{ title: string; type: MedicalType }[]>(() =>
-    optionSelectionTypes.value.SINGLE.map((type) => ({ title: typeTitles[type], type }))
+    optionSelectionTypes.value.SINGLE.filter(
+        (type) =>
+            (type !== MedicalType.HEALTH_GROUP && selectedOptions.value.SINGLE.HEALTH_GROUP?.healthZone !== HealthZone.GREEN) ||
+            type === MedicalType.HEALTH_GROUP
+    ).map((type) => ({ title: typeTitles[type], type }))
 )
 
-const multipleOptions = computed<{ title: string; type: MedicalType }[]>(() =>
-    optionSelectionTypes.value.MULTIPLE.map((type) => ({ title: typeTitles[type], type }))
+const checkboxOptions = computed<{ title: string; type: MedicalType }[]>(() =>
+    optionSelectionTypes.value.CHECKBOX.map((type) => ({ title: typeTitles[type], type }))
 )
 
 const currentHealthZone = computed<HealthZone>(() => {
@@ -204,23 +190,8 @@ const currentHealthZone = computed<HealthZone>(() => {
         return HealthZone.RED
     }
     if (Object.values(selectedOptions.value.SINGLE).some((option) => option.healthZone === HealthZone.YELLOW)) {
-        if (
-            Object.values(selectedOptions.value.MULTIPLE)
-                .flat()
-                .some((option) => option.healthZone === HealthZone.RED)
-        ) {
-            return HealthZone.RED
-        }
         return HealthZone.YELLOW
     }
     return HealthZone.GREEN
 })
-
-const availableRecommendations = computed(() =>
-    medicalRecommendations.value?.filter((recommendation) => recommendation.healthZone === currentHealthZone.value)
-)
-
-const showIndividualOptions = computed(() =>
-    ([HealthZone.YELLOW, HealthZone.RED] as HealthZone[]).includes(currentHealthZone.value)
-)
 </script>
