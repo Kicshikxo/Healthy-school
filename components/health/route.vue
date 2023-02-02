@@ -162,7 +162,6 @@ import {
     HealthGroup,
     HealthZone,
     MedicalHealthOption,
-    MedicalHealthRecommendation,
     MedicalType,
     PedagogueHealthOption,
     PedagogueTab,
@@ -175,7 +174,7 @@ import {
 } from '@prisma/client'
 
 const { data: conclusions } = await useFetch('/api/conclusions/with-recommendations')
-const { data: medicalOptions } = await useFetch('/api/students/health/medical/options')
+const { data: medicalOptions } = await useFetch('/api/students/health/medical/options/with-recommendations')
 const { data: pedagogueOptions } = await useFetch('/api/students/health/pedagogue/options/with-recommendations')
 const { data: psychologicalOptions } = await useFetch('/api/students/health/psychological/options/with-recommendations')
 
@@ -207,15 +206,14 @@ const studentMedicalOptions = computed(() =>
                     medicalOptions.value?.find(
                         (option) => option.medicalType === type && option.healthZone === HealthZone.GREEN
                     )!
-            } else if (medicalOptionSelectionTypes.value.MULTIPLE.includes(type)) {
-                acc.MULTIPLE[type] =
-                    props.studentData?.medicalHealth?.options.filter((option) => option.medicalType === type) ?? []
+            } else if (medicalOptionSelectionTypes.value.CHECKBOX.includes(type)) {
+                acc.CHECKBOX[type] = props.studentData?.medicalHealth?.options.find((option) => option.medicalType === type)
             }
             return acc
         },
-        { SINGLE: {}, MULTIPLE: {} } as {
+        { SINGLE: {}, CHECKBOX: {} } as {
             SINGLE: { [key in MedicalType]: MedicalHealthOption }
-            MULTIPLE: { [key in MedicalType]: MedicalHealthOption[] }
+            CHECKBOX: { [key in MedicalType]?: MedicalHealthOption }
         }
     )
 )
@@ -291,11 +289,7 @@ const studentHealthZones = computed<{ [key in ConclusionType]: HealthZone }>(() 
     MEDICAL: Object.values(studentMedicalOptions.value.SINGLE).some((option) => option.healthZone === HealthZone.RED)
         ? HealthZone.RED
         : Object.values(studentMedicalOptions.value.SINGLE).some((option) => option.healthZone === HealthZone.YELLOW)
-        ? Object.values(studentMedicalOptions.value.MULTIPLE)
-              .flat()
-              .some((option) => option.healthZone === HealthZone.RED)
-            ? HealthZone.RED
-            : HealthZone.YELLOW
+        ? HealthZone.YELLOW
         : HealthZone.GREEN,
     PEDAGOGUE: Object.values(studentPedagogueOptions.value)
         .filter((option) => option.pedagogueTab === PedagogueTab.PEDAGOGUE)
@@ -326,15 +320,25 @@ const studentHealthZones = computed<{ [key in ConclusionType]: HealthZone }>(() 
 }))
 
 const studentOverallRecommendations = computed<{
-    [key in ConclusionType]?: MedicalHealthRecommendation[] | PhysicalHealthRecommendation[] | SocialHealthRecommendation[]
+    [key in ConclusionType]?: PhysicalHealthRecommendation[] | SocialHealthRecommendation[]
 }>(() => ({
-    MEDICAL: [
-        ...(Object.values(studentMedicalOptions.value.MULTIPLE).flat() ?? []),
-        ...(props.studentData?.medicalHealth?.recommendations ?? [])
-    ],
     PHYSICAL: props.studentData?.physicalHealth?.recommendations ?? [],
     SOCIAL: props.studentData?.socialHealth?.recommendations ?? []
 }))
+
+const medicalTypeTitles: { [key in MedicalType]: string } = {
+    HEALTH_GROUP: 'Группа здоровья',
+    DISABILITY: 'Наличие инвалидности',
+    MORBIDITY: 'Сведения о заболеваемости',
+    BALANCED_DIET: 'Сбалансированное питание',
+    CHRONIC_DISEASES: 'Наличие хронических заболеваний',
+
+    VISION: 'Зрение',
+    HEARING: 'Слух',
+    ORTHOPEDIA: 'Ортопедия',
+    GASTROINTESTINAL: 'ЖКТ',
+    NEUROLOGY_PSYCHIATRY: 'Неврология, психиатрия'
+}
 
 const pedagogueTypeTitles: { [key in PedagogueType]: string } = {
     UNDERSTANDING_INSTRUCTIONS: 'Понимание инструкции',
@@ -375,6 +379,18 @@ const psychologicalTypeTitles: { [key in PsychologicalType]: string } = {
 const studentNamedRecommendations = computed<{
     [key in ConclusionType]?: { title: string; healthZone: HealthZone; recommendations: { title: string }[] }[]
 }>(() => ({
+    MEDICAL: (Object.keys(MedicalType) as MedicalType[])
+        .map((type) => ({
+            title: medicalTypeTitles[type],
+            healthZone: studentMedicalOptions.value.CHECKBOX[type]?.healthZone ?? HealthZone.GREEN,
+            recommendations:
+                medicalOptions.value?.find(
+                    (option) =>
+                        option.medicalType === type &&
+                        option.healthZone === (studentMedicalOptions.value.CHECKBOX[type]?.healthZone ?? HealthZone.GREEN)
+                )?.recommendations ?? []
+        }))
+        .filter(({ recommendations }) => recommendations.length),
     PEDAGOGUE: pedagogueTabTypes.value.PEDAGOGUE.map((type) => ({
         title: pedagogueTypeTitles[type],
         healthZone: studentPedagogueOptions.value[type].healthZone,
