@@ -25,7 +25,6 @@ export default defineEventHandler(async (event) => {
             medicalHealth: {
                 select: {
                     options: true,
-                    recommendations: true,
                     specialistNotes: true
                 }
             },

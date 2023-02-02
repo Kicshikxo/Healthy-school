@@ -2,7 +2,6 @@ import {
     HealthGroup,
     MedicalHealth,
     MedicalHealthOption,
-    MedicalHealthRecommendation,
     PhysicalHealth,
     PhysicalHealthRecommendation,
     SocialHealth,
@@ -28,7 +27,6 @@ declare global {
               } | null
               medicalHealth: {
                   options: MedicalHealthOption[]
-                  recommendations: MedicalHealthRecommendation[]
                   specialistNotes: string | null
               } | null
               socialHealth: {
