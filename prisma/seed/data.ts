@@ -290,7 +290,41 @@ export const medicalHealthOptions: {
     medicalType: MedicalType
     healthZone: HealthZone
     selectionType: SelectionType
+    recommendations?: {
+        title: string
+    }[]
 }[] = [
+    {
+        title: '1-ая',
+        medicalType: MedicalType.HEALTH_GROUP,
+        healthZone: HealthZone.GREEN,
+        selectionType: SelectionType.SINGLE
+    },
+    {
+        title: '2-ая',
+        medicalType: MedicalType.HEALTH_GROUP,
+        healthZone: HealthZone.YELLOW,
+        selectionType: SelectionType.SINGLE
+    },
+    {
+        title: '3-я',
+        medicalType: MedicalType.HEALTH_GROUP,
+        healthZone: HealthZone.RED,
+        selectionType: SelectionType.SINGLE
+    },
+    {
+        title: '4-ая',
+        medicalType: MedicalType.HEALTH_GROUP,
+        healthZone: HealthZone.RED,
+        selectionType: SelectionType.SINGLE
+    },
+    {
+        title: '5-ая',
+        medicalType: MedicalType.HEALTH_GROUP,
+        healthZone: HealthZone.RED,
+        selectionType: SelectionType.SINGLE
+    },
+
     {
         title: 'Нет',
         medicalType: MedicalType.DISABILITY,
@@ -362,362 +396,249 @@ export const medicalHealthOptions: {
     },
 
     {
-        title: 'общие офтальмо-гигиенические мероприятия',
+        title: 'Зрение',
         medicalType: MedicalType.VISION,
         healthZone: HealthZone.YELLOW,
-        selectionType: SelectionType.MULTIPLE
+        selectionType: SelectionType.CHECKBOX,
+        recommendations: [
+            {
+                title: 'Общие офтальмо-гигиенические мероприятия'
+            },
+            {
+                title: 'Очковая или контактная коррекция зрения'
+            },
+            {
+                title: 'Курсы плеоптики и ортоптики по показаниям'
+            }
+        ]
     },
     {
-        title: 'очковая или контактная коррекция зрения',
-        medicalType: MedicalType.VISION,
-        healthZone: HealthZone.YELLOW,
-        selectionType: SelectionType.MULTIPLE
-    },
-    {
-        title: 'курсы плеоптики и ортоптики по показаниям',
-        medicalType: MedicalType.VISION,
-        healthZone: HealthZone.YELLOW,
-        selectionType: SelectionType.MULTIPLE
-    },
-    {
-        title: 'диспансерное наблюдение врача-офтальмолога',
-        medicalType: MedicalType.VISION,
-        healthZone: HealthZone.RED,
-        selectionType: SelectionType.MULTIPLE
-    },
-    {
-        title: 'офтальмо-гигиенические мероприятия',
-        medicalType: MedicalType.VISION,
-        healthZone: HealthZone.RED,
-        selectionType: SelectionType.MULTIPLE
-    },
-    {
-        title: 'очковая или контактная коррекция',
-        medicalType: MedicalType.VISION,
-        healthZone: HealthZone.RED,
-        selectionType: SelectionType.MULTIPLE
-    },
-    {
-        title: 'курсы плеоптики и ортоптики',
-        medicalType: MedicalType.VISION,
-        healthZone: HealthZone.RED,
-        selectionType: SelectionType.MULTIPLE
-    },
-    {
-        title: 'курсы нейротрофической терапии',
-        medicalType: MedicalType.VISION,
-        healthZone: HealthZone.RED,
-        selectionType: SelectionType.MULTIPLE
-    },
-    {
-        title: 'использование тифлоприборов',
-        medicalType: MedicalType.VISION,
-        healthZone: HealthZone.RED,
-        selectionType: SelectionType.MULTIPLE
-    },
-    {
-        title: 'организация специального рабочего места обучающегося с патологией органов зрения',
-        medicalType: MedicalType.VISION,
-        healthZone: HealthZone.RED,
-        selectionType: SelectionType.MULTIPLE
-    },
-    {
-        title: 'обучение на основе применения рельефно-точечной системы обозначений Брайля',
-        medicalType: MedicalType.VISION,
-        healthZone: HealthZone.RED,
-        selectionType: SelectionType.MULTIPLE
-    },
-
-    {
-        title: 'физиофункциональное лечение',
+        title: 'Слух',
         medicalType: MedicalType.HEARING,
         healthZone: HealthZone.YELLOW,
-        selectionType: SelectionType.MULTIPLE
+        selectionType: SelectionType.CHECKBOX,
+        recommendations: [
+            {
+                title: 'Физиофункциональное лечение'
+            },
+            {
+                title: 'Консультация аллерголога'
+            }
+        ]
     },
     {
-        title: 'консультация аллерголога',
-        medicalType: MedicalType.HEARING,
-        healthZone: HealthZone.YELLOW,
-        selectionType: SelectionType.MULTIPLE
-    },
-    {
-        title: 'диспансерное наблюдение врача-оториноларинголога',
-        medicalType: MedicalType.HEARING,
-        healthZone: HealthZone.RED,
-        selectionType: SelectionType.MULTIPLE
-    },
-    {
-        title: 'физиофункциональное лечение',
-        medicalType: MedicalType.HEARING,
-        healthZone: HealthZone.RED,
-        selectionType: SelectionType.MULTIPLE
-    },
-    {
-        title: 'консультация сурдолога',
-        medicalType: MedicalType.HEARING,
-        healthZone: HealthZone.RED,
-        selectionType: SelectionType.MULTIPLE
-    },
-    {
-        title: 'организация специального рабочего места обучающегося с патологией органов слуха',
-        medicalType: MedicalType.HEARING,
-        healthZone: HealthZone.RED,
-        selectionType: SelectionType.MULTIPLE
-    },
-    {
-        title: 'контроль за ношением слуховых аппаратов',
-        medicalType: MedicalType.HEARING,
-        healthZone: HealthZone.RED,
-        selectionType: SelectionType.MULTIPLE
-    },
-    {
-        title: 'занятия с сурдопедагогом',
-        medicalType: MedicalType.HEARING,
-        healthZone: HealthZone.RED,
-        selectionType: SelectionType.MULTIPLE
-    },
-
-    {
-        title: 'профилактика остеохондроза, спинальной нестабильности (нарушений осанки)',
+        title: 'Ортопедия',
         medicalType: MedicalType.ORTHOPEDIA,
         healthZone: HealthZone.YELLOW,
-        selectionType: SelectionType.MULTIPLE
+        selectionType: SelectionType.CHECKBOX,
+        recommendations: [
+            {
+                title: 'Профилактика остеохондроза, спинальной нестабильности (нарушений осанки)'
+            }
+        ]
     },
     {
-        title: 'диспансерное наблюдение врача-ортопеда',
-        medicalType: MedicalType.ORTHOPEDIA,
-        healthZone: HealthZone.RED,
-        selectionType: SelectionType.MULTIPLE
-    },
-    {
-        title: 'занятия адаптивной (лечебной) физкультурой',
-        medicalType: MedicalType.ORTHOPEDIA,
-        healthZone: HealthZone.RED,
-        selectionType: SelectionType.MULTIPLE
-    },
-    {
-        title: 'специальная физкультурная группа',
-        medicalType: MedicalType.ORTHOPEDIA,
-        healthZone: HealthZone.RED,
-        selectionType: SelectionType.MULTIPLE
-    },
-    {
-        title: 'физиофункциональное лечение',
-        medicalType: MedicalType.ORTHOPEDIA,
-        healthZone: HealthZone.RED,
-        selectionType: SelectionType.MULTIPLE
-    },
-    {
-        title: 'соблюдение статодинамического режима (чередование обучения и отдыха)',
-        medicalType: MedicalType.ORTHOPEDIA,
-        healthZone: HealthZone.RED,
-        selectionType: SelectionType.MULTIPLE
-    },
-    {
-        title: 'ограничение физических нагрузок',
-        medicalType: MedicalType.ORTHOPEDIA,
-        healthZone: HealthZone.RED,
-        selectionType: SelectionType.MULTIPLE
-    },
-    {
-        title: 'коррегирующее амбулаторное/ стационарное лечение',
-        medicalType: MedicalType.ORTHOPEDIA,
-        healthZone: HealthZone.RED,
-        selectionType: SelectionType.MULTIPLE
-    },
-    {
-        title: 'организация специального рабочего места обучающегося с патологией опорно-двигательного аппарата',
-        medicalType: MedicalType.ORTHOPEDIA,
-        healthZone: HealthZone.RED,
-        selectionType: SelectionType.MULTIPLE
-    },
-
-    {
-        title: 'соблюдение индивидуальной диеты',
+        title: 'ЖКТ',
         medicalType: MedicalType.GASTROINTESTINAL,
         healthZone: HealthZone.YELLOW,
-        selectionType: SelectionType.MULTIPLE
+        selectionType: SelectionType.CHECKBOX,
+        recommendations: [
+            {
+                title: 'Соблюдение индивидуальной диеты'
+            },
+            {
+                title: 'Организация режима сбалансированного питания'
+            }
+        ]
     },
     {
-        title: 'организация режима сбалансированного питания',
-        medicalType: MedicalType.GASTROINTESTINAL,
-        healthZone: HealthZone.YELLOW,
-        selectionType: SelectionType.MULTIPLE
-    },
-    {
-        title: 'обеспечение полноценного и сбалансированного питания',
-        medicalType: MedicalType.GASTROINTESTINAL,
-        healthZone: HealthZone.RED,
-        selectionType: SelectionType.MULTIPLE
-    },
-    {
-        title: 'соблюдение диеты (№ 1, 3, 4, 5, 15), дробного питания (5-6 раз в сутки)',
-        medicalType: MedicalType.GASTROINTESTINAL,
-        healthZone: HealthZone.RED,
-        selectionType: SelectionType.MULTIPLE
-    },
-    {
-        title: 'соблюдение санитарно-гигиенического режима/дефекации',
-        medicalType: MedicalType.GASTROINTESTINAL,
-        healthZone: HealthZone.RED,
-        selectionType: SelectionType.MULTIPLE
-    },
-    {
-        title: 'освобождение от занятий физической культурой на период обострения',
-        medicalType: MedicalType.GASTROINTESTINAL,
-        healthZone: HealthZone.RED,
-        selectionType: SelectionType.MULTIPLE
-    },
-    {
-        title: 'подготовительная физкультурная группа (в период ремиссии)',
-        medicalType: MedicalType.GASTROINTESTINAL,
-        healthZone: HealthZone.RED,
-        selectionType: SelectionType.MULTIPLE
-    },
-    {
-        title: 'специальная физкультурная группа (в период реконвалесценции)',
-        medicalType: MedicalType.GASTROINTESTINAL,
-        healthZone: HealthZone.RED,
-        selectionType: SelectionType.MULTIPLE
-    },
-    {
-        title: 'основная физкультурная группа (в период стойкой ремиссии)',
-        medicalType: MedicalType.GASTROINTESTINAL,
-        healthZone: HealthZone.RED,
-        selectionType: SelectionType.MULTIPLE
-    },
-    {
-        title: 'ограничение физической нагрузки (исключение глубоких наклонов, длительного пребывания в согнутом положении, поднятия руками тяжестей более 8-10 кг на обе руки, физических упражнений связанных с перенапряжением мышц брюшного пресса)',
-        medicalType: MedicalType.GASTROINTESTINAL,
-        healthZone: HealthZone.RED,
-        selectionType: SelectionType.MULTIPLE
-    },
-    {
-        title: 'специальная организация сна с приподнятым головным концом кровати (не менее чем на 15 см)',
-        medicalType: MedicalType.GASTROINTESTINAL,
-        healthZone: HealthZone.RED,
-        selectionType: SelectionType.MULTIPLE
-    },
-
-    {
-        title: 'регулярный прием витаминов и ноотропов',
+        title: 'Неврология, психиатрия',
         medicalType: MedicalType.NEUROLOGY_PSYCHIATRY,
         healthZone: HealthZone.YELLOW,
-        selectionType: SelectionType.MULTIPLE
+        selectionType: SelectionType.CHECKBOX,
+        recommendations: [
+            {
+                title: 'Регулярный прием витаминов и ноотропов'
+            },
+            {
+                title: 'Профилактика  артериальной гипо- и гипертензии, нарушений сна, других форм неврозов'
+            },
+            {
+                title: 'Физиофункциональное лечение вегетососудистой дистонии, неврозов  (ЛФК, массаж, электрофорез, электросон, лазер, магнит и др.)'
+            }
+        ]
     },
     {
-        title: 'профилактика артериальной гипо- и гипертензии, нарушений сна, других форм неврозов',
-        medicalType: MedicalType.NEUROLOGY_PSYCHIATRY,
-        healthZone: HealthZone.YELLOW,
-        selectionType: SelectionType.MULTIPLE
+        title: 'Зрение',
+        medicalType: MedicalType.VISION,
+        healthZone: HealthZone.RED,
+        selectionType: SelectionType.CHECKBOX,
+        recommendations: [
+            {
+                title: 'Диспансерное наблюдение врача-офтальмолога'
+            },
+            {
+                title: 'Офтальмо-гигиенические мероприятия'
+            },
+            {
+                title: 'Очковая или контактная коррекция'
+            },
+            {
+                title: 'Курсы плеоптики и ортоптики'
+            },
+            {
+                title: 'Курсы нейротрофической терапии'
+            },
+            {
+                title: 'Использование тифлоприборов'
+            },
+            {
+                title: 'Организация специального рабочего места обучающегося с патологией органов зрения'
+            },
+            {
+                title: 'Обучение на основе применения рельефно-точечной системы обозначений Брайля'
+            }
+        ]
     },
     {
-        title: 'физиофункциональное лечение вегетососудистой дистонии, неврозов (ЛФК, массаж, электрофорез, электросон, лазер, магнит и др.)',
-        medicalType: MedicalType.NEUROLOGY_PSYCHIATRY,
-        healthZone: HealthZone.YELLOW,
-        selectionType: SelectionType.MULTIPLE
+        title: 'Слух',
+        medicalType: MedicalType.HEARING,
+        healthZone: HealthZone.RED,
+        selectionType: SelectionType.CHECKBOX,
+        recommendations: [
+            {
+                title: 'Диспансерное наблюдение врача-оториноларинголога'
+            },
+            {
+                title: 'Физиофункциональное лечение'
+            },
+            {
+                title: 'Консультация аллерголога'
+            },
+            {
+                title: 'Консультация сурдолога'
+            },
+            {
+                title: 'Организация специального рабочего места обучающегося с патологией органов слуха'
+            },
+            {
+                title: 'Контроль за ношением слуховых аппаратов'
+            },
+            {
+                title: 'Занятия с сурдопедагогом'
+            }
+        ]
     },
     {
-        title: 'диспансерное наблюдение врача-невролога',
+        title: 'Ортопедия',
+        medicalType: MedicalType.ORTHOPEDIA,
+        healthZone: HealthZone.RED,
+        selectionType: SelectionType.CHECKBOX,
+        recommendations: [
+            {
+                title: 'Диспансерное наблюдение врача-ортопеда'
+            },
+            {
+                title: 'Занятия адаптивной (лечебной) физкультурой'
+            },
+            {
+                title: 'Специальная физкультурная группа'
+            },
+            {
+                title: 'Физиофункциональное лечение'
+            },
+            {
+                title: 'Соблюдение статодинамического режима (чередование обучения и отдыха)'
+            },
+            {
+                title: 'Ограничение физических нагрузок'
+            },
+            {
+                title: 'Коррегирующее амбулаторное/ стационарное лечение'
+            },
+            {
+                title: 'Организация специального рабочего места обучающегося с патологией опорно-двигательного аппарата'
+            }
+        ]
+    },
+    {
+        title: 'ЖКТ',
+        medicalType: MedicalType.GASTROINTESTINAL,
+        healthZone: HealthZone.RED,
+        selectionType: SelectionType.CHECKBOX,
+        recommendations: [
+            {
+                title: 'Обеспечение полноценного и сбалансированного питания'
+            },
+            {
+                title: 'Соблюдение диеты (№ 1, 3, 4, 5, 15), дробного питания (5-6 раз в сутки)'
+            },
+            {
+                title: 'Соблюдение санитарно-гигиенического режима/дефекации'
+            },
+            {
+                title: 'Освобождение от занятий физической культурой на период обострения'
+            },
+            {
+                title: 'Подготовительная физкультурная группа (в период ремиссии)'
+            },
+            {
+                title: 'Специальная физкультурная группа (в период реконвалесценции)'
+            },
+            {
+                title: 'Основная физкультурная группа (в период стойкой ремиссии)'
+            },
+            {
+                title: 'Ограничение физической нагрузки (исключение глубоких наклонов'
+            },
+            {
+                title: 'Длительного пребывания в согнутом положении'
+            },
+            {
+                title: 'Поднятия руками тяжестей более 8-10 кг на обе руки'
+            },
+            {
+                title: 'Физических упражнений связанных с перенапряжением мышц брюшного пресса)'
+            },
+            {
+                title: 'Специальная организация сна с приподнятым головным концом кровати (не менее чем на 15 см)'
+            }
+        ]
+    },
+    {
+        title: 'Неврология, психиатрия',
         medicalType: MedicalType.NEUROLOGY_PSYCHIATRY,
         healthZone: HealthZone.RED,
-        selectionType: SelectionType.MULTIPLE
-    },
-    {
-        title: 'диспансерное наблюдение врача-психиатра',
-        medicalType: MedicalType.NEUROLOGY_PSYCHIATRY,
-        healthZone: HealthZone.RED,
-        selectionType: SelectionType.MULTIPLE
-    },
-    {
-        title: 'амбулаторное и стационарное обследование и медикаментозное лечение',
-        medicalType: MedicalType.NEUROLOGY_PSYCHIATRY,
-        healthZone: HealthZone.RED,
-        selectionType: SelectionType.MULTIPLE
-    },
-    {
-        title: 'прием ноотропов и витаминов',
-        medicalType: MedicalType.NEUROLOGY_PSYCHIATRY,
-        healthZone: HealthZone.RED,
-        selectionType: SelectionType.MULTIPLE
-    },
-    {
-        title: 'своевременное проведение реабилитационных и абилитационных процедур (ЛФК, массаж, физиотерапевтическое лечение)',
-        medicalType: MedicalType.NEUROLOGY_PSYCHIATRY,
-        healthZone: HealthZone.RED,
-        selectionType: SelectionType.MULTIPLE
-    },
-    {
-        title: 'организация режима правильных физических нагрузок (занятия физкультурой в спецгруппе)',
-        medicalType: MedicalType.NEUROLOGY_PSYCHIATRY,
-        healthZone: HealthZone.RED,
-        selectionType: SelectionType.MULTIPLE
-    },
-    {
-        title: 'индивидуальный режим организации учебной нагрузки',
-        medicalType: MedicalType.NEUROLOGY_PSYCHIATRY,
-        healthZone: HealthZone.RED,
-        selectionType: SelectionType.MULTIPLE
-    },
-    {
-        title: 'дозированный режим труда и отдыха',
-        medicalType: MedicalType.NEUROLOGY_PSYCHIATRY,
-        healthZone: HealthZone.RED,
-        selectionType: SelectionType.MULTIPLE
-    },
-    {
-        title: 'сопровождение профильными специалистами',
-        medicalType: MedicalType.NEUROLOGY_PSYCHIATRY,
-        healthZone: HealthZone.RED,
-        selectionType: SelectionType.MULTIPLE
-    }
-]
-
-export const medicalHealthRecommendations: { title: string; healthZone: HealthZone }[] = [
-    {
-        title: 'рациональная физическая нагрузка и исполнение требований гигиенических нормативов',
-        healthZone: HealthZone.YELLOW
-    },
-    {
-        title: 'регулярные занятия физической культурой и соблюдение режима дня',
-        healthZone: HealthZone.YELLOW
-    },
-    {
-        title: 'прогулки на свежем воздухе и закаливание',
-        healthZone: HealthZone.YELLOW
-    },
-    {
-        title: 'полноценное и сбалансированное питание',
-        healthZone: HealthZone.YELLOW
-    },
-    {
-        title: 'Проведение профилактических бесед о пагубном воздействии вредных привычек на здоровье человека',
-        healthZone: HealthZone.YELLOW
-    },
-
-    {
-        title: 'рациональная физическая нагрузка и исполнение требований гигиенических нормативов',
-        healthZone: HealthZone.RED
-    },
-    {
-        title: 'регулярные занятия физической культурой и соблюдение режима дня',
-        healthZone: HealthZone.RED
-    },
-    {
-        title: 'прогулки на свежем воздухе и закаливание',
-        healthZone: HealthZone.RED
-    },
-    {
-        title: 'полноценное и сбалансированное питание',
-        healthZone: HealthZone.RED
-    },
-    {
-        title: 'проведение профилактических бесед о пагубном воздействии вредных привычек на здоровье человека',
-        healthZone: HealthZone.RED
-    },
-    {
-        title: 'направление на ПМПК для решения вопроса о создании специальных образовательных условий',
-        healthZone: HealthZone.RED
+        selectionType: SelectionType.CHECKBOX,
+        recommendations: [
+            {
+                title: 'Диспансерное наблюдение врача-невролога'
+            },
+            {
+                title: 'Диспансерное наблюдение врача-психиатра'
+            },
+            {
+                title: 'Амбулаторное и стационарное обследование и медикаментозное лечение'
+            },
+            {
+                title: 'Прием ноотропов и витаминов'
+            },
+            {
+                title: 'Своевременное проведение реабилитационных и абилитационных процедур (ЛФК, массаж, физиотерапевтическое лечение)'
+            },
+            {
+                title: 'Организация режима правильных физических нагрузок (занятия физкультурой в спецгруппе)'
+            },
+            {
+                title: 'Индивидуальный режим организации учебной нагрузки'
+            },
+            {
+                title: 'Дозированный режим труда и отдыха'
+            },
+            {
+                title: 'Сопровождение профильными специалистами'
+            }
+        ]
     }
 ]
 

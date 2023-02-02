@@ -77,33 +77,33 @@ model Student {
 }
 
 model MedicalHealth {
-    studentId       String                        @id(map: "medical_health_pkey") @map("student_id") @db.Uuid
-    student         Student                       @relation(fields: [studentId], references: [id], onUpdate: Cascade, onDelete: Cascade)
-    options         MedicalHealthOption[]         @relation(name: "student_medical_health_options")
-    recommendations MedicalHealthRecommendation[] @relation(name: "student_medical_health_recommendations")
-    specialistNotes String?                       @map("specialist_notes")
+    studentId       String                @id(map: "medical_health_pkey") @map("student_id") @db.Uuid
+    student         Student               @relation(fields: [studentId], references: [id], onUpdate: Cascade, onDelete: Cascade)
+    options         MedicalHealthOption[] @relation(name: "student_medical_health_options")
+    specialistNotes String?               @map("specialist_notes")
 
     @@map("student_medical_health")
 }
 
 model MedicalHealthOption {
-    id            Int             @id(map: "medical_health_options_pkey") @default(autoincrement()) @map("option_id")
-    title         String          @map("title")
-    healthZone    HealthZone      @map("health_zone")
-    medicalType   MedicalType     @map("medical_type")
-    selectionType SelectionType   @map("selection_type")
-    medicalHealth MedicalHealth[] @relation(name: "student_medical_health_options")
+    id              Int                                 @id(map: "medical_health_options_pkey") @default(autoincrement()) @map("option_id")
+    title           String                              @map("title")
+    healthZone      HealthZone                          @map("health_zone")
+    medicalType     MedicalType                         @map("medical_type")
+    selectionType   SelectionType                       @map("selection_type")
+    medicalHealth   MedicalHealth[]                     @relation(name: "student_medical_health_options")
+    recommendations MedicalHealthOptionRecommendation[]
 
     @@map("medical_health_options")
 }
 
-model MedicalHealthRecommendation {
-    id            Int             @id(map: "medical_health_recommendations_pkey") @default(autoincrement()) @map("recommendation_id")
-    title         String          @map("title")
-    healthZone    HealthZone      @map("health_zone")
-    medicalHealth MedicalHealth[] @relation(name: "student_medical_health_recommendations")
+model MedicalHealthOptionRecommendation {
+    id       Int                  @id(map: "medical_health_options_recommendations_pkey") @default(autoincrement()) @map("recommendation_id")
+    option   MedicalHealthOption? @relation(fields: [optionId], references: [id], onUpdate: Cascade, onDelete: Cascade)
+    optionId Int                  @map("option_id")
+    title    String               @map("title")
 
-    @@map("medical_health_recommendations")
+    @@map("medical_health_options_recommendations")
 }
 
 model PedagogueHealth {
@@ -127,7 +127,7 @@ model PedagogueHealthOption {
 }
 
 model PedagogueHealthOptionRecommendation {
-    id       Int                    @id(map: "pedagogue_health_recommendations_pkey") @default(autoincrement()) @map("recommendation_id")
+    id       Int                    @id(map: "pedagogue_health_options_recommendations_pkey") @default(autoincrement()) @map("recommendation_id")
     option   PedagogueHealthOption? @relation(fields: [optionId], references: [id], onUpdate: Cascade, onDelete: Cascade)
     optionId Int                    @map("option_id")
     title    String                 @map("title")
@@ -176,7 +176,7 @@ model PsychologicalHealthOption {
 }
 
 model PsychologicalHealthOptionRecommendation {
-    id       Int                        @id(map: "psychological_health_recommendations_pkey") @default(autoincrement()) @map("recommendation_id")
+    id       Int                        @id(map: "psychological_health_options_recommendations_pkey") @default(autoincrement()) @map("recommendation_id")
     option   PsychologicalHealthOption? @relation(fields: [optionId], references: [id], onUpdate: Cascade, onDelete: Cascade)
     optionId Int                        @map("option_id")
     title    String                     @map("title")
@@ -222,11 +222,11 @@ model Conclusion {
 }
 
 model ConclusionRecommendation {
-    conclusion   Conclusion? @relation(fields: [conclusionId], references: [id])
+    id           Int         @id(map: "conclusions_recommendations_pkey") @default(autoincrement()) @map("recommendation_id")
+    conclusion   Conclusion? @relation(fields: [conclusionId], references: [id], onUpdate: Cascade, onDelete: Cascade)
     conclusionId Int         @map("conclusion_id")
     title        String      @map("title")
 
-    @@unique([conclusionId, title])
     @@map("conclusions_recommendations")
 }
 
@@ -273,6 +273,7 @@ enum EducationType {
 }
 
 enum MedicalType {
+    HEALTH_GROUP
     DISABILITY
     MORBIDITY
     BALANCED_DIET
@@ -288,6 +289,7 @@ enum MedicalType {
 enum SelectionType {
     SINGLE
     MULTIPLE
+    CHECKBOX
 }
 
 enum PedagogueTab {

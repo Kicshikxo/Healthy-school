@@ -8,7 +8,6 @@ import {
     physicalHealthRecommendations,
     socialHealthRecommendations,
     medicalHealthOptions,
-    medicalHealthRecommendations,
     pedagogueHealthOptions,
     psychologicalHealthOptions,
     conclusions
@@ -114,24 +113,20 @@ async function main() {
 
     const medicalHealthOptionsCount = await prisma.medicalHealthOption.count()
     if (medicalHealthOptionsCount === 0) {
-        await prisma.medicalHealthOption.createMany({
-            data: medicalHealthOptions
-        })
+        for (const option of medicalHealthOptions) {
+            await prisma.medicalHealthOption.create({
+                data: {
+                    ...option,
+                    recommendations: {
+                        create: option.recommendations
+                    }
+                }
+            })
+        }
 
         console.log(`Создано ${medicalHealthOptions.length} опций медицинского здоровья`)
     } else {
         console.log(`В БД уже хранится ${medicalHealthOptionsCount} опций медицинского здоровья`)
-    }
-
-    const medicalHealthRecommendationsCount = await prisma.medicalHealthRecommendation.count()
-    if (medicalHealthRecommendationsCount === 0) {
-        await prisma.medicalHealthRecommendation.createMany({
-            data: medicalHealthRecommendations
-        })
-
-        console.log(`Создано ${medicalHealthRecommendations.length} рекомендаций по медицинскому здоровью`)
-    } else {
-        console.log(`В БД уже хранится ${medicalHealthRecommendationsCount} рекомендаций по медицинскому здоровью`)
     }
 
     const pedagogueHealthOptionsCount = await prisma.pedagogueHealthOption.count()
@@ -146,9 +141,6 @@ async function main() {
                 }
             })
         }
-        // await prisma.pedagogueHealthOption.createMany({
-        //     data: pedagogueHealthOptions
-        // })
 
         console.log(`Создано ${pedagogueHealthOptions.length} опций педагогического здоровья`)
     } else {
@@ -167,9 +159,6 @@ async function main() {
                 }
             })
         }
-        // await prisma.psychologicalHealthOption.createMany({
-        //     data: psychologicalHealthOptions
-        // })
 
         console.log(`Создано ${psychologicalHealthOptions.length} опций психологического здоровья`)
     } else {
