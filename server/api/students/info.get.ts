@@ -1,25 +1,24 @@
 import { PrismaClient } from '@prisma/client'
-import checkTokenData from '~~/server/utils/checkTokenData'
+import readTokenData from '~~/server/utils/readTokenData'
 
 const prisma = new PrismaClient()
 
 export default defineEventHandler(async (event) => {
-    const tokenData = checkTokenData(event)
+    const tokenData = readTokenData(event)
     if (!tokenData) return
 
     const query = getQuery(event) as { studentId: string }
 
     const data = await prisma.student.findFirst({
         where: {
-            AND: [{ id: query.studentId as string }, { class: { organizationId: tokenData.organizationId } }]
+            AND: [{ id: query.studentId }, { class: { organizationId: tokenData.organizationId } }]
         },
         include: {
             class: true,
             physicalHealth: {
                 select: {
                     healthGroup: true,
-                    recommendations: true,
-                    specialistNotes: true
+                    options: true
                 }
             },
             medicalHealth: {
@@ -30,8 +29,7 @@ export default defineEventHandler(async (event) => {
             },
             socialHealth: {
                 select: {
-                    indicators: true,
-                    recommendations: true
+                    options: true
                 }
             },
             pedagogueHealth: {
@@ -41,7 +39,8 @@ export default defineEventHandler(async (event) => {
             },
             psychologicalHealth: {
                 select: {
-                    options: true
+                    options: true,
+                    specialistNotes: true
                 }
             }
         }
