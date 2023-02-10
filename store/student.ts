@@ -370,6 +370,7 @@ export const useStudentStore = (initialId?: string) =>
                 summary?: string
                 recommendations?: {
                     title: string
+                    subtitle?: string
                     healthZone?: HealthZone
                     list: { title: string }[]
                 }[]
@@ -435,6 +436,7 @@ export const useStudentStore = (initialId?: string) =>
                     },
                     ...pedagogueHealth.tabTypes.PEDAGOGUE.map((type) => ({
                         title: pedagogueHealth.typeTitles[type],
+                        subtitle: pedagogueOptions.value[type]?.title,
                         healthZone: pedagogueOptions.value[type]?.healthZone,
                         list:
                             pedagogueHealth.optionsWithRecommendations?.find(
@@ -462,6 +464,7 @@ export const useStudentStore = (initialId?: string) =>
                     },
                     ...pedagogueHealth.tabTypes.SPEECH_THERAPIST.map((type) => ({
                         title: pedagogueHealth.typeTitles[type],
+                        subtitle: pedagogueOptions.value[type]?.title,
                         healthZone: pedagogueOptions.value[type]?.healthZone,
                         list:
                             pedagogueHealth.optionsWithRecommendations?.find(
@@ -490,6 +493,7 @@ export const useStudentStore = (initialId?: string) =>
                     },
                     ...(Object.keys(PhysicalType) as PhysicalType[]).map((type) => ({
                         title: physicalHealth.typeTitles[type],
+                        subtitle: physicalOptions.value[type]?.title,
                         healthZone: physicalOptions.value[type]?.healthZone,
                         list:
                             physicalHealth.optionsWithRecommendations?.find(
@@ -518,6 +522,7 @@ export const useStudentStore = (initialId?: string) =>
                     },
                     ...(Object.keys(PsychologicalType) as PsychologicalType[]).map((type) => ({
                         title: psychologicalHealth.typeTitles[type],
+                        subtitle: psychologicalOptions.value[type]?.title,
                         healthZone: psychologicalOptions.value[type]?.healthZone,
                         list:
                             psychologicalHealth.optionsWithRecommendations?.find(

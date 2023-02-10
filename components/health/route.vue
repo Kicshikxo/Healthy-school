@@ -5,9 +5,6 @@
             <health-component-body :content-padding-top="false" :class="{ 'opacity-60': student.loading }">
                 <template #content>
                     <div class="flex flex-column gap-2">
-                        <!-- <div v-for="conclusionType in Object.values(ConclusionType)">
-                            {{ student.conclusions[conclusionType]?.title ?? 'ничего' }}
-                        </div> -->
                         <p-card
                             v-for="conclusion in Object.values(student.conclusions)"
                             class="shadow-none text-white"
@@ -48,6 +45,11 @@
                                                     class="shadow-none text-white bg-transparent"
                                                 >
                                                     <template #title>{{ recommendations.title }}</template>
+                                                    <template #subtitle>
+                                                        <span class="text-white text-lg">
+                                                            {{ recommendations.subtitle }}
+                                                        </span>
+                                                    </template>
                                                     <template #content>
                                                         <div class="flex flex-wrap gap-1">
                                                             <p-chip
