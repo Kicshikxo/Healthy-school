@@ -1,9 +1,9 @@
 import { PrismaClient } from '@prisma/client'
-import checkTokenData from '~~/server/utils/checkTokenData'
+import readTokenData from '~~/server/utils/readTokenData'
 const prisma = new PrismaClient()
 
 export default defineEventHandler(async (event) => {
-    const tokenData = checkTokenData(event)
+    const tokenData = readTokenData(event)
     if (!tokenData) return
 
     const query = getQuery(event) as { classId: string }
