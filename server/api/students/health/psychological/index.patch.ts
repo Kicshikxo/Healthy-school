@@ -18,7 +18,8 @@ export default defineEventHandler(async (event) => {
         update: {
             options: {
                 set: body.options.map((option) => ({ id: option.id }))
-            }
+            },
+            specialistNotes: body.specialistNotes
         }
     })
 })
