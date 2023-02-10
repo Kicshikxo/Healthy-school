@@ -41,8 +41,7 @@
 import shortUUID from 'short-uuid'
 
 definePageMeta({
-    title: 'Список классов',
-    breadcrumb: 'index'
+    title: 'Список классов'
 })
 
 const translator = shortUUID()

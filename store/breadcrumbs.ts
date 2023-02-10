@@ -7,11 +7,10 @@ export const useBreadcrumbsStore = defineStore('breadcrumbs', () => {
 
     const titles = computed<{ [key: string]: string | undefined | 'loading' }>(() => {
         return {
-            index: 'Список классов',
-            class: currentClass.value ? `${currentClass.value?.number}${currentClass.value?.liter}` : undefined,
+            class: currentClass.value ? `${currentClass.value?.number}${currentClass.value?.liter}` : 'Список учащихся',
             student: student.value
                 ? `${student.value?.secondName} ${student.value?.firstName} ${student.value?.middleName}`
-                : undefined
+                : 'Информация по учащемуся'
         }
     })
 
