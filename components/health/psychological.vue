@@ -1,8 +1,13 @@
 <template>
-    <health-component :loading="loadingData" :allow-save="hasChanges" :on-cancel="cancelChanges" :on-save="saveChanges">
+    <health-component
+        :loading="student.loading"
+        :allow-save="hasChanges"
+        :on-cancel="student.refresh"
+        :on-save="student.current.psychological.save"
+    >
         <template #title> Психологический компонент</template>
-        <template #body="{ enableEditing }">
-            <health-component-body :padding-top="false">
+        <template #body="{ enableEditing, loading }">
+            <health-component-body :content-padding-top="false">
                 <template #title> Психологические показатели </template>
                 <template #content>
                     <template v-for="{ title, type } in currentOptions">
@@ -11,16 +16,29 @@
                             <div class="col-6 flex justify-content-start align-items-center text-lg">{{ title }}</div>
                             <div class="col-6 border-left-1 surface-border pl-4">
                                 <health-dropdown
-                                    :disabled="!enableEditing"
-                                    :loading="loadingData"
-                                    :options="educationOptions[type]"
+                                    :disabled="!enableEditing || loading"
+                                    :loading="loading"
+                                    :options="student.current.psychological.educationOptions[type]"
                                     :placeholder="title"
                                     option-label="title"
-                                    v-model="selectedOptions[type]"
+                                    v-model="student.current.psychological.options[type]"
                                 />
                             </div>
                         </div>
                     </template>
+                </template>
+            </health-component-body>
+            <health-component-body>
+                <template #title> Иное </template>
+                <template #content>
+                    <p-textarea
+                        :disabled="!enableEditing || loading"
+                        :autoResize="true"
+                        :rows="6"
+                        v-model="student.current.psychological.specialistNotes"
+                        placeholder="Заполняется вручную"
+                        class="w-full"
+                    />
                 </template>
             </health-component-body>
         </template>
@@ -28,129 +46,25 @@
 </template>
 
 <script setup lang="ts">
-import { PsychologicalHealth, EducationType, PsychologicalHealthOption, PsychologicalType, HealthZone } from '@prisma/client'
+import { PsychologicalType } from '@prisma/client'
+import { useStudentStore } from '~~/store/student'
+import { usePsychologicalHealthStore } from '~~/store/health/psychological'
 
-const props = defineProps<{
-    studentData: HealthComponentData
-    loadingData: boolean
-    refreshData: () => Promise<void>
-}>()
+const student = useStudentStore()
+const psychologicalHealth = usePsychologicalHealthStore()
 
-async function cancelChanges() {
-    await props.refreshData()
-}
-
-async function saveChanges() {
-    const { error } = await useFetch('/api/students/health/psychological', {
-        method: 'PATCH',
-        body: {
-            studentId: props.studentData?.id,
-            options: Object.values(selectedOptions.value).filter(
-                (option) => option.educationType === studentEducationType.value
-            )
-        } as PsychologicalHealth & { options: PsychologicalHealthOption[] }
-    })
-
-    if (error.value) {
-        throw new Error(error.value.message)
-    }
-
-    await props.refreshData()
-}
-
-// Data from server
-const { data: psychologicalOptions } = await useFetch('/api/students/health/psychological/options')
-
-const studentEducationType = computed<EducationType | undefined>(() => {
-    const classNumber = props.studentData?.class?.number
-    if (!classNumber) return
-
-    if (1 <= classNumber && classNumber <= 4) {
-        return EducationType.PRIMARY
-    }
-    if (5 <= classNumber && classNumber <= 9) {
-        return EducationType.BASIC
-    }
-    if (10 <= classNumber && classNumber <= 11) {
-        return EducationType.MIDDLE
-    }
-})
-
-const educationTypes = computed(() =>
-    (Object.keys(EducationType) as EducationType[]).reduce((acc, type) => {
-        acc[type] = [
-            ...new Set(
-                (psychologicalOptions.value ?? [])
-                    .filter((option) => option.educationType === type)
-                    .map((option) => option.psychologicalType)
-            )
-        ]
-        return acc
-    }, {} as { [key in EducationType]: PsychologicalType[] })
+const hasChanges = computed(
+    () =>
+        JSON.stringify(student.current.psychological.options) !== JSON.stringify(student.psychological.options) ||
+        JSON.stringify(student.current.psychological.specialistNotes) !== JSON.stringify(student.psychological.specialistNotes)
 )
-
-const studentPsychologicalTypes = computed(() =>
-    studentEducationType.value ? educationTypes.value[studentEducationType.value] : []
-)
-
-// Options
-const options = computed(() =>
-    (Object.keys(EducationType) as EducationType[]).reduce((acc, type) => {
-        acc[type] = (psychologicalOptions.value?.filter((option) => option.educationType === type) ?? []).reduce(
-            (acc, option) => {
-                acc[option.psychologicalType] = (acc[option.psychologicalType] ?? []).concat(option)
-                return acc
-            },
-            {} as { [key in PsychologicalType]: PsychologicalHealthOption[] }
-        )
-        return acc
-    }, {} as { [key in EducationType]: { [key in PsychologicalType]: PsychologicalHealthOption[] } })
-)
-
-const educationOptions = computed(() =>
-    studentEducationType.value
-        ? options.value[studentEducationType.value]
-        : ({} as { [key in PsychologicalType]: PsychologicalHealthOption[] })
-)
-
-// Student data
-const studentOptions = computed(() => {
-    return studentPsychologicalTypes.value.reduce((acc, type) => {
-        acc[type] =
-            props.studentData?.psychologicalHealth?.options.find((option) => option.psychologicalType === type) ??
-            educationOptions.value[type].find((option) => option.healthZone === HealthZone.GREEN)
-        return acc
-    }, {} as { [key in PsychologicalType]: PsychologicalHealthOption })
-})
-
-// Selected data
-const selectedOptions = ref(useCloneDeep(studentOptions.value))
-
-// Watch on student data update
-watch(studentOptions, (value) => (selectedOptions.value = useCloneDeep(value)))
-
-const hasChanges = computed(() => JSON.stringify(selectedOptions.value) !== JSON.stringify(studentOptions.value))
-
-const typeTitles: { [key in PsychologicalType]: string } = {
-    CULTURAL_VALUES: 'Уровень сформированности ценностей',
-    MOTIVATION: 'Мотивация',
-    ADAPTATION: 'Адаптация',
-    SOCIOMETRY: 'Социальный статус (социометрия)',
-    SELF_ASSESSMENT: 'Самооценка',
-    ACCENTUATIONS: 'Акцентуации характера',
-    ANXIETY: 'Тревожность',
-    PERSONAL_ANXIETY: 'Тревожность (личностная, ситуативная)',
-    AGGRESSIVITY: 'Агрессивность',
-    EXTRACURRICULAR_ABILITIES: 'Способности к различным видам внеучебной деятельности',
-    DEVIANT_BEHAVIOR: 'Отклоняющееся поведение',
-    PROFESSIONAL_INTERESTS: 'Профессиональные интересы и склонности',
-    BULLYING: 'Буллинг',
-    CONFLICTUALITY: 'Участие ребенка в конфликтах в школе и вне школы'
-}
 
 const currentOptions = computed<{ title: string; type: PsychologicalType }[]>(() =>
-    (studentEducationType.value ? educationTypes.value[studentEducationType.value] : []).map((type) => ({
-        title: typeTitles[type],
+    (student.current.psychological.educationType
+        ? psychologicalHealth.educationTypes[student.current.psychological.educationType]
+        : []
+    ).map((type) => ({
+        title: psychologicalHealth.typeTitles[type],
         type
     }))
 )

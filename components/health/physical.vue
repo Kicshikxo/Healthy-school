@@ -1,49 +1,55 @@
 <template>
-    <health-component :loading="loadingData" :allow-save="hasChanges" :on-cancel="cancelChanges" :on-save="saveChanges">
+    <health-component
+        :loading="student.loading"
+        :allow-save="hasChanges"
+        :on-cancel="student.refresh"
+        :on-save="student.current.physical.save"
+    >
         <template #title>Компонент физической культуры</template>
-        <template #body="{ enableEditing }">
+        <template #body="{ enableEditing, loading }">
             <health-component-body>
                 <template #title> Медицинская группа для занятий физической культурой </template>
                 <template #content>
                     <div class="flex justify-content-center">
                         <p-select-button
-                            v-model="selectedHealthGroup"
+                            :disabled="!enableEditing || loading"
                             :options="[
                                 { label: 'Основная', value: HealthGroup.BASIC },
                                 { label: 'Подготовительная', value: HealthGroup.PREPARATORY },
                                 { label: 'Специальная', value: HealthGroup.SPECIAL }
                             ]"
+                            :unselectable="false"
                             optionLabel="label"
                             optionValue="value"
-                            :disabled="!enableEditing"
-                            :unselectable="false"
                             class="select-health-group"
+                            v-model="student.current.physical.healthGroup"
                         />
                     </div>
                 </template>
             </health-component-body>
-            <health-component-body v-if="showRecommendations">
-                <template #title> Индивидуальные рекомендации и назначения </template>
+            <health-component-body v-if="currentOptions.length" :content-padding-top="false">
+                <template #title> Показатели </template>
                 <template #content>
-                    <health-multi-select
-                        :disabled="!enableEditing"
-                        :loading="loadingData"
-                        :options="availableRecommendations"
-                        placeholder="Индивидуальные рекомендации"
-                        optionLabel="title"
-                        v-model="selectedRecommendations"
-                    />
-                </template>
-                <template #footer>
-                    <div class="mb-2 text-xl font-bold">Иное</div>
-                    <p-textarea
-                        :disabled="!enableEditing"
-                        v-model="currentSpecialistNotes"
-                        :autoResize="true"
-                        :rows="4"
-                        placeholder="Рекомендации для занятий физической культурой от профильного медицинского специалиста"
-                        class="w-full"
-                    />
+                    <template v-for="{ title, type } in currentOptions">
+                        <p-divider />
+                        <div class="grid grid-nogutter">
+                            <div class="col-6 flex justify-content-start align-items-center text-lg">{{ title }}</div>
+                            <div class="col-6 border-left-1 surface-border pl-4">
+                                <health-dropdown
+                                    :disabled="!enableEditing || loading"
+                                    :loading="loading"
+                                    :options="
+                                        physicalHealth.typedOptions[type].filter(
+                                            (option) => option.healthGroup === student.current.physical.healthGroup
+                                        )
+                                    "
+                                    :placeholder="title"
+                                    option-label="title"
+                                    v-model="student.current.physical.options[type]"
+                                />
+                            </div>
+                        </div>
+                    </template>
                 </template>
             </health-component-body>
         </template>
@@ -51,74 +57,26 @@
 </template>
 
 <script setup lang="ts">
-import { HealthGroup, PhysicalHealth, PhysicalHealthRecommendation } from '@prisma/client'
+import { PhysicalType, HealthGroup } from '@prisma/client'
+import { useStudentStore } from '~~/store/student'
+import { usePhysicalHealthStore } from '~~/store/health/physical'
 
-const props = defineProps<{
-    studentData: HealthComponentData
-    loadingData: boolean
-    refreshData: () => Promise<void>
-}>()
-
-async function cancelChanges() {
-    await props.refreshData()
-}
-
-async function saveChanges() {
-    const { error } = await useFetch('/api/students/health/physical', {
-        method: 'PATCH',
-        body: {
-            studentId: props.studentData?.id,
-            healthGroup: selectedHealthGroup.value,
-            recommendations: sortedSelectedRecommendations.value.filter(
-                (recommendation) => recommendation.healthGroup === selectedHealthGroup.value
-            ),
-            specialistNotes: currentSpecialistNotes.value
-        } as PhysicalHealth & { recommendations: PhysicalHealthRecommendation[] }
-    })
-
-    if (error.value) {
-        throw new Error(error.value.message)
-    }
-
-    await props.refreshData()
-}
-
-// Data from server
-const { data: physicalRecommendations } = await useFetch('/api/students/health/physical/recommendations')
-
-// Student data
-const studentHealthGroup = computed(() => props.studentData?.physicalHealth?.healthGroup ?? 'BASIC')
-const studentRecommendations = computed(() => props.studentData?.physicalHealth?.recommendations ?? [])
-const studentSpecialistNotes = computed(() => props.studentData?.physicalHealth?.specialistNotes ?? '')
-
-// Selected data
-const selectedHealthGroup = ref(useCloneDeep(studentHealthGroup.value))
-const selectedRecommendations = ref(useCloneDeep(studentRecommendations.value))
-const currentSpecialistNotes = ref(useCloneDeep(studentSpecialistNotes.value))
-
-// Watch on student data update
-watch(studentHealthGroup, (value) => (selectedHealthGroup.value = useCloneDeep(value)))
-watch(studentRecommendations, (value) => (selectedRecommendations.value = useCloneDeep(value)))
-watch(studentSpecialistNotes, (value) => (currentSpecialistNotes.value = useCloneDeep(value)))
-
-// Sorted student data
-const sortedStudentRecommendations = computed(() => studentRecommendations.value.sort((a, b) => a.id - b.id))
-
-// Sorted selected data
-const sortedSelectedRecommendations = computed(() => selectedRecommendations.value.sort((a, b) => a.id - b.id))
+const student = useStudentStore()
+const physicalHealth = usePhysicalHealthStore()
 
 const hasChanges = computed(
     () =>
-        JSON.stringify(selectedHealthGroup.value) !== JSON.stringify(studentHealthGroup.value) ||
-        JSON.stringify(sortedSelectedRecommendations.value) !== JSON.stringify(sortedStudentRecommendations.value) ||
-        JSON.stringify(currentSpecialistNotes.value) !== JSON.stringify(studentSpecialistNotes.value)
+        JSON.stringify(student.current.physical.healthGroup) !== JSON.stringify(student.physical.healthGroup) ||
+        JSON.stringify(student.current.physical.options) !== JSON.stringify(student.physical.options)
 )
 
-const availableRecommendations = computed(() =>
-    physicalRecommendations.value?.filter((recommendation) => recommendation.healthGroup === selectedHealthGroup.value)
-)
-
-const showRecommendations = computed(() =>
-    ([HealthGroup.PREPARATORY, HealthGroup.SPECIAL] as HealthGroup[]).includes(selectedHealthGroup.value)
+const currentOptions = computed<{ title: string; type: PhysicalType }[]>(() =>
+    (Object.keys(PhysicalType) as PhysicalType[])
+        .filter(
+            (type) =>
+                student.current.physical.healthGroup &&
+                physicalHealth.healthGroupTypes[student.current.physical.healthGroup].includes(type)
+        )
+        .map((type) => ({ title: physicalHealth.typeTitles[type], type }))
 )
 </script>

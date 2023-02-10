@@ -3,11 +3,13 @@
         <section class="p-5">
             <div class="flex justify-content-between gap-8">
                 <div class="flex flex-auto gap-5">
-                    <p-skeleton v-if="loadingData" width="96px" height="96px" />
+                    <p-skeleton v-if="student.loading" width="96px" height="96px" />
                     <nuxt-img
                         v-else
                         :src="
-                            studentData?.gender === 'MALE' ? 'images/avatars/persona 0-0.png' : 'images/avatars/persona 0-1.png'
+                            student.data?.gender === 'MALE'
+                                ? 'images/avatars/persona 0-0.png'
+                                : 'images/avatars/persona 0-1.png'
                         "
                         alt="student avatar"
                         width="96"
@@ -15,40 +17,40 @@
                     />
                     <div class="flex flex-auto flex-column justify-content-between">
                         <div class="flex align-items-center text-3xl h-2rem">
-                            <p-skeleton v-if="loadingData" class="max-w-30rem" />
+                            <p-skeleton v-if="student.loading" class="max-w-30rem" />
                             <div v-else class="text-800 font-bold">
-                                {{ studentData?.secondName }}
-                                {{ studentData?.firstName }}
-                                {{ studentData?.middleName }}
+                                {{ student.data?.secondName }}
+                                {{ student.data?.firstName }}
+                                {{ student.data?.middleName }}
                             </div>
                         </div>
                         <div class="flex flex-wrap gap-5">
                             <div class="flex flex-column">
                                 <div class="text-500">Дата рождения</div>
                                 <div class="flex align-items-end h-1rem mt-2 text-700">
-                                    <p-skeleton v-if="loadingData" class="max-w-30rem" />
-                                    <div v-else>{{ new Date(studentData?.birthdate!).toLocaleDateString() }}</div>
+                                    <p-skeleton v-if="student.loading" class="max-w-30rem" />
+                                    <div v-else>{{ new Date(student.data?.birthdate!).toLocaleDateString() }}</div>
                                 </div>
                             </div>
                             <div class="flex flex-column w-5rem">
                                 <div class="text-500">Пол</div>
                                 <div class="flex align-items-end h-1rem mt-2 text-700">
-                                    <p-skeleton v-if="loadingData" class="max-w-30rem" />
-                                    <div v-else>{{ genderLocalization[studentData?.gender!] }}</div>
+                                    <p-skeleton v-if="student.loading" class="max-w-30rem" />
+                                    <div v-else>{{ genderLocalization[student.data?.gender!] }}</div>
                                 </div>
                             </div>
                             <div class="flex flex-column">
                                 <div class="text-500">Класс</div>
                                 <div class="flex align-items-end h-1rem mt-2 text-700">
-                                    <p-skeleton v-if="loadingData" class="max-w-30rem" />
-                                    <div v-else>{{ studentData?.class.number! + studentData?.class.liter! }}</div>
+                                    <p-skeleton v-if="student.loading" class="max-w-30rem" />
+                                    <div v-else>{{ student.data?.class.number! + student.data?.class.liter! }}</div>
                                 </div>
                             </div>
                             <div class="flex flex-column w-8rem">
                                 <div class="text-500">СНИЛС</div>
                                 <div class="flex align-items-end h-1rem mt-2 text-700">
-                                    <p-skeleton v-if="loadingData" class="max-w-30rem" />
-                                    <div v-else>{{ studentData?.snils }}</div>
+                                    <p-skeleton v-if="student.loading" class="max-w-30rem" />
+                                    <div v-else>{{ student.data?.snils }}</div>
                                 </div>
                             </div>
                         </div>
@@ -68,22 +70,22 @@
             </div>
         </section>
         <role-access role="HEALTH_WORKER">
-            <health-medical :student-data="studentData" :loading-data="loadingData" :refresh-data="refreshData" />
+            <health-medical />
         </role-access>
         <role-access role="PEDAGOGUE">
-            <health-pedagogue :student-data="studentData" :loading-data="loadingData" :refresh-data="refreshData" />
+            <health-pedagogue />
         </role-access>
         <role-access role="PHYSICAL_EDUCATION_TEACHER">
-            <health-physical :student-data="studentData" :loading-data="loadingData" :refresh-data="refreshData" />
+            <health-physical />
         </role-access>
         <role-access role="PSYCHOLOGIST">
-            <health-psychological :student-data="studentData" :loading-data="loadingData" :refresh-data="refreshData" />
+            <health-psychological />
         </role-access>
         <role-access role="SOCIAL_PEDAGOGUE">
-            <health-social :student-data="studentData" :loading-data="loadingData" :refresh-data="refreshData" />
+            <health-social />
         </role-access>
         <role-access role="CLASS_TEACHER">
-            <health-class-teacher :student-data="studentData" :loading-data="loadingData" :refresh-data="refreshData" />
+            <health-class-teacher />
         </role-access>
     </div>
 </template>
@@ -94,6 +96,7 @@ import jsPDF from 'jspdf'
 import html2canvas from 'html2canvas'
 import shortUUID from 'short-uuid'
 import { Gender } from '@prisma/client'
+import { useStudentStore } from '~~/store/student'
 
 definePageMeta({
     title: `Информация по учащемуся`
@@ -106,6 +109,9 @@ const router = useRouter()
 const studentPage = ref<HTMLElement>()
 const translator = shortUUID()
 
+const student = useStudentStore(translator.toUUID(route.params.studentId as string))
+student.setId(translator.toUUID(route.params.studentId as string))
+
 const genderLocalization: { [key in Gender]: string } = {
     MALE: 'Мужской',
     FEMALE: 'Женский'
@@ -114,7 +120,7 @@ const genderLocalization: { [key in Gender]: string } = {
 async function deleteStudent() {
     const { error } = await useFetch('/api/students/remove', {
         method: 'DELETE',
-        body: { studentId: studentData.value?.id }
+        body: { studentId: student.data?.id }
     })
     if (error.value) {
         return toast.add({
@@ -173,18 +179,6 @@ async function printStudent() {
 async function saveToPDF() {
     const pdf = await getPDF()
 
-    pdf.save(`${studentData.value?.secondName} ${studentData.value?.firstName} ${studentData.value?.middleName}.pdf`)
+    pdf.save(`${student.data?.secondName} ${student.data?.firstName} ${student.data?.middleName}.pdf`)
 }
-
-const {
-    data: studentData,
-    pending: loadingData,
-    refresh: refreshData
-} = useFetch('/api/students/info', {
-    headers: useRequestHeaders() as HeadersInit,
-    query: {
-        studentId: translator.toUUID(route.params.studentId as string),
-        classId: translator.toUUID(route.params.classId as string)
-    }
-})
 </script>

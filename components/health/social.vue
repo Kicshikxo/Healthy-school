@@ -1,48 +1,40 @@
 <template>
-    <health-component :loading="loadingData" :allow-save="hasChanges" :on-cancel="cancelChanges" :on-save="saveChanges">
+    <health-component
+        :loading="student.loading"
+        :allow-save="hasChanges"
+        :on-cancel="student.refresh"
+        :on-save="student.current.social.save"
+    >
         <template #title>Компонент социального здоровья</template>
         <template #body="{ enableEditing }">
             <health-component-body>
                 <template #title>Индикаторы социального здоровья</template>
                 <template #content>
-                    <div v-for="indicator in socialIndicators" :key="indicator.id" class="field-checkbox">
+                    <div v-for="option in socialHealth.options" class="field-checkbox">
                         <div
                             style="width: 6px; height: 20px"
                             class="mr-2 border-round"
                             :class="{
-                                'bg-green-500': indicator.healthZone === 'GREEN',
-                                'bg-yellow-500': indicator.healthZone === 'YELLOW',
-                                'bg-red-500': indicator.healthZone === 'RED'
+                                'bg-green-500': option.healthZone === HealthZone.GREEN,
+                                'bg-yellow-500': option.healthZone === HealthZone.YELLOW,
+                                'bg-red-500': option.healthZone === HealthZone.RED
                             }"
                         />
                         <p-checkbox
                             :disabled="!enableEditing"
-                            :inputId="`indicator${indicator.id}`"
-                            :value="indicator"
-                            v-model="selectedIndicators"
+                            :inputId="`indicator${option.id}`"
+                            :value="option"
+                            v-model="student.current.social.options"
                             :class="{
-                                'p-checkbox-green': indicator.healthZone === 'GREEN',
-                                'p-checkbox-yellow': indicator.healthZone === 'YELLOW',
-                                'p-checkbox-red': indicator.healthZone === 'RED'
+                                'p-checkbox-green': option.healthZone === HealthZone.GREEN,
+                                'p-checkbox-yellow': option.healthZone === HealthZone.YELLOW,
+                                'p-checkbox-red': option.healthZone === HealthZone.RED
                             }"
                         />
-                        <label :for="`indicator${indicator.id}`">
-                            {{ indicator.title }}
+                        <label :for="`indicator${option.id}`">
+                            {{ socialHealth.typeTitles[option.socialType] }}
                         </label>
                     </div>
-                </template>
-            </health-component-body>
-            <health-component-body v-if="showRecommendations">
-                <template #title> Профилактические и здоровьесберегающие рекомендации </template>
-                <template #content>
-                    <health-multi-select
-                        :disabled="!enableEditing"
-                        :loading="loadingData"
-                        :options="availableRecommendations"
-                        placeholder="Индивидуальные рекомендации"
-                        optionLabel="title"
-                        v-model="selectedRecommendations"
-                    />
                 </template>
             </health-component-body>
         </template>
@@ -50,84 +42,12 @@
 </template>
 
 <script setup lang="ts">
-import { HealthZone, SocialHealth, SocialHealthIndicator, SocialHealthRecommendation } from '@prisma/client'
+import { HealthZone } from '@prisma/client'
+import { useStudentStore } from '~~/store/student'
+import { useSocialHealthStore } from '~~/store/health/social'
 
-const props = defineProps<{
-    studentData: HealthComponentData
-    loadingData: boolean
-    refreshData: () => Promise<void>
-}>()
+const student = useStudentStore()
+const socialHealth = useSocialHealthStore()
 
-async function cancelChanges() {
-    await props.refreshData()
-}
-
-async function saveChanges() {
-    const { error } = await useFetch('/api/students/health/social', {
-        method: 'PATCH',
-        body: {
-            studentId: props.studentData?.id,
-            indicators: sortedSelectedIndicators.value,
-            recommendations: sortedSelectedRecommendations.value.filter(
-                (recommendation) => recommendation.healthZone === currentHealthZone.value
-            )
-        } as SocialHealth & { indicators: SocialHealthIndicator[]; recommendations: SocialHealthRecommendation[] }
-    })
-
-    if (error.value) {
-        throw new Error(error.value.message)
-    }
-
-    await props.refreshData()
-}
-
-// Data from server
-const { data: socialIndicators } = await useFetch('/api/students/health/social/indicators')
-const { data: socialRecommendations } = await useFetch('/api/students/health/social/recommendations')
-
-// Student data
-const studentIndicators = computed(() => props.studentData?.socialHealth?.indicators ?? [])
-const studentRecommendations = computed(() => props.studentData?.socialHealth?.recommendations ?? [])
-
-// Selected data
-const selectedIndicators = ref(useCloneDeep(studentIndicators.value))
-const selectedRecommendations = ref(useCloneDeep(studentRecommendations.value))
-
-// Watch on student data update
-watch(studentIndicators, (value) => (selectedIndicators.value = useCloneDeep(value)))
-watch(studentRecommendations, (value) => (selectedRecommendations.value = useCloneDeep(value)))
-
-// Sorted student data
-const sortedStudentIndicators = computed(() => studentIndicators.value.sort((a, b) => a.id - b.id))
-const sortedStudentRecommendations = computed(() => studentRecommendations.value.sort((a, b) => a.id - b.id))
-
-// Sorted selected data
-const sortedSelectedIndicators = computed(() => selectedIndicators.value.sort((a, b) => a.id - b.id))
-const sortedSelectedRecommendations = computed(() => selectedRecommendations.value.sort((a, b) => a.id - b.id))
-
-const hasChanges = computed(
-    () =>
-        JSON.stringify(sortedSelectedIndicators.value) !== JSON.stringify(sortedStudentIndicators.value) ||
-        JSON.stringify(sortedSelectedRecommendations.value) !== JSON.stringify(sortedStudentRecommendations.value)
-)
-
-const currentHealthZone = computed<HealthZone>(() => {
-    const healthZones = selectedIndicators.value.map((indicator) => indicator.healthZone)
-
-    if (healthZones.some((healthZone) => healthZone === HealthZone.RED)) {
-        return HealthZone.RED
-    }
-    if (healthZones.some((healthZone) => healthZone === HealthZone.YELLOW)) {
-        return HealthZone.YELLOW
-    }
-    return HealthZone.GREEN
-})
-
-const availableRecommendations = computed(() =>
-    socialRecommendations.value?.filter((recommendation) => recommendation.healthZone === currentHealthZone.value)
-)
-
-const showRecommendations = computed(() =>
-    ([HealthZone.YELLOW, HealthZone.RED] as HealthZone[]).includes(currentHealthZone.value)
-)
+const hasChanges = computed(() => JSON.stringify(student.current.social.options) !== JSON.stringify(student.social.options))
 </script>
