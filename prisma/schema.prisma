@@ -79,8 +79,8 @@ model Student {
 model MedicalHealth {
     studentId       String                @id(map: "medical_health_pkey") @map("student_id") @db.Uuid
     student         Student               @relation(fields: [studentId], references: [id], onUpdate: Cascade, onDelete: Cascade)
-    options         MedicalHealthOption[] @relation(name: "student_medical_health_options")
     specialistNotes String?               @map("specialist_notes")
+    options         MedicalHealthOption[] @relation(name: "student_medical_health_options")
 
     @@map("student_medical_health")
 }
@@ -120,6 +120,7 @@ model PedagogueHealthOption {
     healthZone      HealthZone                            @map("health_zone")
     pedagogueTab    PedagogueTab                          @map("pedagogue_tab")
     pedagogueType   PedagogueType                         @map("pedagogue_type")
+    selectionType   SelectionType                         @map("selection_type")
     pedagogueHealth PedagogueHealth[]                     @relation(name: "student_pedagogue_health_options")
     recommendations PedagogueHealthOptionRecommendation[]
 
@@ -136,29 +137,41 @@ model PedagogueHealthOptionRecommendation {
 }
 
 model PhysicalHealth {
-    studentId       String                         @id(map: "physical_health_pkey") @map("student_id") @db.Uuid
-    student         Student                        @relation(fields: [studentId], references: [id], onUpdate: Cascade, onDelete: Cascade)
-    healthGroup     HealthGroup?                   @default(dbgenerated("'BASIC'")) @map("health_group")
-    recommendations PhysicalHealthRecommendation[] @relation(name: "student_physical_health_recommendations")
-    specialistNotes String?                        @map("specialist_notes")
+    studentId   String                 @id(map: "physical_health_pkey") @map("student_id") @db.Uuid
+    student     Student                @relation(fields: [studentId], references: [id], onUpdate: Cascade, onDelete: Cascade)
+    healthGroup HealthGroup            @default(BASIC) @map("health_group")
+    options     PhysicalHealthOption[] @relation(name: "student_physical_health_options")
 
     @@map("student_physical_health")
 }
 
-model PhysicalHealthRecommendation {
-    id             Int              @id(map: "physical_health_recommendations_pkey") @default(autoincrement()) @map("recommendation_id")
-    title          String           @map("title")
-    healthZone     HealthZone       @map("health_zone")
-    healthGroup    HealthGroup      @map("health_group")
-    physicalHealth PhysicalHealth[] @relation(name: "student_physical_health_recommendations")
+model PhysicalHealthOption {
+    id              Int                                   @id(map: "physical_health_options_pkey") @default(autoincrement()) @map("option_id")
+    title           String                                @map("title")
+    healthZone      HealthZone                            @map("health_zone")
+    healthGroup     HealthGroup                           @map("health_group")
+    physicalType    PhysicalType                          @map("physical_type")
+    selectionType   SelectionType                         @map("selection_type")
+    physicalHealth  PhysicalHealth[]                      @relation(name: "student_physical_health_options")
+    recommendations PhysicallHealthOptionRecommendation[]
 
-    @@map("physical_health_recommendations")
+    @@map("physical_health_options")
+}
+
+model PhysicallHealthOptionRecommendation {
+    id       Int                   @id(map: "physical_health_options_recommendations_pkey") @default(autoincrement()) @map("recommendation_id")
+    option   PhysicalHealthOption? @relation(fields: [optionId], references: [id], onUpdate: Cascade, onDelete: Cascade)
+    optionId Int                   @map("option_id")
+    title    String                @map("title")
+
+    @@map("physical_health_options_recommendations")
 }
 
 model PsychologicalHealth {
-    studentId String                      @id(map: "psychological_health_pkey") @map("student_id") @db.Uuid
-    student   Student                     @relation(fields: [studentId], references: [id], onUpdate: Cascade, onDelete: Cascade)
-    options   PsychologicalHealthOption[] @relation(name: "student_psychological_health_options")
+    studentId       String                      @id(map: "psychological_health_pkey") @map("student_id") @db.Uuid
+    student         Student                     @relation(fields: [studentId], references: [id], onUpdate: Cascade, onDelete: Cascade)
+    specialistNotes String?                     @map("specialist_notes")
+    options         PsychologicalHealthOption[] @relation(name: "student_psychological_health_options")
 
     @@map("student_psychological_health")
 }
@@ -169,6 +182,7 @@ model PsychologicalHealthOption {
     healthZone          HealthZone                                @map("health_zone")
     educationType       EducationType                             @map("education_type")
     psychologicalType   PsychologicalType                         @map("psychological_type")
+    selectionType       SelectionType                             @map("selection_type")
     psychologicalHealth PsychologicalHealth[]                     @relation(name: "student_psychological_health_options")
     recommendations     PsychologicalHealthOptionRecommendation[]
 
@@ -185,35 +199,37 @@ model PsychologicalHealthOptionRecommendation {
 }
 
 model SocialHealth {
-    studentId       String                       @id(map: "student_social_health_pkey") @map("student_id") @db.Uuid
-    student         Student                      @relation(fields: [studentId], references: [id], onUpdate: Cascade, onDelete: Cascade)
-    indicators      SocialHealthIndicator[]      @relation(name: "student_social_health_indicators")
-    recommendations SocialHealthRecommendation[] @relation(name: "student_social_health_recommendations")
+    studentId String               @id(map: "student_social_health_pkey") @map("student_id") @db.Uuid
+    student   Student              @relation(fields: [studentId], references: [id], onUpdate: Cascade, onDelete: Cascade)
+    options   SocialHealthOption[] @relation(name: "student_social_health_options")
 
     @@map("student_social_health")
 }
 
-model SocialHealthIndicator {
-    id           Int            @id(map: "social_health_indicators_pkey") @default(autoincrement()) @map("indicator_id")
-    title        String         @map("title")
-    healthZone   HealthZone     @map("health_zone")
-    socialHealth SocialHealth[] @relation(name: "student_social_health_indicators")
+model SocialHealthOption {
+    id              Int                                @id(map: "social_health_options_pkey") @default(autoincrement()) @map("option_id")
+    title           String                             @map("title")
+    healthZone      HealthZone                         @map("health_zone")
+    socialType      SocialType                         @map("social_type")
+    selectionType   SelectionType                      @map("selection_type")
+    socialHealth    SocialHealth[]                     @relation(name: "student_social_health_options")
+    recommendations SocialHealthOptionRecommendation[]
 
-    @@map("social_health_indicators")
+    @@map("social_health_options")
 }
 
-model SocialHealthRecommendation {
-    id           Int            @id(map: "social_health_recommendations_pkey") @default(autoincrement()) @map("recommendation_id")
-    title        String         @map("title")
-    healthZone   HealthZone     @map("health_zone")
-    socialHealth SocialHealth[] @relation(name: "student_social_health_recommendations")
+model SocialHealthOptionRecommendation {
+    id       Int                 @id(map: "social_health_options_recommendations_pkey") @default(autoincrement()) @map("recommendation_id")
+    option   SocialHealthOption? @relation(fields: [optionId], references: [id], onUpdate: Cascade, onDelete: Cascade)
+    optionId Int?                @map("option_id")
+    title    String              @map("title")
 
-    @@map("social_health_recommendations")
+    @@map("social_health_options_recommendations")
 }
 
 model Conclusion {
     id              Int                        @id(map: "conclusions_pkey") @default(autoincrement()) @map("conclusion_id")
-    title           String                     @map("title")
+    summary         String                     @map("summary")
     healthZone      HealthZone                 @map("health_zone")
     conclusionType  ConclusionType             @map("conclusion_type")
     recommendations ConclusionRecommendation[]
@@ -316,6 +332,12 @@ enum PedagogueType {
     READING_DISORDERS
 }
 
+enum PhysicalType {
+    FUNCTIONAL_INDICATORS
+    PHYSICAL_DEVELOPMENT
+    PHYSICAL_TRAINING
+}
+
 enum PsychologicalType {
     CULTURAL_VALUES
     MOTIVATION
@@ -331,4 +353,19 @@ enum PsychologicalType {
     PROFESSIONAL_INTERESTS
     BULLYING
     CONFLICTUALITY
+}
+
+enum SocialType {
+    HEALTH_LIMITATIONS
+    DEVIANT_BEHAVIOR
+    PREVENTIVE_ACCOUNTING
+    BAD_HABITS
+    ORPHAN
+    SOCIAL_RISK
+    ADDICTED_FAMILY
+    DOMESTIC_ABUSE
+    REFUGEE
+    SWO_FAMILY
+    LOW_INCOME
+    CONFLICTUAL_FAMILY_RELATIONS
 }

@@ -1,15 +1,16 @@
 import {
-    Role,
-    HealthZone,
+    ConclusionType,
+    EducationType,
     HealthGroup,
+    HealthZone,
     MedicalType,
     PedagogueTab,
     PedagogueType,
-    EducationType,
+    PhysicalType,
     PsychologicalType,
-    ConclusionType,
+    Role,
     SelectionType,
-    ConclusionRecommendation
+    SocialType
 } from '@prisma/client'
 
 export const municipality: { name: string } = {
@@ -58,230 +59,534 @@ export const usersData: { username: string; password: string; role: Role }[] = [
     }
 ]
 
-export const physicalHealthRecommendations: { title: string; healthZone: HealthZone; healthGroup: HealthGroup }[] = [
+export const physicalHealthOptions: {
+    title: string
+    healthZone: HealthZone
+    healthGroup: HealthGroup
+    physicalType: PhysicalType
+    selectionType: SelectionType
+    recommendations?: { title: string }[]
+}[] = [
+    // {
+    //  title: 'Основная',
+    //  healthZone: HealthZone.GREEN,
+    //  physicalType: PhysicalType.HEALTH_GROUP,
+    //  selectionType: SelectionType.SINGLE
+    // },
+    // {
+    //  title: 'Подготовительная',
+    //  healthZone: HealthZone.YELLOW,
+    //  physicalType: PhysicalType.HEALTH_GROUP,
+    //  selectionType: SelectionType.SINGLE
+    // },
+    // {
+    //  title: 'Специальная',
+    //  healthZone: HealthZone.RED,
+    //  physicalType: PhysicalType.HEALTH_GROUP,
+    //  selectionType: SelectionType.SINGLE
+    // },
+
     {
-        title: 'выполнение программы физического воспитания с ограничениями по рекомендации врача',
+        title: 'Соответствуют',
         healthZone: HealthZone.YELLOW,
-        healthGroup: HealthGroup.PREPARATORY
+        healthGroup: HealthGroup.PREPARATORY,
+        physicalType: PhysicalType.FUNCTIONAL_INDICATORS,
+        selectionType: SelectionType.SINGLE,
+        recommendations: [
+            {
+                title: 'Проведение физических упражнений, дозированных по интенсивности и продолжительности'
+            },
+            {
+                title: 'Циклические виды упражнений, а также регулярные физические нагрузки высокой и субмаксимальной интенсивности в тренировочном режиме без ограничений уровня повседневной физической активности'
+            }
+        ]
     },
     {
-        title: 'сдача индивидуальных нормативов и участие в массовых физкультурных мероприятиях при наличии медицинского заключения по результатам дополнительного осмотра',
+        title: 'Не соответствуют',
         healthZone: HealthZone.YELLOW,
-        healthGroup: HealthGroup.PREPARATORY
-    },
-    {
-        title: 'не допущение к занятиям спортом и участию в соревнованиях',
-        healthZone: HealthZone.YELLOW,
-        healthGroup: HealthGroup.PREPARATORY
-    },
-    {
-        title: 'проведение дополнительных занятий для повышения общей физической подготовки',
-        healthZone: HealthZone.YELLOW,
-        healthGroup: HealthGroup.PREPARATORY
+        healthGroup: HealthGroup.PREPARATORY,
+        physicalType: PhysicalType.FUNCTIONAL_INDICATORS,
+        selectionType: SelectionType.SINGLE,
+        recommendations: [
+            {
+                title: 'Проведение физических упражнений, дозированных по интенсивности и продолжительности'
+            },
+            {
+                title: 'Оздоровительный бег, ходьба, плавание, пеший туризм, а также регулярное выполнение дыхательной гимнастики на уроках физической культуры и самостоятельно по методике А.Н. Стрельниковой'
+            }
+        ]
     },
 
     {
-        title: 'обучение умению и навыкам элементов ЗОЖ',
-        healthZone: HealthZone.RED,
-        healthGroup: HealthGroup.SPECIAL
+        title: 'Соответствует возрасту',
+        healthZone: HealthZone.YELLOW,
+        healthGroup: HealthGroup.PREPARATORY,
+        physicalType: PhysicalType.PHYSICAL_DEVELOPMENT,
+        selectionType: SelectionType.SINGLE,
+        recommendations: [
+            {
+                title: 'Соблюдение здорового образа жизни, режима сбалансированного питания и высокого уровня повседневной двигательной активности'
+            }
+        ]
     },
     {
-        title: 'осуществление самоконтроля здоровья и функциональных возможностей',
-        healthZone: HealthZone.RED,
-        healthGroup: HealthGroup.SPECIAL
+        title: 'Не соответствует возрасту',
+        healthZone: HealthZone.YELLOW,
+        healthGroup: HealthGroup.PREPARATORY,
+        physicalType: PhysicalType.PHYSICAL_DEVELOPMENT,
+        selectionType: SelectionType.SINGLE,
+        recommendations: [
+            {
+                title: 'Консультирование врачом-эндокринологом, диетологом, соблюдение рекомендаций'
+            },
+            {
+                title: 'Исключение психологической причины лишнего веса (еда от скуки, от стресса, от одиночества)'
+            },
+            {
+                title: 'Обеспечение ежедневной физической активности не менее 60 минут в день умеренной интенсивности, выполнение комплекса утренней гигиенической гимнастики, увеличение привычной дозы физической двигательной активности'
+            }
+        ]
+    },
+
+    {
+        title: 'Соответствует нормативам',
+        healthZone: HealthZone.GREEN,
+        healthGroup: HealthGroup.BASIC,
+        physicalType: PhysicalType.PHYSICAL_TRAINING,
+        selectionType: SelectionType.SINGLE
     },
     {
-        title: 'организация физкультурных занятий по особой программе, снижение нормативов, строгое дозирование физической нагрузки',
-        healthZone: HealthZone.RED,
-        healthGroup: HealthGroup.SPECIAL
+        title: 'Не соответствует нормативам',
+        healthZone: HealthZone.GREEN,
+        healthGroup: HealthGroup.BASIC,
+        physicalType: PhysicalType.PHYSICAL_TRAINING,
+        selectionType: SelectionType.SINGLE,
+        recommendations: [
+            {
+                title: 'Выполнение комплексов специальных упражнений для улучшения показателей конкретного двигательного качества или физической подготовки в целом (по рекомендации учителя физической культуры)'
+            }
+        ]
+    },
+
+    {
+        title: 'Соответствует нормативам',
+        healthZone: HealthZone.YELLOW,
+        healthGroup: HealthGroup.PREPARATORY,
+        physicalType: PhysicalType.PHYSICAL_TRAINING,
+        selectionType: SelectionType.SINGLE,
+        recommendations: [
+            {
+                title: 'Развитие двигательных качеств с целью повышения функциональных возможностей организма, обогащение и расширение двигательного опыта посредством овладения новыми более сложными двигательными действиями, сдача учебных нормативов и норм Всероссийского физкультурно-спортивного комплекса «Готов к труду и обороне» (ГТО)'
+            }
+        ]
     },
     {
-        title: 'включение лечебной физкультуры в программу занятий',
-        healthZone: HealthZone.RED,
-        healthGroup: HealthGroup.SPECIAL
-    },
-    {
-        title: 'широкое использование дыхательных, корригирующих и общеразвивающих упражнений',
-        healthZone: HealthZone.RED,
-        healthGroup: HealthGroup.SPECIAL
-    },
-    {
-        title: 'проявление повышенной осторожности при использовании физических упражнений',
-        healthZone: HealthZone.RED,
-        healthGroup: HealthGroup.SPECIAL
-    },
-    {
-        title: 'исключение физических упражнений, противопоказанных по состоянию здоровья',
-        healthZone: HealthZone.RED,
-        healthGroup: HealthGroup.SPECIAL
-    },
-    {
-        title: 'включение в занятия подвижных игр умеренной интенсивности',
-        healthZone: HealthZone.RED,
-        healthGroup: HealthGroup.SPECIAL
+        title: 'Не соответствует нормативам',
+        healthZone: HealthZone.YELLOW,
+        healthGroup: HealthGroup.PREPARATORY,
+        physicalType: PhysicalType.PHYSICAL_TRAINING,
+        selectionType: SelectionType.SINGLE,
+        recommendations: [
+            {
+                title: 'Повышение уровня физической подготовленности в ходе уроков физической культуры, секционных занятий, а также дополнительных занятий в группах ОФП, выполнение комплексов специальных упражнений для улучшения показателей конкретного двигательного качества или физической подготовки в целом (по рекомендации учителя физической культуры)'
+            }
+        ]
     }
 ]
 
-export const socialHealthIndicators: { title: string; healthZone: HealthZone }[] = [
+export const socialHealthOptions: {
+    title: string
+    healthZone: HealthZone
+    socialType: SocialType
+    selectionType: SelectionType
+    recommendations?: {
+        title: string
+    }[]
+}[] = [
     {
-        title: 'Ребенок из семьи с низким уровнем дохода',
-        healthZone: HealthZone.YELLOW
-    },
-    {
-        title: 'Ребенок из семьи переселенцев, беженцев',
-        healthZone: HealthZone.YELLOW
-    },
-    {
-        title: 'Ребенок из семьи участника СВО',
-        healthZone: HealthZone.YELLOW
-    },
-    {
-        title: 'Ребенок из семьи родителей-инвалидов',
-        healthZone: HealthZone.YELLOW
-    },
-    {
-        title: 'Ребенок из семьи с одним родителем',
-        healthZone: HealthZone.YELLOW
-    },
-    {
-        title: 'Обучающийся является ребенком-инвалидом',
-        healthZone: HealthZone.RED
-    },
-    {
-        title: 'Обучающийся с ОВЗ',
-        healthZone: HealthZone.RED
+        title: 'Обучающийся с ОВЗ, с инвалидностью',
+        healthZone: HealthZone.RED,
+        socialType: SocialType.HEALTH_LIMITATIONS,
+        selectionType: SelectionType.CHECKBOX,
+        recommendations: [
+            {
+                title: 'Юридическая консультация и оказание социальной помощи обучающемуся и семье'
+            },
+            {
+                title: 'Проведение индивидуальных профилактических занятий с педагогом-психологом'
+            },
+            {
+                title: 'Проведение индивидуальных просветительских занятий с социальным педагогом'
+            },
+            {
+                title: 'Проведение совместных индивидуальных занятий социальным педагогом и педагогом-психологом с обучающимся'
+            },
+            {
+                title: 'Организация социально-педагогической деятельности по социальной адаптации обучающегося, помощь им в освоении социальных ролей'
+            }
+        ]
     },
     {
         title: 'Обучающийся с отклоняющимся поведением',
-        healthZone: HealthZone.RED
+        healthZone: HealthZone.RED,
+        socialType: SocialType.DEVIANT_BEHAVIOR,
+        selectionType: SelectionType.CHECKBOX,
+        recommendations: [
+            {
+                title: 'Юридическая консультация и оказание социальной помощи обучающемуся и семье'
+            },
+            {
+                title: 'Проведение совместных индивидуальных занятий социальным педагогом и педагогом-психологом с обучающимся'
+            },
+            {
+                title: 'Проведение индивидуальных просветительских занятий с социальным педагогом'
+            },
+            {
+                title: 'Проведение индивидуальных профилактических занятий с педагогом-психологом'
+            },
+            {
+                title: 'Контроль и консультирование семьи несовершеннолетнего обучающегося'
+            },
+            {
+                title: 'Организация межведомственного взаимодействия со всеми заинтересованными структурами по сопровождению обучающегося и семьи'
+            },
+            {
+                title: 'Организация рейдов в семью совместно с органами опеки, КДНиЗП, ПДН'
+            },
+            {
+                title: 'Осуществление совместной профилактической и просветительской деятельности с центром сопровождения несовершеннолетних'
+            },
+            {
+                title: 'Проведение совместных мероприятий с медицинскими организациями по профилактике нарко- и алкозависимости'
+            },
+            {
+                title: 'Проведение совместных мероприятий с УМВД по профилактике насилия и жестокости'
+            },
+            {
+                title: 'Обеспечение досуговой занятости обучающегося'
+            }
+        ]
     },
     {
-        title: 'Увлечение видеоиграми',
-        healthZone: HealthZone.RED
+        title: 'Несовершеннолетний состоит на профилактическом учете (КДН, ПДН, ВШУ)',
+        healthZone: HealthZone.RED,
+        socialType: SocialType.PREVENTIVE_ACCOUNTING,
+        selectionType: SelectionType.CHECKBOX,
+        recommendations: [
+            {
+                title: 'Юридическая консультация и оказание социальной помощи обучающемуся и семье'
+            },
+            {
+                title: 'Проведение совместных индивидуальных занятий социальным педагогом и педагогом-психологом с обучающимся'
+            },
+            {
+                title: 'Проведение индивидуальных просветительских занятий с социальным педагогом'
+            },
+            {
+                title: 'Проведение индивидуальных профилактических занятий с педагогом-психологом'
+            },
+            {
+                title: 'Контроль и консультирование семьи несовершеннолетнего обучающегося'
+            },
+            {
+                title: 'Организация межведомственного взаимодействия со всеми заинтересованными структурами по сопровождению обучающегося и семьи'
+            },
+            {
+                title: 'Организация совместной деятельности с социальными институтами по обеспечению позитивной социализации обучающегося'
+            },
+            {
+                title: 'Организация рейдов в семью совместно с органами опеки, КДНиЗП, ПДН'
+            },
+            {
+                title: 'Анализ ситуаций жизнедеятельности обучающегося и семьи'
+            },
+            {
+                title: 'Осуществление совместной профилактической и просветительской деятельности с центром сопровождения несовершеннолетних'
+            },
+            {
+                title: 'Проведение совместных мероприятий с медицинскими организациями по профилактике нарко- и алкозависимости'
+            },
+            {
+                title: 'Проведение совместных мероприятий с УМВД по профилактике насилия и жестокости'
+            },
+            {
+                title: 'Организация индивидуальной профилактической работы с обучающимися'
+            }
+        ]
     },
     {
-        title: 'Несовершеннолетний состоит на профилактическом учете (КДН, ПДН, ОШУ)',
-        healthZone: HealthZone.RED
+        title: 'Наличие вредных привычек у обучающегося (курение, алкоголь, ПАВ, компьютерная, игровая зависимость и другие)',
+        healthZone: HealthZone.RED,
+        socialType: SocialType.BAD_HABITS,
+        selectionType: SelectionType.CHECKBOX,
+        recommendations: [
+            {
+                title: 'Юридическая консультация и оказание социальной помощи обучающемуся и семье'
+            },
+            {
+                title: 'Проведение совместных индивидуальных занятий социальным педагогом и педагогом-психологом с обучающимся'
+            },
+            {
+                title: 'Проведение индивидуальных просветительских занятий с социальным педагогом'
+            },
+            {
+                title: 'Проведение индивидуальных профилактических занятий с педагогом-психологом'
+            },
+            {
+                title: 'Контроль и консультирование семьи несовершеннолетнего обучающегося'
+            },
+            {
+                title: 'Организация межведомственного взаимодействия со всеми заинтересованными структурами по сопровождению обучающегося и семьи'
+            },
+            {
+                title: 'Организация рейдов в семью совместно с органами опеки, КДНиЗП, ПДН'
+            },
+            {
+                title: 'Проведение совместных мероприятий с медицинскими организациями по профилактике нарко- и алкозависимости'
+            },
+            {
+                title: 'Проведение совместных мероприятий с УМВД по профилактике насилия и жестокости'
+            },
+            {
+                title: 'Обеспечение досуговой занятости обучающегося'
+            }
+        ]
     },
     {
-        title: 'Вредные привычки у обучающегося (курение, алкоголь, ПАВ)',
-        healthZone: HealthZone.RED
+        title: 'Ребенок-сирота (оставшийся без попечения родителей)',
+        healthZone: HealthZone.RED,
+        socialType: SocialType.ORPHAN,
+        selectionType: SelectionType.CHECKBOX,
+        recommendations: [
+            {
+                title: 'Юридическая консультация и оказание социальной помощи обучающемуся и семье'
+            },
+            {
+                title: 'Проведение совместных индивидуальных занятий социальным педагогом и педагогом-психологом с обучающимся'
+            },
+            {
+                title: 'Проведение индивидуальных просветительских занятий с социальным педагогом'
+            },
+            {
+                title: 'Проведение индивидуальных профилактических занятий с педагогом-психологом'
+            },
+            {
+                title: 'Организация межведомственного взаимодействия со всеми заинтересованными структурами, в т.ч. органами опеки, по сопровождению обучающегося и семьи'
+            },
+            {
+                title: 'Анализ ситуаций жизнедеятельности обучающегося и семьи'
+            },
+            {
+                title: 'Осуществление совместной профилактической и просветительской деятельности с центром сопровождения несовершеннолетних'
+            },
+            {
+                title: 'Оказание обучающимся организационно-педагогической поддержки в построении социальных отношений, адаптации к новым жизненным ситуациям'
+            }
+        ]
     },
     {
-        title: 'Ребенок из семьи бывших воспитанников школ-интернатов',
-        healthZone: HealthZone.RED
-    },
-    {
-        title: 'Ребенок сирота, оставшийся без попечения родителей',
-        healthZone: HealthZone.RED
-    },
-    {
-        title: 'Ребенок из семьи, состоящей на учете в органах опеки',
-        healthZone: HealthZone.RED
-    },
-    {
-        title: 'Ребенок из семьи, находящейся в социально-опасном положении',
-        healthZone: HealthZone.RED
+        title: 'Ребенок из семьи, находящейся в социально-опасном положении, состоящей на учете в органах опеки',
+        healthZone: HealthZone.RED,
+        socialType: SocialType.SOCIAL_RISK,
+        selectionType: SelectionType.CHECKBOX,
+        recommendations: [
+            {
+                title: 'Юридическая консультация и оказание социальной помощи обучающемуся и семье'
+            },
+            {
+                title: 'Проведение совместных индивидуальных занятий социальным педагогом и педагогом-психологом с обучающимся'
+            },
+            {
+                title: 'Проведение индивидуальных просветительских занятий с социальным педагогом'
+            },
+            {
+                title: 'Проведение индивидуальных профилактических занятий с педагогом-психологом'
+            },
+            {
+                title: 'Контроль и консультирование семьи несовершеннолетнего обучающегося'
+            },
+            {
+                title: 'Организация межведомственного взаимодействия со всеми заинтересованными структурами по сопровождению обучающегося и семьи'
+            },
+            {
+                title: 'Организация рейдов в семью совместно с органами опеки, КДНиЗП, ПДН'
+            },
+            {
+                title: 'Анализ ситуаций жизнедеятельности обучающегося и семьи'
+            },
+            {
+                title: 'Осуществление совместной профилактической и просветительской деятельности с центром сопровождения несовершеннолетних'
+            },
+            {
+                title: 'Проведение совместных мероприятий с медицинскими организациями по профилактике нарко- и алкозависимости'
+            },
+            {
+                title: 'Проведение совместных мероприятий с УМВД по профилактике насилия и жестокости'
+            }
+        ]
     },
     {
         title: 'Наркотическая, алкогольная зависимость у членов семьи',
-        healthZone: HealthZone.RED
-    },
-    {
-        title: 'Конфликтные отношения между родителями',
-        healthZone: HealthZone.RED
-    },
-    {
-        title: 'Конфликтные отношения между родителями и ребёнком',
-        healthZone: HealthZone.RED
+        healthZone: HealthZone.RED,
+        socialType: SocialType.ADDICTED_FAMILY,
+        selectionType: SelectionType.CHECKBOX,
+        recommendations: [
+            {
+                title: 'Юридическая консультация и оказание социальной помощи обучающемуся и семье'
+            },
+            {
+                title: 'Проведение совместных индивидуальных занятий социальным педагогом и педагогом-психологом с обучающимся'
+            },
+            {
+                title: 'Проведение индивидуальных просветительских занятий с социальным педагогом'
+            },
+            {
+                title: 'Проведение индивидуальных профилактических занятий с педагогом-психологом'
+            },
+            {
+                title: 'Контроль и консультирование семьи несовершеннолетнего обучающегося'
+            },
+            {
+                title: 'Организация межведомственного взаимодействия со всеми заинтересованными структурами по сопровождению обучающегося и семьи'
+            },
+            {
+                title: 'Организация рейдов в семью совместно с органами опеки, КДНиЗП, ПДН'
+            },
+            {
+                title: 'Анализ ситуаций жизнедеятельности обучающегося и семьи'
+            },
+            {
+                title: 'Осуществление совместной профилактической и просветительской деятельности с центром сопровождения несовершеннолетних'
+            },
+            {
+                title: 'Проведение совместных мероприятий с медицинскими организациями по профилактике нарко- и алкозависимости'
+            }
+        ]
     },
     {
         title: 'Физические наказания, факты насилия, жестокого обращения в семье',
-        healthZone: HealthZone.RED
-    }
-]
+        healthZone: HealthZone.RED,
+        socialType: SocialType.DOMESTIC_ABUSE,
+        selectionType: SelectionType.CHECKBOX,
+        recommendations: [
+            {
+                title: 'Юридическая консультация и оказание социальной помощи обучающемуся и семье'
+            },
+            {
+                title: 'Проведение совместных индивидуальных занятий социальным педагогом и педагогом-психологом с обучающимся'
+            },
+            {
+                title: 'Проведение индивидуальных просветительских занятий с социальным педагогом'
+            },
+            {
+                title: 'Проведение индивидуальных профилактических занятий с педагогом-психологом'
+            },
 
-export const socialHealthRecommendations: { title: string; healthZone: HealthZone }[] = [
-    {
-        title: 'консультирование у специалистов по запросу',
-        healthZone: HealthZone.YELLOW
+            {
+                title: 'Контроль и консультирование семьи несовершеннолетнего обучающегося'
+            },
+            {
+                title: 'Организация межведомственного взаимодействия со всеми заинтересованными структурами по сопровождению обучающегося и семьи'
+            },
+            {
+                title: 'Организация рейдов в семью совместно с органами опеки, КДНиЗП, ПДН'
+            },
+            {
+                title: 'Анализ ситуаций жизнедеятельности обучающегося и семьи'
+            },
+            {
+                title: 'Осуществление совместной профилактической и просветительской деятельности с центром сопровождения несовершеннолетних'
+            },
+            {
+                title: 'Проведение совместных мероприятий с медицинскими организациями по профилактике нарко- и алкозависимости'
+            },
+            {
+                title: 'Проведение совместных мероприятий с УМВД по профилактике насилия и жестокости'
+            }
+        ]
     },
     {
-        title: 'формирование здорового образа жизни через проведение профилактических и просветительских мероприятий',
-        healthZone: HealthZone.YELLOW
+        title: 'Ребенок из семьи переселенцев, беженцев',
+        healthZone: HealthZone.YELLOW,
+        socialType: SocialType.REFUGEE,
+        selectionType: SelectionType.CHECKBOX,
+        recommendations: [
+            {
+                title: 'Юридическая консультация педагогов, родителей (законных представителей) и обучающегося по вопросам реализации прав школьников в процессе обучения'
+            },
+            {
+                title: 'Оказание социальной помощи'
+            },
+            {
+                title: 'Проведение совместных индивидуальных занятий социальным педагогом и педагогом-психологом с обучающимся'
+            },
+            {
+                title: 'Организация социально и личностно значимой деятельности обучающегося с целью расширения его социокультурного опыта'
+            },
+            {
+                title: 'Оказание обучающемуся организационно-педагогической поддержки в построении социальных отношений, адаптации к новым жизненным ситуациям'
+            }
+        ]
     },
     {
-        title: 'занятия с социальным педагогом',
-        healthZone: HealthZone.YELLOW
+        title: 'Ребенок из семьи участника СВО',
+        healthZone: HealthZone.YELLOW,
+        socialType: SocialType.SWO_FAMILY,
+        selectionType: SelectionType.CHECKBOX,
+        recommendations: [
+            {
+                title: 'Обеспечение реализации и защита прав обучающегося в процессе обучения'
+            },
+            {
+                title: 'Проведение совместных индивидуальных занятий социальным педагогом и педагогом-психологом с обучающимся'
+            },
+            {
+                title: 'Применение социально-педагогических методов изучения ситуации жизнедеятельности обучающегося для выявления потребностей его и семьи'
+            },
+            {
+                title: 'Разработка мероприятий по социальной адаптации обучающегося к трудной жизненной ситуации'
+            }
+        ]
     },
     {
-        title: 'социальная помощь',
-        healthZone: HealthZone.YELLOW
+        title: 'Ребенок из семьи с низким уровнем дохода',
+        healthZone: HealthZone.YELLOW,
+        socialType: SocialType.LOW_INCOME,
+        selectionType: SelectionType.CHECKBOX,
+        recommendations: [
+            {
+                title: 'Обеспечение реализации и защита прав обучающегося в процессе обучения'
+            },
+            {
+                title: 'Проведение совместных индивидуальных занятий социальным педагогом и педагогом-психологом с обучающимся'
+            },
+            {
+                title: 'Применение методов социально-педагогической диагностики, изучение ситуаций жизнедеятельности обучающегося, выявление потребностей семьи, проведение мероприятий, направленных на устранение выявленных трудностей'
+            }
+        ]
     },
     {
-        title: 'юридическая консультация',
-        healthZone: HealthZone.YELLOW
-    },
-    {
-        title: 'просветительские и профилактические занятия с педагогом-психологом',
-        healthZone: HealthZone.YELLOW
-    },
-
-    {
-        title: 'консультирование у специалистов по запросу',
-        healthZone: HealthZone.RED
-    },
-    {
-        title: 'формирование здорового образа жизни через проведение профилактических и просветительских мероприятий',
-        healthZone: HealthZone.RED
-    },
-    {
-        title: 'социальная помощь',
-        healthZone: HealthZone.RED
-    },
-    {
-        title: 'юридическая консультация',
-        healthZone: HealthZone.RED
-    },
-    {
-        title: 'просветительские и профилактические занятия с педагогом-психологом',
-        healthZone: HealthZone.RED
-    },
-    {
-        title: 'контроль и консультирование семьи несовершеннолетнего и обучающегося',
-        healthZone: HealthZone.RED
-    },
-    {
-        title: 'организация межведомственного взаимодействия по сопровождению обучающегося со всеми заинтересованными структурами',
-        healthZone: HealthZone.RED
-    },
-    {
-        title: 'проведение индивидуальных занятий с обучающимся с социальным педагогом и педагогом-психологом',
-        healthZone: HealthZone.RED
-    },
-    {
-        title: 'проведение мониторингов социальной работы в образовательной организации',
-        healthZone: HealthZone.RED
-    },
-    {
-        title: 'организация рейдов в семью совместно с органами опеки, КДН, ПДН',
-        healthZone: HealthZone.RED
-    },
-    {
-        title: 'междисциплинарное взаимодействие с педагогами образовательной организации',
-        healthZone: HealthZone.RED
-    },
-    {
-        title: 'совестная профилактическая и просветительская деятельность с центром сопровождения несовершеннолетних (для семьи – бывших воспитанников школы-интерната)',
-        healthZone: HealthZone.RED
-    },
-    {
-        title: 'проведение мероприятий совместно с медицинскими организациями по профилактике нарко- и алкозависимости',
-        healthZone: HealthZone.RED
-    },
-    {
-        title: 'проведение мероприятий совместно с УМВД по профилактике насилия и жестокости',
-        healthZone: HealthZone.RED
+        title: 'Конфликтные отношения в семье',
+        healthZone: HealthZone.YELLOW,
+        socialType: SocialType.CONFLICTUAL_FAMILY_RELATIONS,
+        selectionType: SelectionType.CHECKBOX,
+        recommendations: [
+            {
+                title: 'Юридическая консультация и оказание социальной помощи обучающемуся и семье'
+            },
+            {
+                title: 'Проведение совместных индивидуальных занятий социальным педагогом и педагогом-психологом с обучающимся'
+            },
+            {
+                title: 'Организация межведомственного взаимодействия со всеми заинтересованными структурами по сопровождению обучающегося и его семьи'
+            },
+            {
+                title: 'Организация рейдов в семью совместно с органами опеки, КДНиЗП, ПДН'
+            },
+            {
+                title: 'Проведение совместных мероприятий с УМВД по профилактике насилия и жестокости'
+            }
+        ]
     }
 ]
 
@@ -461,10 +766,10 @@ export const medicalHealthOptions: {
                 title: 'Регулярный прием витаминов и ноотропов'
             },
             {
-                title: 'Профилактика  артериальной гипо- и гипертензии, нарушений сна, других форм неврозов'
+                title: 'Профилактика артериальной гипо- и гипертензии, нарушений сна, других форм неврозов'
             },
             {
-                title: 'Физиофункциональное лечение вегетососудистой дистонии, неврозов  (ЛФК, массаж, электрофорез, электросон, лазер, магнит и др.)'
+                title: 'Физиофункциональное лечение вегетососудистой дистонии, неврозов (ЛФК, массаж, электрофорез, электросон, лазер, магнит и др.)'
             }
         ]
     },
@@ -647,6 +952,7 @@ export const pedagogueHealthOptions: {
     healthZone: HealthZone
     pedagogueTab: PedagogueTab
     pedagogueType: PedagogueType
+    selectionType: SelectionType
     recommendations?: {
         title: string
     }[]
@@ -655,13 +961,15 @@ export const pedagogueHealthOptions: {
         title: 'Понимает',
         healthZone: HealthZone.GREEN,
         pedagogueTab: PedagogueTab.PEDAGOGUE,
-        pedagogueType: PedagogueType.UNDERSTANDING_INSTRUCTIONS
+        pedagogueType: PedagogueType.UNDERSTANDING_INSTRUCTIONS,
+        selectionType: SelectionType.SINGLE
     },
     {
         title: 'Частично понимает',
         healthZone: HealthZone.YELLOW,
         pedagogueTab: PedagogueTab.PEDAGOGUE,
         pedagogueType: PedagogueType.UNDERSTANDING_INSTRUCTIONS,
+        selectionType: SelectionType.SINGLE,
         recommendations: [
             {
                 title: 'Краткость, четкость инструкций, подкрепление изучаемого материала наглядной опорой, алгоритмом действий'
@@ -676,6 +984,7 @@ export const pedagogueHealthOptions: {
         healthZone: HealthZone.RED,
         pedagogueTab: PedagogueTab.PEDAGOGUE,
         pedagogueType: PedagogueType.UNDERSTANDING_INSTRUCTIONS,
+        selectionType: SelectionType.SINGLE,
         recommendations: [
             {
                 title: 'Организация коррекционно-развивающей работы, направленной на развитие понимания обращенной речи, обогащение и расширение словарного запаса'
@@ -693,13 +1002,15 @@ export const pedagogueHealthOptions: {
         title: 'Освоено',
         healthZone: HealthZone.GREEN,
         pedagogueTab: PedagogueTab.PEDAGOGUE,
-        pedagogueType: PedagogueType.MASTERING_EDUCATION
+        pedagogueType: PedagogueType.MASTERING_EDUCATION,
+        selectionType: SelectionType.SINGLE
     },
     {
         title: 'Освоено не в полном объёме',
         healthZone: HealthZone.YELLOW,
         pedagogueTab: PedagogueTab.PEDAGOGUE,
         pedagogueType: PedagogueType.MASTERING_EDUCATION,
+        selectionType: SelectionType.SINGLE,
         recommendations: [
             {
                 title: 'Проведение диагностики специалистами ППк'
@@ -717,6 +1028,7 @@ export const pedagogueHealthOptions: {
         healthZone: HealthZone.RED,
         pedagogueTab: PedagogueTab.PEDAGOGUE,
         pedagogueType: PedagogueType.MASTERING_EDUCATION,
+        selectionType: SelectionType.SINGLE,
         recommendations: [
             {
                 title: 'Проведение диагностических процедур с целью определения актуального уровня развития обучающегося'
@@ -734,13 +1046,15 @@ export const pedagogueHealthOptions: {
         title: 'Высокий',
         healthZone: HealthZone.GREEN,
         pedagogueTab: PedagogueTab.PEDAGOGUE,
-        pedagogueType: PedagogueType.WORK_PACE
+        pedagogueType: PedagogueType.WORK_PACE,
+        selectionType: SelectionType.SINGLE
     },
     {
         title: 'Средний',
         healthZone: HealthZone.YELLOW,
         pedagogueTab: PedagogueTab.PEDAGOGUE,
         pedagogueType: PedagogueType.WORK_PACE,
+        selectionType: SelectionType.SINGLE,
         recommendations: [
             {
                 title: 'Проведение педагогом-психологом диагностики по определению типа темперамента (по согласованию)'
@@ -758,6 +1072,7 @@ export const pedagogueHealthOptions: {
         healthZone: HealthZone.RED,
         pedagogueTab: PedagogueTab.PEDAGOGUE,
         pedagogueType: PedagogueType.WORK_PACE,
+        selectionType: SelectionType.SINGLE,
         recommendations: [
             {
                 title: 'Проведение педагогом-психологом диагностики по определению типа темперамента (по согласованию)'
@@ -778,13 +1093,15 @@ export const pedagogueHealthOptions: {
         title: 'Действует самостоятельно',
         healthZone: HealthZone.GREEN,
         pedagogueTab: PedagogueTab.PEDAGOGUE,
-        pedagogueType: PedagogueType.ACTIVITY_SPECIFICS
+        pedagogueType: PedagogueType.ACTIVITY_SPECIFICS,
+        selectionType: SelectionType.SINGLE
     },
     {
         title: 'Действует с незначительной помощью',
         healthZone: HealthZone.YELLOW,
         pedagogueTab: PedagogueTab.PEDAGOGUE,
         pedagogueType: PedagogueType.ACTIVITY_SPECIFICS,
+        selectionType: SelectionType.SINGLE,
         recommendations: [
             {
                 title: 'Создание и использование средств (инструментов), помогающих обучающемуся самостоятельно организовать собственную деятельность'
@@ -802,6 +1119,7 @@ export const pedagogueHealthOptions: {
         healthZone: HealthZone.RED,
         pedagogueTab: PedagogueTab.PEDAGOGUE,
         pedagogueType: PedagogueType.ACTIVITY_SPECIFICS,
+        selectionType: SelectionType.SINGLE,
         recommendations: [
             {
                 title: 'Постепенный переход от обучающей помощи к направляющей и стимулирующей'
@@ -819,13 +1137,15 @@ export const pedagogueHealthOptions: {
         title: 'Высокая',
         healthZone: HealthZone.GREEN,
         pedagogueTab: PedagogueTab.PEDAGOGUE,
-        pedagogueType: PedagogueType.WORKABILITY
+        pedagogueType: PedagogueType.WORKABILITY,
+        selectionType: SelectionType.SINGLE
     },
     {
         title: 'Средняя',
         healthZone: HealthZone.YELLOW,
         pedagogueTab: PedagogueTab.PEDAGOGUE,
         pedagogueType: PedagogueType.WORKABILITY,
+        selectionType: SelectionType.SINGLE,
         recommendations: [
             {
                 title: 'Учет динамики работоспособности, цикличности интеллектуальной деятельности (в начале дня, начале занятий)'
@@ -843,6 +1163,7 @@ export const pedagogueHealthOptions: {
         healthZone: HealthZone.RED,
         pedagogueTab: PedagogueTab.PEDAGOGUE,
         pedagogueType: PedagogueType.WORKABILITY,
+        selectionType: SelectionType.SINGLE,
         recommendations: [
             {
                 title: 'Учёт индивидуального характера работоспособности в течение урока'
@@ -857,13 +1178,15 @@ export const pedagogueHealthOptions: {
         title: 'Нет',
         healthZone: HealthZone.GREEN,
         pedagogueTab: PedagogueTab.PEDAGOGUE,
-        pedagogueType: PedagogueType.HEALTH_LIMITATIONS
+        pedagogueType: PedagogueType.HEALTH_LIMITATIONS,
+        selectionType: SelectionType.SINGLE
     },
     {
         title: 'Да, рекомендации реализуются',
         healthZone: HealthZone.YELLOW,
         pedagogueTab: PedagogueTab.PEDAGOGUE,
         pedagogueType: PedagogueType.HEALTH_LIMITATIONS,
+        selectionType: SelectionType.SINGLE,
         recommendations: [
             {
                 title: 'Создание специальных условий для получения образования'
@@ -890,6 +1213,7 @@ export const pedagogueHealthOptions: {
         healthZone: HealthZone.RED,
         pedagogueTab: PedagogueTab.PEDAGOGUE,
         pedagogueType: PedagogueType.HEALTH_LIMITATIONS,
+        selectionType: SelectionType.SINGLE,
         recommendations: [
             {
                 title: 'Создание специальных условий для получения образования'
@@ -916,13 +1240,15 @@ export const pedagogueHealthOptions: {
         title: 'Нет',
         healthZone: HealthZone.GREEN,
         pedagogueTab: PedagogueTab.PEDAGOGUE,
-        pedagogueType: PedagogueType.DISABILITY
+        pedagogueType: PedagogueType.DISABILITY,
+        selectionType: SelectionType.SINGLE
     },
     {
         title: 'Да, мероприятия реализуются',
         healthZone: HealthZone.YELLOW,
         pedagogueTab: PedagogueTab.PEDAGOGUE,
         pedagogueType: PedagogueType.DISABILITY,
+        selectionType: SelectionType.SINGLE,
         recommendations: [
             {
                 title: 'Разработка мероприятий по реализации ИПРА в части психолого-педагогической реабилитации и абилитации ребенка-инвалида'
@@ -949,6 +1275,7 @@ export const pedagogueHealthOptions: {
         healthZone: HealthZone.RED,
         pedagogueTab: PedagogueTab.PEDAGOGUE,
         pedagogueType: PedagogueType.DISABILITY,
+        selectionType: SelectionType.SINGLE,
         recommendations: [
             {
                 title: 'Разработка мероприятий по реализации ИПРА в части психолого-педагогической реабилитации и абилитации ребенка-инвалида'
@@ -975,13 +1302,15 @@ export const pedagogueHealthOptions: {
         title: 'Отсутствуют',
         healthZone: HealthZone.GREEN,
         pedagogueTab: PedagogueTab.SPEECH_THERAPIST,
-        pedagogueType: PedagogueType.VOICE_DISORDERS
+        pedagogueType: PedagogueType.VOICE_DISORDERS,
+        selectionType: SelectionType.SINGLE
     },
     {
         title: 'Незначительные нарушения',
         healthZone: HealthZone.YELLOW,
         pedagogueTab: PedagogueTab.SPEECH_THERAPIST,
         pedagogueType: PedagogueType.VOICE_DISORDERS,
+        selectionType: SelectionType.SINGLE,
         recommendations: [
             {
                 title: 'Консультирование оториноларинголога'
@@ -1011,6 +1340,7 @@ export const pedagogueHealthOptions: {
         healthZone: HealthZone.RED,
         pedagogueTab: PedagogueTab.SPEECH_THERAPIST,
         pedagogueType: PedagogueType.VOICE_DISORDERS,
+        selectionType: SelectionType.SINGLE,
         recommendations: [
             {
                 title: 'Консультирование невролога'
@@ -1037,6 +1367,7 @@ export const pedagogueHealthOptions: {
         healthZone: HealthZone.RED,
         pedagogueTab: PedagogueTab.SPEECH_THERAPIST,
         pedagogueType: PedagogueType.VOICE_DISORDERS,
+        selectionType: SelectionType.SINGLE,
         recommendations: [
             {
                 title: 'Консультирование невролога'
@@ -1063,6 +1394,7 @@ export const pedagogueHealthOptions: {
         healthZone: HealthZone.RED,
         pedagogueTab: PedagogueTab.SPEECH_THERAPIST,
         pedagogueType: PedagogueType.VOICE_DISORDERS,
+        selectionType: SelectionType.SINGLE,
         recommendations: [
             {
                 title: 'Консультирование невролога'
@@ -1089,13 +1421,15 @@ export const pedagogueHealthOptions: {
         title: 'Отсутствуют',
         healthZone: HealthZone.GREEN,
         pedagogueTab: PedagogueTab.SPEECH_THERAPIST,
-        pedagogueType: PedagogueType.TEMPO_RHYTHMIC_DISORDERS
+        pedagogueType: PedagogueType.TEMPO_RHYTHMIC_DISORDERS,
+        selectionType: SelectionType.SINGLE
     },
     {
         title: 'Незначительные нарушения',
         healthZone: HealthZone.YELLOW,
         pedagogueTab: PedagogueTab.SPEECH_THERAPIST,
         pedagogueType: PedagogueType.TEMPO_RHYTHMIC_DISORDERS,
+        selectionType: SelectionType.SINGLE,
         recommendations: [
             {
                 title: 'Консультирование невролога'
@@ -1122,6 +1456,7 @@ export const pedagogueHealthOptions: {
         healthZone: HealthZone.RED,
         pedagogueTab: PedagogueTab.SPEECH_THERAPIST,
         pedagogueType: PedagogueType.TEMPO_RHYTHMIC_DISORDERS,
+        selectionType: SelectionType.SINGLE,
         recommendations: [
             {
                 title: 'Консультирование невролога'
@@ -1142,6 +1477,7 @@ export const pedagogueHealthOptions: {
         healthZone: HealthZone.RED,
         pedagogueTab: PedagogueTab.SPEECH_THERAPIST,
         pedagogueType: PedagogueType.TEMPO_RHYTHMIC_DISORDERS,
+        selectionType: SelectionType.SINGLE,
         recommendations: [
             {
                 title: 'Консультирование невролога'
@@ -1159,6 +1495,7 @@ export const pedagogueHealthOptions: {
         healthZone: HealthZone.RED,
         pedagogueTab: PedagogueTab.SPEECH_THERAPIST,
         pedagogueType: PedagogueType.TEMPO_RHYTHMIC_DISORDERS,
+        selectionType: SelectionType.SINGLE,
         recommendations: [
             {
                 title: 'Консультирование невролога'
@@ -1179,13 +1516,15 @@ export const pedagogueHealthOptions: {
         title: 'Отсутствуют',
         healthZone: HealthZone.GREEN,
         pedagogueTab: PedagogueTab.SPEECH_THERAPIST,
-        pedagogueType: PedagogueType.SPELLING_DISORDERS
+        pedagogueType: PedagogueType.SPELLING_DISORDERS,
+        selectionType: SelectionType.SINGLE
     },
     {
         title: 'Мономорфная дислалия (ФН, ФФН, ОНР (III уровень речевого развития), НВОНР)',
         healthZone: HealthZone.YELLOW,
         pedagogueTab: PedagogueTab.SPEECH_THERAPIST,
         pedagogueType: PedagogueType.SPELLING_DISORDERS,
+        selectionType: SelectionType.SINGLE,
         recommendations: [
             {
                 title: 'Консультирование невролога'
@@ -1206,6 +1545,7 @@ export const pedagogueHealthOptions: {
         healthZone: HealthZone.RED,
         pedagogueTab: PedagogueTab.SPEECH_THERAPIST,
         pedagogueType: PedagogueType.SPELLING_DISORDERS,
+        selectionType: SelectionType.SINGLE,
         recommendations: [
             {
                 title: 'Консультирование невролога'
@@ -1223,13 +1563,15 @@ export const pedagogueHealthOptions: {
         title: 'Отсутствуют',
         healthZone: HealthZone.GREEN,
         pedagogueTab: PedagogueTab.SPEECH_THERAPIST,
-        pedagogueType: PedagogueType.ANATOMO_PHYSIOLOGICAL_DEFECTS
+        pedagogueType: PedagogueType.ANATOMO_PHYSIOLOGICAL_DEFECTS,
+        selectionType: SelectionType.SINGLE
     },
     {
         title: 'Нарушения, не влияющие на произносительную сторону речи',
         healthZone: HealthZone.YELLOW,
         pedagogueTab: PedagogueTab.SPEECH_THERAPIST,
         pedagogueType: PedagogueType.ANATOMO_PHYSIOLOGICAL_DEFECTS,
+        selectionType: SelectionType.SINGLE,
         recommendations: [
             {
                 title: 'Консультирование невролога'
@@ -1253,6 +1595,7 @@ export const pedagogueHealthOptions: {
         healthZone: HealthZone.RED,
         pedagogueTab: PedagogueTab.SPEECH_THERAPIST,
         pedagogueType: PedagogueType.ANATOMO_PHYSIOLOGICAL_DEFECTS,
+        selectionType: SelectionType.SINGLE,
         recommendations: [
             {
                 title: 'Консультирование ортодонта'
@@ -1276,13 +1619,15 @@ export const pedagogueHealthOptions: {
         title: 'Отсутствуют',
         healthZone: HealthZone.GREEN,
         pedagogueTab: PedagogueTab.SPEECH_THERAPIST,
-        pedagogueType: PedagogueType.INNERVATION_DISORDERS
+        pedagogueType: PedagogueType.INNERVATION_DISORDERS,
+        selectionType: SelectionType.SINGLE
     },
     {
         title: 'Стертая дизартрия',
         healthZone: HealthZone.YELLOW,
         pedagogueTab: PedagogueTab.SPEECH_THERAPIST,
         pedagogueType: PedagogueType.INNERVATION_DISORDERS,
+        selectionType: SelectionType.SINGLE,
         recommendations: [
             {
                 title: 'Консультирование невролога'
@@ -1306,6 +1651,7 @@ export const pedagogueHealthOptions: {
         healthZone: HealthZone.RED,
         pedagogueTab: PedagogueTab.SPEECH_THERAPIST,
         pedagogueType: PedagogueType.INNERVATION_DISORDERS,
+        selectionType: SelectionType.SINGLE,
         recommendations: [
             {
                 title: 'Консультирование невролога'
@@ -1326,13 +1672,15 @@ export const pedagogueHealthOptions: {
         title: 'Отсутствуют',
         healthZone: HealthZone.GREEN,
         pedagogueTab: PedagogueTab.SPEECH_THERAPIST,
-        pedagogueType: PedagogueType.STRUCTURAL_SEMANTIC_DISORDERS
+        pedagogueType: PedagogueType.STRUCTURAL_SEMANTIC_DISORDERS,
+        selectionType: SelectionType.SINGLE
     },
     {
         title: 'Незначительные нарушения',
         healthZone: HealthZone.YELLOW,
         pedagogueTab: PedagogueTab.SPEECH_THERAPIST,
         pedagogueType: PedagogueType.STRUCTURAL_SEMANTIC_DISORDERS,
+        selectionType: SelectionType.SINGLE,
         recommendations: [
             {
                 title: 'Консультирование невролога'
@@ -1353,6 +1701,7 @@ export const pedagogueHealthOptions: {
         healthZone: HealthZone.RED,
         pedagogueTab: PedagogueTab.SPEECH_THERAPIST,
         pedagogueType: PedagogueType.STRUCTURAL_SEMANTIC_DISORDERS,
+        selectionType: SelectionType.SINGLE,
         recommendations: [
             {
                 title: 'Наблюдение невролога'
@@ -1370,13 +1719,15 @@ export const pedagogueHealthOptions: {
         title: 'Отсутствуют',
         healthZone: HealthZone.GREEN,
         pedagogueTab: PedagogueTab.SPEECH_THERAPIST,
-        pedagogueType: PedagogueType.WRITING_DISORDERS
+        pedagogueType: PedagogueType.WRITING_DISORDERS,
+        selectionType: SelectionType.SINGLE
     },
     {
         title: 'Незначительные проявления',
         healthZone: HealthZone.YELLOW,
         pedagogueTab: PedagogueTab.SPEECH_THERAPIST,
         pedagogueType: PedagogueType.WRITING_DISORDERS,
+        selectionType: SelectionType.SINGLE,
         recommendations: [
             {
                 title: 'Проведение логопедического обследования устной и письменной речи'
@@ -1391,6 +1742,7 @@ export const pedagogueHealthOptions: {
         healthZone: HealthZone.RED,
         pedagogueTab: PedagogueTab.SPEECH_THERAPIST,
         pedagogueType: PedagogueType.WRITING_DISORDERS,
+        selectionType: SelectionType.SINGLE,
         recommendations: [
             {
                 title: 'Консультирование невролога'
@@ -1414,6 +1766,7 @@ export const pedagogueHealthOptions: {
         healthZone: HealthZone.RED,
         pedagogueTab: PedagogueTab.SPEECH_THERAPIST,
         pedagogueType: PedagogueType.WRITING_DISORDERS,
+        selectionType: SelectionType.SINGLE,
         recommendations: [
             {
                 title: 'Консультирование невролога'
@@ -1437,13 +1790,15 @@ export const pedagogueHealthOptions: {
         title: 'Отсутствуют',
         healthZone: HealthZone.GREEN,
         pedagogueTab: PedagogueTab.SPEECH_THERAPIST,
-        pedagogueType: PedagogueType.READING_DISORDERS
+        pedagogueType: PedagogueType.READING_DISORDERS,
+        selectionType: SelectionType.SINGLE
     },
     {
         title: 'Незначительные проявления',
         healthZone: HealthZone.YELLOW,
         pedagogueTab: PedagogueTab.SPEECH_THERAPIST,
         pedagogueType: PedagogueType.READING_DISORDERS,
+        selectionType: SelectionType.SINGLE,
         recommendations: [
             {
                 title: 'Проведение логопедического обследования устной и письменной речи'
@@ -1461,6 +1816,7 @@ export const pedagogueHealthOptions: {
         healthZone: HealthZone.RED,
         pedagogueTab: PedagogueTab.SPEECH_THERAPIST,
         pedagogueType: PedagogueType.READING_DISORDERS,
+        selectionType: SelectionType.SINGLE,
         recommendations: [
             {
                 title: 'Консультирование невролога'
@@ -1486,6 +1842,7 @@ export const psychologicalHealthOptions: {
     healthZone: HealthZone
     educationType: EducationType
     psychologicalType: PsychologicalType
+    selectionType: SelectionType
     recommendations?: {
         title: string
     }[]
@@ -1494,13 +1851,15 @@ export const psychologicalHealthOptions: {
         title: 'Высокая',
         healthZone: HealthZone.GREEN,
         educationType: EducationType.PRIMARY,
-        psychologicalType: PsychologicalType.MOTIVATION
+        psychologicalType: PsychologicalType.MOTIVATION,
+        selectionType: SelectionType.SINGLE
     },
     {
         title: 'Внешняя',
         healthZone: HealthZone.YELLOW,
         educationType: EducationType.PRIMARY,
         psychologicalType: PsychologicalType.MOTIVATION,
+        selectionType: SelectionType.SINGLE,
         recommendations: [
             {
                 title: 'Проведение углубленной диагностики и определение стратегии дальнейших профилактических мероприятий'
@@ -1527,6 +1886,7 @@ export const psychologicalHealthOptions: {
         healthZone: HealthZone.RED,
         educationType: EducationType.PRIMARY,
         psychologicalType: PsychologicalType.MOTIVATION,
+        selectionType: SelectionType.SINGLE,
         recommendations: [
             {
                 title: 'Проведение углубленной диагностики и определение стратегии дальнейших коррекционно-развивающих мероприятий'
@@ -1553,13 +1913,15 @@ export const psychologicalHealthOptions: {
         title: 'Адаптирован',
         healthZone: HealthZone.GREEN,
         educationType: EducationType.PRIMARY,
-        psychologicalType: PsychologicalType.ADAPTATION
+        psychologicalType: PsychologicalType.ADAPTATION,
+        selectionType: SelectionType.SINGLE
     },
     {
         title: 'Требуется помощь',
         healthZone: HealthZone.YELLOW,
         educationType: EducationType.PRIMARY,
         psychologicalType: PsychologicalType.ADAPTATION,
+        selectionType: SelectionType.SINGLE,
         recommendations: [
             {
                 title: 'Проведение углубленной диагностики и определение стратегии дальнейших профилактических мероприятий'
@@ -1580,6 +1942,7 @@ export const psychologicalHealthOptions: {
         healthZone: HealthZone.RED,
         educationType: EducationType.PRIMARY,
         psychologicalType: PsychologicalType.ADAPTATION,
+        selectionType: SelectionType.SINGLE,
         recommendations: [
             {
                 title: 'Проведение углубленной диагностики и определение стратегии дальнейших коррекционно-развивающих мероприятий'
@@ -1606,13 +1969,15 @@ export const psychologicalHealthOptions: {
         title: 'Лидер, предпочитаемый',
         healthZone: HealthZone.GREEN,
         educationType: EducationType.PRIMARY,
-        psychologicalType: PsychologicalType.SOCIOMETRY
+        psychologicalType: PsychologicalType.SOCIOMETRY,
+        selectionType: SelectionType.SINGLE
     },
     {
         title: 'Принятый',
         healthZone: HealthZone.YELLOW,
         educationType: EducationType.PRIMARY,
         psychologicalType: PsychologicalType.SOCIOMETRY,
+        selectionType: SelectionType.SINGLE,
         recommendations: [
             {
                 title: 'Проведение углубленной диагностики и определение стратегии дальнейших профилактических мероприятий'
@@ -1633,6 +1998,7 @@ export const psychologicalHealthOptions: {
         healthZone: HealthZone.RED,
         educationType: EducationType.PRIMARY,
         psychologicalType: PsychologicalType.SOCIOMETRY,
+        selectionType: SelectionType.SINGLE,
         recommendations: [
             {
                 title: 'Проведение углубленной диагностики и определение стратегии дальнейших коррекционно-развивающих мероприятий'
@@ -1668,13 +2034,15 @@ export const psychologicalHealthOptions: {
         title: 'Адекватная',
         healthZone: HealthZone.GREEN,
         educationType: EducationType.PRIMARY,
-        psychologicalType: PsychologicalType.SELF_ASSESSMENT
+        psychologicalType: PsychologicalType.SELF_ASSESSMENT,
+        selectionType: SelectionType.SINGLE
     },
     {
         title: 'Тенденция к заниженной/завышенной',
         healthZone: HealthZone.YELLOW,
         educationType: EducationType.PRIMARY,
         psychologicalType: PsychologicalType.SELF_ASSESSMENT,
+        selectionType: SelectionType.SINGLE,
         recommendations: [
             {
                 title: 'Проведение углубленной диагностики и определение стратегии дальнейших профилактических мероприятий'
@@ -1695,6 +2063,7 @@ export const psychologicalHealthOptions: {
         healthZone: HealthZone.RED,
         educationType: EducationType.PRIMARY,
         psychologicalType: PsychologicalType.SELF_ASSESSMENT,
+        selectionType: SelectionType.SINGLE,
         recommendations: [
             {
                 title: 'Проведение углубленной диагностики и определение стратегии дальнейших коррекционно-развивающих мероприятий'
@@ -1721,13 +2090,15 @@ export const psychologicalHealthOptions: {
         title: 'Нормальный уровень – менее 50%',
         healthZone: HealthZone.GREEN,
         educationType: EducationType.PRIMARY,
-        psychologicalType: PsychologicalType.ANXIETY
+        psychologicalType: PsychologicalType.ANXIETY,
+        selectionType: SelectionType.SINGLE
     },
     {
         title: 'Умеренный уровень – от 50% до 75%',
         healthZone: HealthZone.YELLOW,
         educationType: EducationType.PRIMARY,
         psychologicalType: PsychologicalType.ANXIETY,
+        selectionType: SelectionType.SINGLE,
         recommendations: [
             {
                 title: 'Проведение углубленной диагностики и определение стратегии дальнейших профилактических мероприятий'
@@ -1751,6 +2122,7 @@ export const psychologicalHealthOptions: {
         healthZone: HealthZone.RED,
         educationType: EducationType.PRIMARY,
         psychologicalType: PsychologicalType.ANXIETY,
+        selectionType: SelectionType.SINGLE,
         recommendations: [
             {
                 title: 'Проведение углубленной диагностики и определение стратегии дальнейших коррекционно-развивающих мероприятий'
@@ -1777,13 +2149,15 @@ export const psychologicalHealthOptions: {
         title: 'Отсутствует',
         healthZone: HealthZone.GREEN,
         educationType: EducationType.PRIMARY,
-        psychologicalType: PsychologicalType.AGGRESSIVITY
+        psychologicalType: PsychologicalType.AGGRESSIVITY,
+        selectionType: SelectionType.SINGLE
     },
     {
         title: 'Слабо выражена',
         healthZone: HealthZone.YELLOW,
         educationType: EducationType.PRIMARY,
         psychologicalType: PsychologicalType.AGGRESSIVITY,
+        selectionType: SelectionType.SINGLE,
         recommendations: [
             {
                 title: 'Проведение углубленной диагностики и определение стратегии дальнейших профилактических мероприятий'
@@ -1813,6 +2187,7 @@ export const psychologicalHealthOptions: {
         healthZone: HealthZone.RED,
         educationType: EducationType.PRIMARY,
         psychologicalType: PsychologicalType.AGGRESSIVITY,
+        selectionType: SelectionType.SINGLE,
         recommendations: [
             {
                 title: 'Проведение углубленной диагностики и определение стратегии дальнейших коррекционно-развивающих мероприятий'
@@ -1857,13 +2232,15 @@ export const psychologicalHealthOptions: {
         title: 'Да',
         healthZone: HealthZone.GREEN,
         educationType: EducationType.PRIMARY,
-        psychologicalType: PsychologicalType.EXTRACURRICULAR_ABILITIES
+        psychologicalType: PsychologicalType.EXTRACURRICULAR_ABILITIES,
+        selectionType: SelectionType.SINGLE
     },
     {
         title: 'Слабо выражены',
         healthZone: HealthZone.YELLOW,
         educationType: EducationType.PRIMARY,
         psychologicalType: PsychologicalType.EXTRACURRICULAR_ABILITIES,
+        selectionType: SelectionType.SINGLE,
         recommendations: [
             {
                 title: 'Проведение углубленной диагностики и определение стратегии дальнейших профилактических мероприятий'
@@ -1887,6 +2264,7 @@ export const psychologicalHealthOptions: {
         healthZone: HealthZone.RED,
         educationType: EducationType.PRIMARY,
         psychologicalType: PsychologicalType.EXTRACURRICULAR_ABILITIES,
+        selectionType: SelectionType.SINGLE,
         recommendations: [
             {
                 title: 'Проведение углубленной диагностики и определение стратегии дальнейших коррекционно-развивающих мероприятий'
@@ -1916,13 +2294,15 @@ export const psychologicalHealthOptions: {
         title: 'Нет',
         healthZone: HealthZone.GREEN,
         educationType: EducationType.PRIMARY,
-        psychologicalType: PsychologicalType.BULLYING
+        psychologicalType: PsychologicalType.BULLYING,
+        selectionType: SelectionType.SINGLE
     },
     {
         title: 'Риск',
         healthZone: HealthZone.YELLOW,
         educationType: EducationType.PRIMARY,
         psychologicalType: PsychologicalType.BULLYING,
+        selectionType: SelectionType.SINGLE,
         recommendations: [
             {
                 title: 'Проведение углубленной диагностики и определение стратегии дальнейших профилактических мероприятий'
@@ -1943,6 +2323,7 @@ export const psychologicalHealthOptions: {
         healthZone: HealthZone.RED,
         educationType: EducationType.PRIMARY,
         psychologicalType: PsychologicalType.BULLYING,
+        selectionType: SelectionType.SINGLE,
         recommendations: [
             {
                 title: 'Проведение углубленной диагностики и определение стратегии дальнейших коррекционно-развивающих мероприятий'
@@ -1963,13 +2344,15 @@ export const psychologicalHealthOptions: {
         title: 'Избегает',
         healthZone: HealthZone.GREEN,
         educationType: EducationType.PRIMARY,
-        psychologicalType: PsychologicalType.CONFLICTUALITY
+        psychologicalType: PsychologicalType.CONFLICTUALITY,
+        selectionType: SelectionType.SINGLE
     },
     {
         title: 'Эпизодически участвует',
         healthZone: HealthZone.YELLOW,
         educationType: EducationType.PRIMARY,
         psychologicalType: PsychologicalType.CONFLICTUALITY,
+        selectionType: SelectionType.SINGLE,
         recommendations: [
             {
                 title: 'Проведение углубленной диагностики и определение стратегии дальнейших профилактических мероприятий'
@@ -1993,6 +2376,7 @@ export const psychologicalHealthOptions: {
         healthZone: HealthZone.RED,
         educationType: EducationType.PRIMARY,
         psychologicalType: PsychologicalType.CONFLICTUALITY,
+        selectionType: SelectionType.SINGLE,
         recommendations: [
             {
                 title: 'Проведение углубленной диагностики и определение стратегии дальнейших коррекционно-развивающих мероприятий'
@@ -2027,13 +2411,15 @@ export const psychologicalHealthOptions: {
         title: 'Высокая',
         healthZone: HealthZone.GREEN,
         educationType: EducationType.BASIC,
-        psychologicalType: PsychologicalType.MOTIVATION
+        psychologicalType: PsychologicalType.MOTIVATION,
+        selectionType: SelectionType.SINGLE
     },
     {
         title: 'Внешняя',
         healthZone: HealthZone.YELLOW,
         educationType: EducationType.BASIC,
         psychologicalType: PsychologicalType.MOTIVATION,
+        selectionType: SelectionType.SINGLE,
         recommendations: [
             {
                 title: 'Проведение углубленной диагностики и определение стратегии дальнейших профилактических мероприятий'
@@ -2060,6 +2446,7 @@ export const psychologicalHealthOptions: {
         healthZone: HealthZone.RED,
         educationType: EducationType.BASIC,
         psychologicalType: PsychologicalType.MOTIVATION,
+        selectionType: SelectionType.SINGLE,
         recommendations: [
             {
                 title: 'Проведение углубленной диагностики и определение стратегии дальнейших коррекционно-развивающих мероприятий'
@@ -2083,13 +2470,15 @@ export const psychologicalHealthOptions: {
         title: 'Адаптирован',
         healthZone: HealthZone.GREEN,
         educationType: EducationType.BASIC,
-        psychologicalType: PsychologicalType.ADAPTATION
+        psychologicalType: PsychologicalType.ADAPTATION,
+        selectionType: SelectionType.SINGLE
     },
     {
         title: 'Требуется помощь',
         healthZone: HealthZone.YELLOW,
         educationType: EducationType.BASIC,
         psychologicalType: PsychologicalType.ADAPTATION,
+        selectionType: SelectionType.SINGLE,
         recommendations: [
             {
                 title: 'Проведение углубленной диагностики и определение стратегии дальнейших профилактических мероприятий'
@@ -2110,6 +2499,7 @@ export const psychologicalHealthOptions: {
         healthZone: HealthZone.RED,
         educationType: EducationType.BASIC,
         psychologicalType: PsychologicalType.ADAPTATION,
+        selectionType: SelectionType.SINGLE,
         recommendations: [
             {
                 title: 'Проведение углубленной диагностики и определение стратегии дальнейших коррекционно-развивающих мероприятий'
@@ -2130,13 +2520,15 @@ export const psychologicalHealthOptions: {
         title: 'Лидер, предпочитаемый',
         healthZone: HealthZone.GREEN,
         educationType: EducationType.BASIC,
-        psychologicalType: PsychologicalType.SOCIOMETRY
+        psychologicalType: PsychologicalType.SOCIOMETRY,
+        selectionType: SelectionType.SINGLE
     },
     {
         title: 'Принятый',
         healthZone: HealthZone.YELLOW,
         educationType: EducationType.BASIC,
         psychologicalType: PsychologicalType.SOCIOMETRY,
+        selectionType: SelectionType.SINGLE,
         recommendations: [
             {
                 title: 'Проведение углубленной диагностики и определение стратегии дальнейших профилактических мероприятий'
@@ -2160,6 +2552,7 @@ export const psychologicalHealthOptions: {
         healthZone: HealthZone.RED,
         educationType: EducationType.BASIC,
         psychologicalType: PsychologicalType.SOCIOMETRY,
+        selectionType: SelectionType.SINGLE,
         recommendations: [
             {
                 title: 'Проведение углубленной диагностики и определение стратегии дальнейших коррекционно-развивающих мероприятий'
@@ -2180,13 +2573,15 @@ export const psychologicalHealthOptions: {
         title: 'Адекватная',
         healthZone: HealthZone.GREEN,
         educationType: EducationType.BASIC,
-        psychologicalType: PsychologicalType.SELF_ASSESSMENT
+        psychologicalType: PsychologicalType.SELF_ASSESSMENT,
+        selectionType: SelectionType.SINGLE
     },
     {
         title: 'Тенденция к заниженной/завышенной',
         healthZone: HealthZone.YELLOW,
         educationType: EducationType.BASIC,
         psychologicalType: PsychologicalType.SELF_ASSESSMENT,
+        selectionType: SelectionType.SINGLE,
         recommendations: [
             {
                 title: 'Проведение углубленной диагностики и определение стратегии дальнейших профилактических мероприятий'
@@ -2207,6 +2602,7 @@ export const psychologicalHealthOptions: {
         healthZone: HealthZone.RED,
         educationType: EducationType.BASIC,
         psychologicalType: PsychologicalType.SELF_ASSESSMENT,
+        selectionType: SelectionType.SINGLE,
         recommendations: [
             {
                 title: 'Проведение углубленной диагностики и определение стратегии дальнейших коррекционно-развивающих мероприятий'
@@ -2230,32 +2626,398 @@ export const psychologicalHealthOptions: {
         title: 'Отсутствуют',
         healthZone: HealthZone.GREEN,
         educationType: EducationType.BASIC,
-        psychologicalType: PsychologicalType.ACCENTUATIONS
+        psychologicalType: PsychologicalType.ACCENTUATIONS,
+        selectionType: SelectionType.SINGLE
     },
     {
-        title: 'Тенденция к акцентуациям',
+        title: 'Тенденция к лабильному типу',
         healthZone: HealthZone.YELLOW,
         educationType: EducationType.BASIC,
-        psychologicalType: PsychologicalType.ACCENTUATIONS
+        psychologicalType: PsychologicalType.ACCENTUATIONS,
+        selectionType: SelectionType.SINGLE,
+        recommendations: [
+            {
+                title: 'Формирование психологом навыков эмоциональной саморегуляции'
+            },
+            {
+                title: 'Создание у подростка педагогами атмосферы доброжелательности, позитивной оценки учебной деятельности'
+            },
+            {
+                title: 'Организация родителями ситуации успеха в учебной деятельности, поддержание эмоционально теплых отношений с ребенком'
+            }
+        ]
     },
     {
-        title: 'Наличие акцентуаций',
+        title: 'Тенденция к демонстративному типу',
+        healthZone: HealthZone.YELLOW,
+        educationType: EducationType.BASIC,
+        psychologicalType: PsychologicalType.ACCENTUATIONS,
+        selectionType: SelectionType.SINGLE,
+        recommendations: [
+            {
+                title: 'Проведение психологом работы по преодолению стремления у обучающегося быть в центре внимания окружающих, создание адекватной самооценки и развитие эмпатии'
+            },
+            {
+                title: 'Создание педагогами и родителями условий для развития общих и специальных способностей, объективного отношения к успехам и достижениям подростка'
+            },
+            {
+                title: 'Проведение родителями бесед с ребенком об условиях проявления уважения и внимания к окружающим, гуманных чувств'
+            }
+        ]
+    },
+    {
+        title: 'Тенденция к циклоидному типу',
+        healthZone: HealthZone.YELLOW,
+        educationType: EducationType.BASIC,
+        psychologicalType: PsychologicalType.ACCENTUATIONS,
+        selectionType: SelectionType.SINGLE,
+        recommendations: [
+            {
+                title: 'Предупреждение психологом на занятиях повышенных нагрузок, особенно в стадии спада, предъявление поручений и заданий, отвлекающих от отрицательных эмоций и состояний'
+            },
+            {
+                title: 'Организация педагогами работы по рациональному распределению сил и профилактике переутомлений, установление с подростком теплых доверительных отношений'
+            },
+            {
+                title: 'Обучение родителей формированию у ребенка самоконтроля, самодисциплины, умения философски относиться к временным трудностям, находить интересные дела в период спада'
+            }
+        ]
+    },
+    {
+        title: 'Тенденция к возбудимому типу',
+        healthZone: HealthZone.YELLOW,
+        educationType: EducationType.BASIC,
+        psychologicalType: PsychologicalType.ACCENTUATIONS,
+        selectionType: SelectionType.SINGLE,
+        recommendations: [
+            {
+                title: 'Развитие психологом на занятиях навыков общения и саморегуляции у школьника'
+            },
+            {
+                title: 'Проведение педагогами работы по нивелированию конфликтов, учет аффективной вспыльчивости подростка, уважение его интересов и личностной ценности'
+            },
+            {
+                title: 'Работа с родителями по обучению ребенка самообладанию, самоконтролю, возможности отказаться от неразумных желаний, умению понимать других'
+            }
+        ]
+    },
+    {
+        title: 'Тенденция к интровертному (шизоидному) типу',
+        healthZone: HealthZone.YELLOW,
+        educationType: EducationType.BASIC,
+        psychologicalType: PsychologicalType.ACCENTUATIONS,
+        selectionType: SelectionType.SINGLE,
+        recommendations: [
+            {
+                title: 'Проведение психологом тренингов с подростком, направленных на развитие коммуникативных способностей, эмпатийности, использование в работе ролевых игр'
+            },
+            {
+                title: 'Акцентирование педагогами успехов обучающегося в процессе его общения с окружающими, формирование компетентной заинтересованности идеями и увлечениями'
+            },
+            {
+                title: 'Проявление родителями заинтересованности идеями и увлечениями ребенка, поддержка его организаторских успехов'
+            }
+        ]
+    },
+    {
+        title: 'Тенденция к гипертимному типу',
+        healthZone: HealthZone.YELLOW,
+        educationType: EducationType.BASIC,
+        psychologicalType: PsychologicalType.ACCENTUATIONS,
+        selectionType: SelectionType.SINGLE,
+        recommendations: [
+            {
+                title: 'Проведение психологом просветительской беседы с учителями о недисциплинированности, неусидчивости и других поведенческих реакциях ребенка в данном возрасте, что является определённой характерологией, а не негативной учебной мотивацией и неприязненным отношением к педагогу'
+            },
+            {
+                title: 'Удержание дистанции, достаточной для поддержания продуктивного взаимодействия'
+            },
+            {
+                title: 'Аргументированное определение педагогами обязанностей и границ поведения подростка, контроль выполненного'
+            },
+            {
+                title: 'Работа с родителями по обучению подростка рациональному планированию своей деятельности, самоконтролю поведения, саморегуляции психофизиологического состояния, умению общаться'
+            }
+        ]
+    },
+    {
+        title: 'Тенденция к астено-невротическому типу',
+        healthZone: HealthZone.YELLOW,
+        educationType: EducationType.BASIC,
+        psychologicalType: PsychologicalType.ACCENTUATIONS,
+        selectionType: SelectionType.SINGLE,
+        recommendations: [
+            {
+                title: 'Проведение психологом работы по преодолению у ребенка страхов, развитие таких важных свойств личности как решительность, самостоятельность, инициативность'
+            },
+            {
+                title: 'Создание педагогами разумного режима школьных нагрузок и условий для организации здорового образа жизни обучающегося, формирование терпеливого, заботливого отношения к подростку'
+            },
+            {
+                title: 'Обучение родителей планированию режима дня и жизни ребенка в целом, доведению дел до конца, преодолению трудностей субъективного характера'
+            }
+        ]
+    },
+    {
+        title: 'Тенденция к неустойчивому типу',
+        healthZone: HealthZone.YELLOW,
+        educationType: EducationType.BASIC,
+        psychologicalType: PsychologicalType.ACCENTUATIONS,
+        selectionType: SelectionType.SINGLE,
+        recommendations: [
+            {
+                title: 'Проведение коррекционно-развивающих занятий педагогом-психологом по развитию и формированию волевых качеств у подростка'
+            },
+            {
+                title: 'Обучение педагогов и родителей формированию у обучающегося планированию режима жизни, доведению дела до конца, преодолению трудностей'
+            }
+        ]
+    },
+    {
+        title: 'Тенденция к тревожно-педантичному (психастеническому) типу',
+        healthZone: HealthZone.YELLOW,
+        educationType: EducationType.BASIC,
+        psychologicalType: PsychologicalType.ACCENTUATIONS,
+        selectionType: SelectionType.SINGLE,
+        recommendations: [
+            {
+                title: 'Развитие педагогом-психологом навыков инициативности и самостоятельности школьника, коррекция тревожности, использование аутогенных тренировок'
+            },
+            {
+                title: 'Формирование педагогами оптимистических установок, развитие у подростка эмоциональности, самооценки'
+            },
+            {
+                title: 'Обучение родителей предъявлению конкретных и посильных поручений подростку, оказание помощи в подготовке и выполнении поручений'
+            }
+        ]
+    },
+    {
+        title: 'Тенденция к сензитивному типу',
+        healthZone: HealthZone.YELLOW,
+        educationType: EducationType.BASIC,
+        psychologicalType: PsychologicalType.ACCENTUATIONS,
+        selectionType: SelectionType.SINGLE,
+        recommendations: [
+            {
+                title: 'Создание педагогами условий для самореализации ученика в интересных видах деятельности. При возникновении проблем – анализ их в спокойной, доверительной атмосфере'
+            },
+            {
+                title: 'Проведение педагогом-психологом коррекционно-развивающей работы по повышению самооценки, обучение умению строить взаимоотношения с одноклассниками, формирование возможностей преодолевать застенчивость, прощать людям недостатки'
+            },
+            {
+                title: 'Обучение родителей предъявлению ребенку поручений, соответствующих его интересам и увлечениям'
+            },
+            {
+                title: 'Воспитание терпимости к себе и окружающим, поощрение доверия к другим, обращение при необходимости за помощью, организация успеха в повседневной жизни'
+            }
+        ]
+    },
+    {
+        title: 'Лабильный тип',
         healthZone: HealthZone.RED,
         educationType: EducationType.BASIC,
-        psychologicalType: PsychologicalType.ACCENTUATIONS
+        psychologicalType: PsychologicalType.ACCENTUATIONS,
+        selectionType: SelectionType.SINGLE,
+        recommendations: [
+            {
+                title: 'Проведение коррекционно-развивающих занятий с педагогом-психологом по обучению приемам эмоциональной саморегуляции, умению преодолевать препятствия, рациональному использованию своих сил'
+            },
+            {
+                title: 'Организация педагогами спокойной учебной обстановки, похвалы ребенка за конкретные достижения, придание учебным заданиям формы просьб с уверенностью в успехе их выполнения'
+            },
+            {
+                title: 'Оказание родителями поддержки, организации ситуации успеха в учебной деятельности, поддержании эмоционально теплых отношений в семье'
+            }
+        ]
+    },
+    {
+        title: 'Демонстративный тип',
+        healthZone: HealthZone.RED,
+        educationType: EducationType.BASIC,
+        psychologicalType: PsychologicalType.ACCENTUATIONS,
+        selectionType: SelectionType.SINGLE,
+        recommendations: [
+            {
+                title: 'Проведение коррекционно-развивающих занятий с педагогом-психологом по формированию коммуникативных навыков и умений, развитию самоконтроля поведения'
+            },
+            {
+                title: 'Консультирование педагогов о необходимости начинать работу с посильных заданий, с поступательным переходом к более сложным через высокую эмоциональную мотивацию, поддержание высокого уровня интенсивности учебной деятельности, предоставление объективной информации о результатах, создание условий для адекватной самооценки'
+            },
+            {
+                title: 'Обучение родителей подростка общению с одноклассниками, самоконтролю поведения, умению демонстрировать свои позитивные качества'
+            }
+        ]
+    },
+    {
+        title: 'Циклоидный тип',
+        healthZone: HealthZone.RED,
+        educationType: EducationType.BASIC,
+        psychologicalType: PsychologicalType.ACCENTUATIONS,
+        selectionType: SelectionType.SINGLE,
+        recommendations: [
+            {
+                title: 'Проведение коррекционно-развивающих занятий с педагогом-психологом по формированию у подростка навыков программирования, регуляции и контроля своего поведения, развитие эмоциональной сферы'
+            },
+            {
+                title: 'Консультирование педагогов о необходимости создания доброжелательной рабочей обстановки на уроке, избегание критики и нареканий, преобладание заинтересованности'
+            },
+            {
+                title: 'При оценивании деятельности школьника основное внимание обращать на позитивные стороны результата, спокойно и аргументировано оценивать возможную неудачу, подчеркивая ее временный характер'
+            },
+            {
+                title: 'Обучение родителей формированию у ребенка самодисциплины, умения философски относится к временным трудностям, находить интересные дела в период спада'
+            }
+        ]
+    },
+    {
+        title: 'Возбудимый тип',
+        healthZone: HealthZone.RED,
+        educationType: EducationType.BASIC,
+        psychologicalType: PsychologicalType.ACCENTUATIONS,
+        selectionType: SelectionType.SINGLE,
+        recommendations: [
+            {
+                title: 'Проведение коррекционно-развивающих занятий с педагогом-психологом по формированию у подростка навыков самоконтроля, программирования и регуляции своего поведения, аутогенные тренировки'
+            },
+            {
+                title: 'Консультирование педагогов по формированию контроля, руководства и помощи в учебной и познавательной деятельности, тренировки сдержанности, умению выслушать учителя и товарища, доброжелательного аргументирования выставляемых оценок, ведение урока в спокойной манере'
+            },
+            {
+                title: 'Обучение родителей подростка формированию умения отказаться от неразумных желаний, умению понимать других'
+            }
+        ]
+    },
+    {
+        title: 'Интровертированный (шизоидный) тип',
+        healthZone: HealthZone.RED,
+        educationType: EducationType.BASIC,
+        psychologicalType: PsychologicalType.ACCENTUATIONS,
+        selectionType: SelectionType.SINGLE,
+        recommendations: [
+            {
+                title: 'Проведение педагогом-психологом тренингов на развитие коммуникативных навыков'
+            },
+            {
+                title: 'Формирование педагогами умения четкой постановки целей подростком и развитие мотивации в учебной деятельности'
+            },
+            {
+                title: 'Обучение родителей формированию у подростка заинтересованности идеями и увлечениями, поддержание организаторских успехов, доверия у одноклассников'
+            }
+        ]
+    },
+    {
+        title: 'Гипертимный тип',
+        healthZone: HealthZone.RED,
+        educationType: EducationType.BASIC,
+        psychologicalType: PsychologicalType.ACCENTUATIONS,
+        selectionType: SelectionType.SINGLE,
+        recommendations: [
+            {
+                title: 'Проведение коррекционно-развивающих занятий с педагогом-психологом по обучению ребенка самостоятельности, самодисциплине, умению держать слово, считаться с мнением других, вежливости, тактичности'
+            },
+            {
+                title: 'Поддержание педагогами высокого уровня работоспособности на уроке и во время выполнения типовых операций, чередование разных видов деятельности'
+            },
+            {
+                title: 'Консультирование родителей по вопросу обучения подростка рациональному планированию своей деятельности, самоконтролю поведения, саморегуляции психофизиологического состояния, умению общаться'
+            }
+        ]
+    },
+    {
+        title: 'Астено-невротический тип',
+        healthZone: HealthZone.RED,
+        educationType: EducationType.BASIC,
+        psychologicalType: PsychologicalType.ACCENTUATIONS,
+        selectionType: SelectionType.SINGLE,
+        recommendations: [
+            {
+                title: 'Проведение коррекционно-развивающих занятий с педагогом-психологом по обучению рациональному планированию обучающимся своей деятельности, самоконтролю своего поведения, саморегуляции психофизиологического состояния, умению общаться'
+            },
+            {
+                title: 'Консультирование педагогов по вопросу предъявления ребенку заданий гипотетического характера, которые не имеют неправильных решений'
+            },
+            {
+                title: 'Разделение сложных заданий на части с анализом и поддержкой на каждом этапе'
+            },
+            {
+                title: 'Обучение родителей подростка планированию режима жизни, доведению дела до конца, преодолению трудностей субъективного характера'
+            }
+        ]
+    },
+    {
+        title: 'Неустойчивый тип',
+        healthZone: HealthZone.RED,
+        educationType: EducationType.BASIC,
+        psychologicalType: PsychologicalType.ACCENTUATIONS,
+        selectionType: SelectionType.SINGLE,
+        recommendations: [
+            {
+                title: 'Проведение коррекционно-развивающих занятий с педагогом-психологом по развитию волевых качеств подростка, формированию мотивации получения знаний, навыков планирования и доведения дел до конца'
+            },
+            {
+                title: 'Обучение педагогов контролированию результативности учебной деятельности на уроке, разделению материала на части и выдаче их по мере усвоения, создание спокойной, благоприятной обстановки в классе'
+            },
+            {
+                title: 'Консультирование родителей по вопросу обучения подростка планированию режима жизни, доведению дел до конца, преодолению трудностей субъективного характера, предупреждение оценивания возникающего желания с позиции корысти и вреда для себя и других'
+            }
+        ]
+    },
+    {
+        title: 'Тревожно-педантичный (психастенический) тип',
+        healthZone: HealthZone.RED,
+        educationType: EducationType.BASIC,
+        psychologicalType: PsychologicalType.ACCENTUATIONS,
+        selectionType: SelectionType.SINGLE,
+        recommendations: [
+            {
+                title: 'Проведение коррекционно-развивающих занятий с педагогом-психологом, направленных на формирование у подростка адекватной самооценки, уверенности в собственных действиях'
+            },
+            {
+                title: 'Поддержание педагогами спокойной обстановки в классе, уверенности обучающегося в достижении цели и собственных силах'
+            },
+            {
+                title: 'Консультирование родителей по вопросу предъявления подростку конкретных и посильных поручений, закрепляющих ситуацию успеха и повышающих самооценку'
+            },
+            {
+                title: 'Оказание помощи в подготовке и выполнении поручений, не требующих большой ответственности, формированию установки на успех, проявлению заботы и оказанию поддержки близким'
+            }
+        ]
+    },
+    {
+        title: 'Сензитивный тип',
+        healthZone: HealthZone.RED,
+        educationType: EducationType.BASIC,
+        psychologicalType: PsychologicalType.ACCENTUATIONS,
+        selectionType: SelectionType.SINGLE,
+        recommendations: [
+            {
+                title: 'Проведение коррекционно-развивающих занятий с педагогом-психологом по обучению коммуникативным навыкам, учету особенности личности, умению преодолевать свою застенчивость, прощать людям недостатки'
+            },
+            {
+                title: 'Консультирование педагогов по вопросу создания атмосферы взаимоуважения и тактичного общения на уроках'
+            },
+            {
+                title: 'При оценке результативности учебной деятельности спокойно комментировать общий результат, акцентировать успех, в случае неудачи – обязательное индивидуальное обсуждение ошибок'
+            },
+            {
+                title: 'Консультирование родителей по вопросу предъявления подростку поручений, соответствующих его интересам и увлечениям, воспитание терпимости к себе и другим, обучение умению строить взаимоотношения с одноклассниками, преодолевать застенчивость'
+            }
+        ]
     },
 
     {
         title: 'Низкая',
         healthZone: HealthZone.GREEN,
         educationType: EducationType.BASIC,
-        psychologicalType: PsychologicalType.PERSONAL_ANXIETY
+        psychologicalType: PsychologicalType.PERSONAL_ANXIETY,
+        selectionType: SelectionType.SINGLE
     },
     {
         title: 'Умеренная – 31-45%',
         healthZone: HealthZone.YELLOW,
         educationType: EducationType.BASIC,
         psychologicalType: PsychologicalType.PERSONAL_ANXIETY,
+        selectionType: SelectionType.SINGLE,
         recommendations: [
             {
                 title: 'Проведение углубленной диагностики и определение стратегии дальнейших профилактических мероприятий'
@@ -2279,6 +3041,7 @@ export const psychologicalHealthOptions: {
         healthZone: HealthZone.RED,
         educationType: EducationType.BASIC,
         psychologicalType: PsychologicalType.PERSONAL_ANXIETY,
+        selectionType: SelectionType.SINGLE,
         recommendations: [
             {
                 title: 'Проведение углубленной диагностики и определение стратегии дальнейших коррекционно-развивающих мероприятий'
@@ -2302,13 +3065,15 @@ export const psychologicalHealthOptions: {
         title: 'Отсутствует',
         healthZone: HealthZone.GREEN,
         educationType: EducationType.BASIC,
-        psychologicalType: PsychologicalType.AGGRESSIVITY
+        psychologicalType: PsychologicalType.AGGRESSIVITY,
+        selectionType: SelectionType.SINGLE
     },
     {
         title: 'Слабо выражена',
         healthZone: HealthZone.YELLOW,
         educationType: EducationType.BASIC,
         psychologicalType: PsychologicalType.AGGRESSIVITY,
+        selectionType: SelectionType.SINGLE,
         recommendations: [
             {
                 title: 'Проведение углубленной диагностики и определение стратегии дальнейших профилактических мероприятий'
@@ -2335,6 +3100,7 @@ export const psychologicalHealthOptions: {
         healthZone: HealthZone.RED,
         educationType: EducationType.BASIC,
         psychologicalType: PsychologicalType.AGGRESSIVITY,
+        selectionType: SelectionType.SINGLE,
         recommendations: [
             {
                 title: 'Проведение углубленной диагностики и определение стратегии дальнейших коррекционно-развивающих мероприятий'
@@ -2361,13 +3127,15 @@ export const psychologicalHealthOptions: {
         title: 'Да',
         healthZone: HealthZone.GREEN,
         educationType: EducationType.BASIC,
-        psychologicalType: PsychologicalType.EXTRACURRICULAR_ABILITIES
+        psychologicalType: PsychologicalType.EXTRACURRICULAR_ABILITIES,
+        selectionType: SelectionType.SINGLE
     },
     {
         title: 'Слабо выражены',
         healthZone: HealthZone.YELLOW,
         educationType: EducationType.BASIC,
         psychologicalType: PsychologicalType.EXTRACURRICULAR_ABILITIES,
+        selectionType: SelectionType.SINGLE,
         recommendations: [
             {
                 title: 'Проведение углубленной диагностики и определение стратегии дальнейших профилактических мероприятий'
@@ -2388,6 +3156,7 @@ export const psychologicalHealthOptions: {
         healthZone: HealthZone.RED,
         educationType: EducationType.BASIC,
         psychologicalType: PsychologicalType.EXTRACURRICULAR_ABILITIES,
+        selectionType: SelectionType.SINGLE,
         recommendations: [
             {
                 title: 'Проведение углубленной диагностики и определение стратегии дальнейших коррекционно-развивающих мероприятий'
@@ -2414,13 +3183,15 @@ export const psychologicalHealthOptions: {
         title: 'Отсутствует',
         healthZone: HealthZone.GREEN,
         educationType: EducationType.BASIC,
-        psychologicalType: PsychologicalType.DEVIANT_BEHAVIOR
+        psychologicalType: PsychologicalType.DEVIANT_BEHAVIOR,
+        selectionType: SelectionType.SINGLE
     },
     {
         title: 'Ситуативная предрасположенность',
         healthZone: HealthZone.YELLOW,
         educationType: EducationType.BASIC,
         psychologicalType: PsychologicalType.DEVIANT_BEHAVIOR,
+        selectionType: SelectionType.SINGLE,
         recommendations: [
             {
                 title: 'Проведение углубленной диагностики и определение стратегии дальнейших профилактических мероприятий'
@@ -2465,6 +3236,7 @@ export const psychologicalHealthOptions: {
         healthZone: HealthZone.RED,
         educationType: EducationType.BASIC,
         psychologicalType: PsychologicalType.DEVIANT_BEHAVIOR,
+        selectionType: SelectionType.SINGLE,
         recommendations: [
             {
                 title: 'Проведение углубленной диагностики и определение стратегии дальнейших коррекционно-развивающих мероприятий'
@@ -2500,6 +3272,7 @@ export const psychologicalHealthOptions: {
         healthZone: HealthZone.RED,
         educationType: EducationType.BASIC,
         psychologicalType: PsychologicalType.DEVIANT_BEHAVIOR,
+        selectionType: SelectionType.SINGLE,
         recommendations: [
             {
                 title: 'Проведение углубленной диагностики и определение стратегии дальнейших коррекционно-развивающих мероприятий'
@@ -2535,6 +3308,7 @@ export const psychologicalHealthOptions: {
         healthZone: HealthZone.RED,
         educationType: EducationType.BASIC,
         psychologicalType: PsychologicalType.DEVIANT_BEHAVIOR,
+        selectionType: SelectionType.SINGLE,
         recommendations: [
             {
                 title: 'Проведение углубленной диагностики и определение стратегии дальнейших коррекционно-развивающих мероприятий'
@@ -2570,6 +3344,7 @@ export const psychologicalHealthOptions: {
         healthZone: HealthZone.RED,
         educationType: EducationType.BASIC,
         psychologicalType: PsychologicalType.DEVIANT_BEHAVIOR,
+        selectionType: SelectionType.SINGLE,
         recommendations: [
             {
                 title: 'Проведение углубленной диагностики и определение стратегии дальнейших коррекционно-развивающих мероприятий'
@@ -2605,6 +3380,7 @@ export const psychologicalHealthOptions: {
         healthZone: HealthZone.RED,
         educationType: EducationType.BASIC,
         psychologicalType: PsychologicalType.DEVIANT_BEHAVIOR,
+        selectionType: SelectionType.SINGLE,
         recommendations: [
             {
                 title: 'Проведение углубленной диагностики и определение стратегии дальнейших коррекционно-развивающих мероприятий'
@@ -2640,13 +3416,15 @@ export const psychologicalHealthOptions: {
         title: 'Да',
         healthZone: HealthZone.GREEN,
         educationType: EducationType.BASIC,
-        psychologicalType: PsychologicalType.PROFESSIONAL_INTERESTS
+        psychologicalType: PsychologicalType.PROFESSIONAL_INTERESTS,
+        selectionType: SelectionType.SINGLE
     },
     {
         title: 'Слабо выражены',
         healthZone: HealthZone.YELLOW,
         educationType: EducationType.BASIC,
         psychologicalType: PsychologicalType.PROFESSIONAL_INTERESTS,
+        selectionType: SelectionType.SINGLE,
         recommendations: [
             {
                 title: 'Проведение углубленной диагностики и определение стратегии дальнейших профилактических мероприятий'
@@ -2661,6 +3439,7 @@ export const psychologicalHealthOptions: {
         healthZone: HealthZone.RED,
         educationType: EducationType.BASIC,
         psychologicalType: PsychologicalType.PROFESSIONAL_INTERESTS,
+        selectionType: SelectionType.SINGLE,
         recommendations: [
             {
                 title: 'Проведение углубленной диагностики и определение стратегии дальнейших коррекционно-развивающих мероприятий'
@@ -2690,13 +3469,15 @@ export const psychologicalHealthOptions: {
         title: 'Нет',
         healthZone: HealthZone.GREEN,
         educationType: EducationType.BASIC,
-        psychologicalType: PsychologicalType.BULLYING
+        psychologicalType: PsychologicalType.BULLYING,
+        selectionType: SelectionType.SINGLE
     },
     {
         title: 'Риск',
         healthZone: HealthZone.YELLOW,
         educationType: EducationType.BASIC,
         psychologicalType: PsychologicalType.BULLYING,
+        selectionType: SelectionType.SINGLE,
         recommendations: [
             {
                 title: 'Проведение углубленной диагностики и определение стратегии дальнейших профилактических мероприятий'
@@ -2717,6 +3498,7 @@ export const psychologicalHealthOptions: {
         healthZone: HealthZone.RED,
         educationType: EducationType.BASIC,
         psychologicalType: PsychologicalType.BULLYING,
+        selectionType: SelectionType.SINGLE,
         recommendations: [
             {
                 title: 'Проведение углубленной диагностики и определение стратегии дальнейших коррекционно-развивающих мероприятий'
@@ -2737,13 +3519,15 @@ export const psychologicalHealthOptions: {
         title: 'Избегает',
         healthZone: HealthZone.GREEN,
         educationType: EducationType.BASIC,
-        psychologicalType: PsychologicalType.CONFLICTUALITY
+        psychologicalType: PsychologicalType.CONFLICTUALITY,
+        selectionType: SelectionType.SINGLE
     },
     {
         title: 'Эпизодически участвует',
         healthZone: HealthZone.YELLOW,
         educationType: EducationType.BASIC,
         psychologicalType: PsychologicalType.CONFLICTUALITY,
+        selectionType: SelectionType.SINGLE,
         recommendations: [
             {
                 title: 'Проведение углубленной диагностики и определение стратегии дальнейших профилактических мероприятий'
@@ -2767,6 +3551,7 @@ export const psychologicalHealthOptions: {
         healthZone: HealthZone.RED,
         educationType: EducationType.BASIC,
         psychologicalType: PsychologicalType.CONFLICTUALITY,
+        selectionType: SelectionType.SINGLE,
         recommendations: [
             {
                 title: 'Проведение углубленной диагностики и определение стратегии дальнейших коррекционно-развивающих мероприятий'
@@ -2793,13 +3578,15 @@ export const psychologicalHealthOptions: {
         title: 'Высокий',
         healthZone: HealthZone.GREEN,
         educationType: EducationType.MIDDLE,
-        psychologicalType: PsychologicalType.CULTURAL_VALUES
+        psychologicalType: PsychologicalType.CULTURAL_VALUES,
+        selectionType: SelectionType.SINGLE
     },
     {
         title: 'Средний',
         healthZone: HealthZone.YELLOW,
         educationType: EducationType.MIDDLE,
         psychologicalType: PsychologicalType.CULTURAL_VALUES,
+        selectionType: SelectionType.SINGLE,
         recommendations: [
             {
                 title: 'Проведение углубленной диагностики и определение стратегии дальнейших профилактических мероприятий'
@@ -2814,6 +3601,7 @@ export const psychologicalHealthOptions: {
         healthZone: HealthZone.RED,
         educationType: EducationType.MIDDLE,
         psychologicalType: PsychologicalType.CULTURAL_VALUES,
+        selectionType: SelectionType.SINGLE,
         recommendations: [
             {
                 title: 'Проведение углубленной диагностики и определение стратегии дальнейших коррекционно-развивающих мероприятий'
@@ -2840,13 +3628,15 @@ export const psychologicalHealthOptions: {
         title: 'Адаптирован',
         healthZone: HealthZone.GREEN,
         educationType: EducationType.MIDDLE,
-        psychologicalType: PsychologicalType.ADAPTATION
+        psychologicalType: PsychologicalType.ADAPTATION,
+        selectionType: SelectionType.SINGLE
     },
     {
         title: 'Требуется помощь',
         healthZone: HealthZone.YELLOW,
         educationType: EducationType.MIDDLE,
         psychologicalType: PsychologicalType.ADAPTATION,
+        selectionType: SelectionType.SINGLE,
         recommendations: [
             {
                 title: 'Проведение углубленной диагностики и определение стратегии дальнейших профилактических мероприятий'
@@ -2867,6 +3657,7 @@ export const psychologicalHealthOptions: {
         healthZone: HealthZone.RED,
         educationType: EducationType.MIDDLE,
         psychologicalType: PsychologicalType.ADAPTATION,
+        selectionType: SelectionType.SINGLE,
         recommendations: [
             {
                 title: 'Проведение углубленной диагностики и определение стратегии дальнейших коррекционно-развивающих мероприятий'
@@ -2887,13 +3678,15 @@ export const psychologicalHealthOptions: {
         title: 'Лидер, предпочитаемый',
         healthZone: HealthZone.GREEN,
         educationType: EducationType.MIDDLE,
-        psychologicalType: PsychologicalType.SOCIOMETRY
+        psychologicalType: PsychologicalType.SOCIOMETRY,
+        selectionType: SelectionType.SINGLE
     },
     {
         title: 'Принятый',
         healthZone: HealthZone.YELLOW,
         educationType: EducationType.MIDDLE,
         psychologicalType: PsychologicalType.SOCIOMETRY,
+        selectionType: SelectionType.SINGLE,
         recommendations: [
             {
                 title: 'Проведение углубленной диагностики и определение стратегии дальнейших профилактических мероприятий'
@@ -2914,12 +3707,13 @@ export const psychologicalHealthOptions: {
         healthZone: HealthZone.RED,
         educationType: EducationType.MIDDLE,
         psychologicalType: PsychologicalType.SOCIOMETRY,
+        selectionType: SelectionType.SINGLE,
         recommendations: [
             {
                 title: 'Проведение углубленной диагностики и определение стратегии дальнейших коррекционно-развивающих мероприятий'
             },
             {
-                title: 'Проведение индивидуальной работы  с «отвергнутым» учеником'
+                title: 'Проведение индивидуальной работы с «отвергнутым» учеником'
             },
             {
                 title: 'Организация в классе работы по подгруппам (по принципу взаимопомощи и поддержки, мотивации на достижения обучающегося)'
@@ -2943,7 +3737,7 @@ export const psychologicalHealthOptions: {
                 title: 'Создание в классе единой системы традиций и ценностей'
             },
             {
-                title: 'Проведение краткого курса психологического просвещения для педагогов с целью развития успешной самореализации школьника в различных видах деятельности в ОО (с учетом эмоционального неблагополучия и  самочувствия ученика в системе личных взаимоотношений)'
+                title: 'Проведение краткого курса психологического просвещения для педагогов с целью развития успешной самореализации школьника в различных видах деятельности в ОО (с учетом эмоционального неблагополучия и самочувствия ученика в системе личных взаимоотношений)'
             },
             {
                 title: 'Проведение просветительских бесед с родителями, направленных на вовлечение «изолированного» обучающегося в разнообразную внешкольную сеть образовательных организаций (спортивные секции, кружки), где есть возможность завоёвывать более устойчивый статус в новой структуре межличностных отношений'
@@ -2955,13 +3749,15 @@ export const psychologicalHealthOptions: {
         title: 'Адекватная',
         healthZone: HealthZone.GREEN,
         educationType: EducationType.MIDDLE,
-        psychologicalType: PsychologicalType.SELF_ASSESSMENT
+        psychologicalType: PsychologicalType.SELF_ASSESSMENT,
+        selectionType: SelectionType.SINGLE
     },
     {
         title: 'Тенденция к заниженной/завышенной',
         healthZone: HealthZone.YELLOW,
         educationType: EducationType.MIDDLE,
         psychologicalType: PsychologicalType.SELF_ASSESSMENT,
+        selectionType: SelectionType.SINGLE,
         recommendations: [
             {
                 title: 'Проведение углубленной диагностики и определение стратегии дальнейших профилактических мероприятий'
@@ -2982,6 +3778,7 @@ export const psychologicalHealthOptions: {
         healthZone: HealthZone.RED,
         educationType: EducationType.MIDDLE,
         psychologicalType: PsychologicalType.SELF_ASSESSMENT,
+        selectionType: SelectionType.SINGLE,
         recommendations: [
             {
                 title: 'Проведение углубленной диагностики и определение стратегии дальнейших коррекционно-развивающих мероприятий'
@@ -2996,7 +3793,7 @@ export const psychologicalHealthOptions: {
                 title: 'Проведение краткого курса психологического просвещения для педагогов с целью развития успешной самореализации школьника в различных видах деятельности в образовательной организации'
             },
             {
-                title: 'Организация индивидуальной работы с родителями старшеклассника по вопросам  развития профессиональных предпочтений'
+                title: 'Организация индивидуальной работы с родителями старшеклассника по вопросам развития профессиональных предпочтений'
             }
         ]
     },
@@ -3005,13 +3802,15 @@ export const psychologicalHealthOptions: {
         title: 'Отсутствует',
         healthZone: HealthZone.GREEN,
         educationType: EducationType.MIDDLE,
-        psychologicalType: PsychologicalType.AGGRESSIVITY
+        psychologicalType: PsychologicalType.AGGRESSIVITY,
+        selectionType: SelectionType.SINGLE
     },
     {
         title: 'Слабо выражена',
         healthZone: HealthZone.YELLOW,
         educationType: EducationType.MIDDLE,
         psychologicalType: PsychologicalType.AGGRESSIVITY,
+        selectionType: SelectionType.SINGLE,
         recommendations: [
             {
                 title: 'Проведение углубленной диагностики и определение стратегии дальнейших профилактических мероприятий'
@@ -3026,7 +3825,7 @@ export const psychologicalHealthOptions: {
                 title: 'Проведение просветительской работы с педагогами по повышению уровня коммуникативной культуры обучающегося, формированию позитивных качеств личности'
             },
             {
-                title: 'Консультирование родителей по вопросам  повышения родительской компетентности в сфере воспитания, обучения ребенка альтернативным методам выражения агрессии, формирования эмпатии, доверия к людям'
+                title: 'Консультирование родителей по вопросам повышения родительской компетентности в сфере воспитания, обучения ребенка альтернативным методам выражения агрессии, формирования эмпатии, доверия к людям'
             }
         ]
     },
@@ -3035,6 +3834,7 @@ export const psychologicalHealthOptions: {
         healthZone: HealthZone.RED,
         educationType: EducationType.MIDDLE,
         psychologicalType: PsychologicalType.AGGRESSIVITY,
+        selectionType: SelectionType.SINGLE,
         recommendations: [
             {
                 title: 'Проведение углубленной диагностики и определение стратегии дальнейших коррекционно-развивающих мероприятий'
@@ -3044,7 +3844,7 @@ export const psychologicalHealthOptions: {
                 title: 'Проведение тренинга с обучающимся по управлению агрессией в форме упражнений, дискуссий, мини-лекций в сочетании с психотерапевтическими методами (рационально-эмотивной психотерапии, гештальтерапии, со-консультировании)'
             },
             {
-                title: 'Проведение просветительской работы с педагогами по  формированию само- и взаимоподдержки обучающихся, навыков бесконфликтного и эффективного общения'
+                title: 'Проведение просветительской работы с педагогами по формированию само- и взаимоподдержки обучающихся, навыков бесконфликтного и эффективного общения'
             },
             {
                 title: 'Консультирование родителей по вопросам повышения уровня компетентности в сфере воспитания, формирования здорового жизненного стиля, высокофункциональных стратегий и навыков поведения ребенка'
@@ -3056,13 +3856,15 @@ export const psychologicalHealthOptions: {
         title: 'Низкая',
         healthZone: HealthZone.GREEN,
         educationType: EducationType.MIDDLE,
-        psychologicalType: PsychologicalType.PERSONAL_ANXIETY
+        psychologicalType: PsychologicalType.PERSONAL_ANXIETY,
+        selectionType: SelectionType.SINGLE
     },
     {
         title: 'Умеренная – 31-45%',
         healthZone: HealthZone.YELLOW,
         educationType: EducationType.MIDDLE,
         psychologicalType: PsychologicalType.PERSONAL_ANXIETY,
+        selectionType: SelectionType.SINGLE,
         recommendations: [
             {
                 title: 'Проведение углубленной диагностики и определение стратегии дальнейших профилактических мероприятий'
@@ -3086,6 +3888,7 @@ export const psychologicalHealthOptions: {
         healthZone: HealthZone.RED,
         educationType: EducationType.MIDDLE,
         psychologicalType: PsychologicalType.PERSONAL_ANXIETY,
+        selectionType: SelectionType.SINGLE,
         recommendations: [
             {
                 title: 'Проведение углубленной диагностики и определение стратегии дальнейших коррекционно-развивающих мероприятий'
@@ -3109,13 +3912,15 @@ export const psychologicalHealthOptions: {
         title: 'Нет',
         healthZone: HealthZone.GREEN,
         educationType: EducationType.MIDDLE,
-        psychologicalType: PsychologicalType.BULLYING
+        psychologicalType: PsychologicalType.BULLYING,
+        selectionType: SelectionType.SINGLE
     },
     {
         title: 'Риск',
         healthZone: HealthZone.YELLOW,
         educationType: EducationType.MIDDLE,
         psychologicalType: PsychologicalType.BULLYING,
+        selectionType: SelectionType.SINGLE,
         recommendations: [
             {
                 title: 'Проведение углубленной диагностики и определение стратегии дальнейших профилактических мероприятий'
@@ -3139,12 +3944,13 @@ export const psychologicalHealthOptions: {
         healthZone: HealthZone.RED,
         educationType: EducationType.MIDDLE,
         psychologicalType: PsychologicalType.BULLYING,
+        selectionType: SelectionType.SINGLE,
         recommendations: [
             {
                 title: 'Проведение углубленной диагностики и определение стратегии дальнейших коррекционно-развивающих мероприятий'
             },
             {
-                title: 'Проведение коррекционной работы с обучающимся, направленной на  устранение буллинга (насмешки, издевательства, байкот): развитие навыков выхода из конфликтной ситуации'
+                title: 'Проведение коррекционной работы с обучающимся, направленной на устранение буллинга (насмешки, издевательства, байкот): развитие навыков выхода из конфликтной ситуации'
             },
             {
                 title: 'Расширение конструктивных способов взаимодействия с окружающими'
@@ -3156,7 +3962,7 @@ export const psychologicalHealthOptions: {
                 title: 'Проведение индивидуальных тренингов, ориентированных на раскрытие положительных сторон личности обучающегося'
             },
             {
-                title: 'Организация работы с педагогами по оптимизации межличностных отношений в классе  через развитие  коммуникативной культуры, навыков общения и сотрудничества, эмпатийных способностей членов группы, толерантности'
+                title: 'Организация работы с педагогами по оптимизации межличностных отношений в классе через развитие коммуникативной культуры, навыков общения и сотрудничества, эмпатийных способностей членов группы, толерантности'
             },
             {
                 title: 'Консультирование родителей по вопросам формирования адекватных стратегий самореализации обучающегося в группе сверстников, умению принимать противоположную точку зрения, слушать и слышать друг друга'
@@ -3168,13 +3974,15 @@ export const psychologicalHealthOptions: {
         title: 'Избегает',
         healthZone: HealthZone.GREEN,
         educationType: EducationType.MIDDLE,
-        psychologicalType: PsychologicalType.CONFLICTUALITY
+        psychologicalType: PsychologicalType.CONFLICTUALITY,
+        selectionType: SelectionType.SINGLE
     },
     {
         title: 'Эпизодически участвует',
         healthZone: HealthZone.YELLOW,
         educationType: EducationType.MIDDLE,
         psychologicalType: PsychologicalType.CONFLICTUALITY,
+        selectionType: SelectionType.SINGLE,
         recommendations: [
             {
                 title: 'Проведение углубленной диагностики и определение стратегии дальнейших профилактических мероприятий'
@@ -3201,6 +4009,7 @@ export const psychologicalHealthOptions: {
         healthZone: HealthZone.RED,
         educationType: EducationType.MIDDLE,
         psychologicalType: PsychologicalType.CONFLICTUALITY,
+        selectionType: SelectionType.SINGLE,
         recommendations: [
             {
                 title: 'Проведение углубленной диагностики и определение стратегии дальнейших коррекционно-развивающих мероприятий'
@@ -3228,114 +4037,307 @@ export const psychologicalHealthOptions: {
 ]
 
 export const conclusions: {
-    title: string
+    summary: string
     conclusionType: ConclusionType
     healthZone: HealthZone
-    recommendations?: ConclusionRecommendation[]
+    recommendations?: { title: string }[]
 }[] = [
     {
-        title: 'Нет ограничений по здоровью',
+        summary: 'Нет ограничений по здоровью',
         conclusionType: ConclusionType.MEDICAL,
-        healthZone: HealthZone.GREEN
+        healthZone: HealthZone.GREEN,
+        recommendations: [
+            {
+                title: 'Рациональная физическая нагрузка и исполнение требований гигиенических нормативов'
+            },
+            {
+                title: 'Регулярные занятия физической культурой и соблюдение режима дня'
+            },
+            {
+                title: 'Прогулки на свежем воздухе и закаливание'
+            },
+            {
+                title: 'Полноценное и сбалансированное питание'
+            },
+            {
+                title: 'Проведение профилактических бесед о пагубном воздействии вредных привычек на здоровье человека'
+            }
+        ]
     },
     {
-        title: 'Подвержен риску развития частых/хронических заболеваний, обладает пониженным иммунитетом/проблемной наследственностью',
+        summary:
+            'Подвержен риску развития частых/хронических заболеваний, обладает пониженным иммунитетом/проблемной наследственностью',
         conclusionType: ConclusionType.MEDICAL,
-        healthZone: HealthZone.YELLOW
+        healthZone: HealthZone.YELLOW,
+        recommendations: [
+            {
+                title: 'Рациональная физическая нагрузка и исполнение требований гигиенических нормативов'
+            },
+            {
+                title: 'Регулярные занятия физической культурой и соблюдение режима дня'
+            },
+            {
+                title: 'Прогулки на свежем воздухе и закаливание'
+            },
+            {
+                title: 'Полноценное и сбалансированное питание'
+            },
+            {
+                title: 'Проведение профилактических бесед о пагубном воздействии вредных привычек на здоровье человека'
+            }
+        ]
     },
     {
-        title: 'Наблюдается значительное ухудшение здоровья, нарушение функционирования некоторых органов и систем',
+        summary:
+            'Наблюдается значительное ухудшение здоровья, нарушение функционирования некоторых органов и систем\nСниженная сопротивляемость организма\nТребуется лечение/реабилитация',
         conclusionType: ConclusionType.MEDICAL,
-        healthZone: HealthZone.RED
-    },
-    {
-        title: 'Сниженная сопротивляемость организма',
-        conclusionType: ConclusionType.MEDICAL,
-        healthZone: HealthZone.RED
-    },
-    {
-        title: 'Требуется лечение/реабилитация',
-        conclusionType: ConclusionType.MEDICAL,
-        healthZone: HealthZone.RED
+        healthZone: HealthZone.RED,
+        recommendations: [
+            {
+                title: 'Рациональная физическая нагрузка и исполнение требований гигиенических нормативов'
+            },
+            {
+                title: 'Регулярные занятия физической культурой и соблюдение режима дня'
+            },
+            {
+                title: 'Прогулки на свежем воздухе и закаливание'
+            },
+            {
+                title: 'Полноценное и сбалансированное питание'
+            },
+            {
+                title: 'Проведение профилактических бесед о пагубном воздействии вредных привычек на здоровье человека'
+            },
+            {
+                title: 'Направление на ПМПК для решения вопроса о создании специальных образовательных условий'
+            }
+        ]
     },
 
     {
-        title: 'Нет особенностей по педагогическим показателям',
+        summary: 'Нет особенностей по педагогическим показателям',
         conclusionType: ConclusionType.PEDAGOGUE,
-        healthZone: HealthZone.GREEN
+        healthZone: HealthZone.GREEN,
+        recommendations: [
+            {
+                title: 'Использование дифференцированного подхода в обучении с учетом типа высшей нервной деятельности'
+            }
+        ]
     },
     {
-        title: 'Наличие риска по педагогическим показателям',
+        summary: 'Наличие риска по педагогическим показателям',
         conclusionType: ConclusionType.PEDAGOGUE,
-        healthZone: HealthZone.YELLOW
+        healthZone: HealthZone.YELLOW,
+        recommendations: [
+            {
+                title: 'Использование дифференцированного подхода в обучении с учетом типа высшей нервной деятельности и психофизического здоровья обучающегося'
+            }
+        ]
     },
     {
-        title: 'Выявлены нарушения по педагогическим показателям',
+        summary: 'Выявлены нарушения по педагогическим показателям',
         conclusionType: ConclusionType.PEDAGOGUE,
-        healthZone: HealthZone.RED
+        healthZone: HealthZone.RED,
+        recommendations: [
+            {
+                title: 'Организация процесса обучения с учетом типа высшей нервной деятельности и психофизического здоровья обучающегося'
+            },
+            {
+                title: 'Создание специальных образовательных условий'
+            }
+        ]
     },
 
     {
-        title: 'Отсутствие речевых нарушений',
+        summary: 'Отсутствие речевых нарушений',
         conclusionType: ConclusionType.SPEECH,
-        healthZone: HealthZone.GREEN
+        healthZone: HealthZone.GREEN,
+        recommendations: [
+            {
+                title: 'Консультирование учителем-логопедом и проведение логопедического обследования при возникновении трудностей чтения или письма'
+            }
+        ]
     },
     {
-        title: 'Наличие риска по логопедическим показателям',
+        summary: 'Наличие риска по логопедическим показателям',
         conclusionType: ConclusionType.SPEECH,
-        healthZone: HealthZone.YELLOW
+        healthZone: HealthZone.YELLOW,
+        recommendations: [
+            {
+                title: 'Консультирование учителем-логопедом и проведение логопедического обследования при возникновении трудностей чтения или письма'
+            }
+        ]
     },
     {
-        title: 'Нарушения речевого развития',
+        summary: 'Нарушения речевого развития',
         conclusionType: ConclusionType.SPEECH,
-        healthZone: HealthZone.RED
+        healthZone: HealthZone.RED,
+        recommendations: [
+            {
+                title: 'Обязательное проведение логопедических занятий'
+            },
+            {
+                title: 'Направленных на коррекцию нарушенных компонентов речевой системы'
+            },
+            {
+                title: 'Использование дифференцированного подхода по профилактике/устранению нарушений устной и письменной речи'
+            }
+        ]
     },
 
     {
-        title: 'Основная группа для занятий физической культурой',
+        summary: 'Основная группа для занятий физической культурой',
         conclusionType: ConclusionType.PHYSICAL,
-        healthZone: HealthZone.GREEN
+        healthZone: HealthZone.GREEN,
+        recommendations: [
+            {
+                title: 'Проведение занятий физической культурой и спортом в полном объёме по учебной программе без ограничений с учетом возраста, индивидуальных особенностей, выполнение всех контрольных нормативов с учетом рекомендаций'
+            },
+            {
+                title: 'Дополнительные занятия, посещение спортивных секций, участие в олимпиадах, соревнования, физкультурно-оздоровительных мероприятиях'
+            },
+            {
+                title: 'Подготовка и сдача нормативов ГТО'
+            },
+            {
+                title: 'Обеспечение рационального режима дня, закаливания, соблюдения гигиенических норм'
+            }
+        ]
     },
     {
-        title: 'Подготовительная группа для занятий физической культурой',
+        summary: 'Подготовительная группа для занятий физической культурой',
         conclusionType: ConclusionType.PHYSICAL,
-        healthZone: HealthZone.YELLOW
+        healthZone: HealthZone.YELLOW,
+        recommendations: [
+            {
+                title: 'Проведение занятий по физической культуре в соответствии с медицинской группой'
+            },
+            {
+                title: 'Обеспечение рационального режима дня, закаливания, соблюдения гигиенических норм'
+            },
+            {
+                title: 'Обучение навыкам здорового образа жизни'
+            }
+        ]
     },
     {
-        title: 'Специальная группа для занятий физической культурой',
+        summary: 'Специальная группа для занятий физической культурой',
         conclusionType: ConclusionType.PHYSICAL,
-        healthZone: HealthZone.RED
+        healthZone: HealthZone.RED,
+        recommendations: [
+            {
+                title: 'Обучение навыкам здорового образа жизни, воспитание сознательного и активного отношения к ценности здоровья'
+            },
+            {
+                title: 'Приучение к дисциплине и организованности'
+            },
+            {
+                title: 'Организация занятий по адаптивной физической культуре'
+            },
+            {
+                title: 'Обеспечение рационального режима дня, закаливания, соблюдения гигиенических норм'
+            },
+            {
+                title: 'Развитие интереса к регулярным занятиям физической культурой'
+            }
+        ]
     },
 
     {
-        title: 'Нет ограничений по психологическому здоровью',
+        summary: 'Нет ограничений по психологическому здоровью',
         conclusionType: ConclusionType.PSYCHOLOGICAL,
-        healthZone: HealthZone.GREEN
+        healthZone: HealthZone.GREEN,
+        recommendations: [
+            {
+                title: 'Учет способностей обучающегося'
+            },
+            {
+                title: 'Развитие выявленных склонностей с опорой на лидерские качества'
+            },
+            {
+                title: 'Поддержание ситуации успеха'
+            }
+        ]
     },
     {
-        title: 'Наличие риска по показателям психологического здоровья',
+        summary: 'Наличие риска по показателям психологического здоровья',
         conclusionType: ConclusionType.PSYCHOLOGICAL,
-        healthZone: HealthZone.YELLOW
+        healthZone: HealthZone.YELLOW,
+        recommendations: [
+            {
+                title: 'Учет способностей обучающегося, зоны его актуального и ближайшего развития'
+            },
+            {
+                title: 'Поддержание ситуации успеха'
+            }
+        ]
     },
     {
-        title: 'Наблюдается значительное ухудшение показателей психологического здоровья',
+        summary: 'Наблюдается значительное ухудшение показателей психологического здоровья',
         conclusionType: ConclusionType.PSYCHOLOGICAL,
-        healthZone: HealthZone.RED
+        healthZone: HealthZone.RED,
+        recommendations: [
+            {
+                title: 'Учет способностей обучающегося, зоны его актуального и ближайшего развития'
+            },
+            {
+                title: 'Поддержание ситуации успеха'
+            },
+            {
+                title: 'Опора на выявленные склонности к различным видам деятельности'
+            }
+        ]
     },
 
     {
-        title: 'Нет ограничений по социальному здоровью',
+        summary: 'Нет ограничений по социальному здоровью',
         conclusionType: ConclusionType.SOCIAL,
-        healthZone: HealthZone.GREEN
+        healthZone: HealthZone.GREEN,
+        recommendations: [
+            {
+                title: 'Формирование здорового образа жизни'
+            },
+            {
+                title: 'Проведение профилактических и просветительских мероприятий'
+            },
+            {
+                title: 'Консультирование семьи и обучающегося (по запросу)'
+            }
+        ]
     },
     {
-        title: 'Группа риска по показателям социального здоровья',
+        summary: 'Группа риска по показателям социального здоровья',
         conclusionType: ConclusionType.SOCIAL,
-        healthZone: HealthZone.YELLOW
+        healthZone: HealthZone.YELLOW,
+        recommendations: [
+            {
+                title: 'Формирование здорового образа жизни'
+            },
+            {
+                title: 'Проведение профилактических и просветительских мероприятий'
+            },
+            {
+                title: 'Консультирование семьи и обучающегося (по запросу)'
+            }
+        ]
     },
     {
-        title: 'Наблюдаются значительные ухудшения по показателям социального здоровья',
+        summary: 'Наблюдаются значительные ухудшения по показателям социального здоровья',
         conclusionType: ConclusionType.SOCIAL,
-        healthZone: HealthZone.RED
+        healthZone: HealthZone.RED,
+        recommendations: [
+            {
+                title: 'Формирование здорового образа жизни'
+            },
+            {
+                title: 'Междисциплинарное взаимодействие с педагогами образовательной организации'
+            },
+            {
+                title: 'Проведение профилактических и просветительских мероприятий'
+            },
+            {
+                title: 'Консультирование семьи и обучающегося (по запросу)'
+            }
+        ]
     }
 ]

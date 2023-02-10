@@ -4,9 +4,8 @@ import {
     municipality,
     educationalOrganization,
     usersData,
-    socialHealthIndicators,
-    physicalHealthRecommendations,
-    socialHealthRecommendations,
+    socialHealthOptions,
+    physicalHealthOptions,
     medicalHealthOptions,
     pedagogueHealthOptions,
     psychologicalHealthOptions,
@@ -78,37 +77,40 @@ async function main() {
         console.log('Базовые пользователи для работы с системой уже созданы')
     }
 
-    const socialHealthIndicatorsCount = await prisma.socialHealthIndicator.count()
-    if (socialHealthIndicatorsCount === 0) {
-        await prisma.socialHealthIndicator.createMany({
-            data: socialHealthIndicators
-        })
+    const socialHealthOptionsCount = await prisma.socialHealthOption.count()
+    if (socialHealthOptionsCount === 0) {
+        for (const option of socialHealthOptions) {
+            await prisma.socialHealthOption.create({
+                data: {
+                    ...option,
+                    recommendations: {
+                        create: option.recommendations
+                    }
+                }
+            })
+        }
 
-        console.log(`Создано ${socialHealthIndicators.length} индикаторов социального здоровья`)
+        console.log(`Создано ${socialHealthOptions.length} опций социального здоровья`)
     } else {
-        console.log(`В БД уже хранится ${socialHealthIndicatorsCount} социальных индикаторов здоровья`)
+        console.log(`В БД уже хранится ${socialHealthOptionsCount} опций социального здоровья`)
     }
 
-    const physicalHealthRecommendationsCount = await prisma.physicalHealthRecommendation.count()
-    if (physicalHealthRecommendationsCount === 0) {
-        await prisma.physicalHealthRecommendation.createMany({
-            data: physicalHealthRecommendations
-        })
+    const physicalHealthOptionsCount = await prisma.physicalHealthOption.count()
+    if (physicalHealthOptionsCount === 0) {
+        for (const option of physicalHealthOptions) {
+            await prisma.physicalHealthOption.create({
+                data: {
+                    ...option,
+                    recommendations: {
+                        create: option.recommendations
+                    }
+                }
+            })
+        }
 
-        console.log(`Создано ${physicalHealthRecommendations.length} рекомендаций по физическому здоровью`)
+        console.log(`Создано ${physicalHealthOptions.length} рекомендаций по физическому здоровью`)
     } else {
-        console.log(`В БД уже хранится ${physicalHealthRecommendationsCount} рекомендаций по физическому здоровью`)
-    }
-
-    const socialHealthRecommendationsCount = await prisma.socialHealthRecommendation.count()
-    if (socialHealthRecommendationsCount === 0) {
-        await prisma.socialHealthRecommendation.createMany({
-            data: socialHealthRecommendations
-        })
-
-        console.log(`Создано ${socialHealthRecommendations.length} рекомендаций по социальному здоровью`)
-    } else {
-        console.log(`В БД уже хранится ${socialHealthRecommendationsCount} рекомендаций по социальному здоровью`)
+        console.log(`В БД уже хранится ${physicalHealthOptionsCount} рекомендаций по физическому здоровью`)
     }
 
     const medicalHealthOptionsCount = await prisma.medicalHealthOption.count()
@@ -167,13 +169,20 @@ async function main() {
 
     const conclusionsCount = await prisma.conclusion.count()
     if (conclusionsCount === 0) {
-        await prisma.conclusion.createMany({
-            data: conclusions
-        })
+        for (const conclusion of conclusions) {
+            await prisma.conclusion.create({
+                data: {
+                    ...conclusion,
+                    recommendations: {
+                        create: conclusion.recommendations
+                    }
+                }
+            })
+        }
 
-        console.log(`Создано ${conclusions.length} медицинских заключений`)
+        console.log(`Создано ${conclusions.length} заключений`)
     } else {
-        console.log(`В БД уже хранится ${conclusionsCount} медицинских заключений`)
+        console.log(`В БД уже хранится ${conclusionsCount} заключений`)
     }
 }
 
