@@ -24,7 +24,7 @@ export const usePhysicalHealthStore = defineStore('physical', () => {
     )
 
     const typeTitles: { [key in PhysicalType]: string } = {
-        FUNCTIONAL_INDICATORS: 'Медицинская группа для занятий физической культурой',
+        FUNCTIONAL_INDICATORS: 'Функциональные показатели',
         PHYSICAL_DEVELOPMENT: 'Физическое развитие',
         PHYSICAL_TRAINING: 'Физическая подготовка'
     }
