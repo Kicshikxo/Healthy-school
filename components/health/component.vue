@@ -79,9 +79,9 @@ const emit = defineEmits<{
 
 const toast = useToast()
 
-const enableEditing = ref<boolean>(false)
-
+const enableEditing = ref(false)
 const innerLoading = ref(false)
+
 const isLoading = computed(() => props.loading || innerLoading.value)
 
 async function startEditing() {
