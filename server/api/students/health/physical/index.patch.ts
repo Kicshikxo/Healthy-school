@@ -1,4 +1,4 @@
-import { PhysicalHealth, PhysicalHealthRecommendation, PrismaClient, Role } from '@prisma/client'
+import { PhysicalHealth, PhysicalHealthOption, PrismaClient, Role } from '@prisma/client'
 import checkRole from '~~/server/utils/checkRole'
 
 const prisma = new PrismaClient()
@@ -6,7 +6,7 @@ const prisma = new PrismaClient()
 export default defineEventHandler(async (event) => {
     if (!checkRole(event, { role: Role.PHYSICAL_EDUCATION_TEACHER })) return
 
-    const body: PhysicalHealth & { recommendations: PhysicalHealthRecommendation[] } = await readBody(event)
+    const body: PhysicalHealth & { options: PhysicalHealthOption[] } = await readBody(event)
 
     return prisma.physicalHealth.upsert({
         where: {
@@ -17,10 +17,9 @@ export default defineEventHandler(async (event) => {
         },
         update: {
             healthGroup: body.healthGroup,
-            recommendations: {
-                set: body.recommendations.map((recommendation) => ({ id: recommendation.id }))
-            },
-            specialistNotes: body.specialistNotes
+            options: {
+                set: body.options.map((recommendation) => ({ id: recommendation.id }))
+            }
         }
     })
 })
