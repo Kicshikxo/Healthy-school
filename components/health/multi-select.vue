@@ -13,12 +13,14 @@
     >
         <template #chip="{ value }">
             <health-zone-indicator
+                v-if="value"
                 :health-zone="indicator ? value.healthZone : undefined"
                 :label="optionLabel ? value[optionLabel] : value"
             />
         </template>
         <template #option="{ option }">
             <health-zone-indicator
+                v-if="option"
                 :health-zone="indicator ? option.healthZone : undefined"
                 :label="optionLabel ? option[optionLabel] : option"
             />
