@@ -40,6 +40,11 @@
     padding-top: 0 !important;
 }
 
+/* p-card-title removing margins */
+.p-card.p-card-title-mb-0 .p-card-title {
+    margin-bottom: 0 !important;
+}
+
 /* health-component-body border joining */
 .p-card.health-component-body:not(:last-child) {
     border-bottom-left-radius: 0;
@@ -69,7 +74,9 @@
 
 /* Enabling wrap in p-multiselect */
 .p-multiselect-item,
-.p-multiselect-label {
+.p-dropdown-item,
+.p-multiselect-label,
+.p-dropdown-label {
     white-space: normal !important;
 }
 .p-multiselect-token {
@@ -130,6 +137,9 @@
 }
 
 /* Colores p-checkboxes */
+.field-checkbox:last-child {
+    margin-bottom: 0;
+}
 .p-checkbox.p-checkbox-green .p-checkbox-box.p-highlight,
 .p-checkbox.p-checkbox-green .p-checkbox-box.p-highlight:hover {
     border-color: var(--green-500);
