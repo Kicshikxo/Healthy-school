@@ -18,7 +18,18 @@
                                 <health-dropdown
                                     :disabled="!enableEditing || loading"
                                     :loading="loading"
-                                    :options="medicalHealth.typedOptions[type]"
+                                    :options="
+                                        medicalHealth.typedOptions[type]
+                                            .filter(
+                                                (option) =>
+                                                    option.medicalType === MedicalType.HEALTH_GROUP ||
+                                                    healthZones.indexOf(option.healthZone) <=
+                                                        healthZones.indexOf(student.current.medical.healthZone)
+                                            )
+                                            .sort(
+                                                (a, b) => healthZones.indexOf(a.healthZone) - healthZones.indexOf(b.healthZone)
+                                            )
+                                    "
                                     :placeholder="title"
                                     option-label="title"
                                     v-model="student.current.medical.options.SINGLE[type]"
@@ -87,13 +98,25 @@ const hasChanges = computed(
         JSON.stringify(student.current.medical.specialistNotes) !== JSON.stringify(student.medical.specialistNotes)
 )
 
+const healthZones: HealthZone[] = [HealthZone.GREEN, HealthZone.YELLOW, HealthZone.RED]
+
+const optionsTypes = ref<MedicalType[]>([
+    MedicalType.HEALTH_GROUP,
+    MedicalType.DISABILITY,
+    MedicalType.MORBIDITY,
+    MedicalType.BALANCED_DIET,
+    MedicalType.CHRONIC_DISEASES
+])
+
 const singleOptions = computed<{ title: string; type: MedicalType }[]>(() =>
-    medicalHealth.selectionTypes.SINGLE.filter(
-        (type) =>
-            (type !== MedicalType.HEALTH_GROUP &&
-                student.current.medical.options.SINGLE.HEALTH_GROUP?.healthZone !== HealthZone.GREEN) ||
-            type === MedicalType.HEALTH_GROUP
-    ).map((type) => ({ title: medicalHealth.typeTitles[type], type }))
+    optionsTypes.value
+        .filter(
+            (type) =>
+                (type !== MedicalType.HEALTH_GROUP &&
+                    student.current.medical.options.SINGLE.HEALTH_GROUP?.healthZone !== HealthZone.GREEN) ||
+                type === MedicalType.HEALTH_GROUP
+        )
+        .map((type) => ({ title: medicalHealth.typeTitles[type], type }))
 )
 
 const checkboxOptions = computed<{ title: string; type: MedicalType }[]>(() =>
