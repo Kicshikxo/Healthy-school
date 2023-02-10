@@ -15,20 +15,21 @@
                 :class="$route.path == path ? 'text-primary-50' : 'text-primary-200 hover:text-primary-100'"
                 class="no-underline"
             >
-                {{ $router.resolve({ path }).meta.title ?? $route.path }}
+                {{
+                    breadcrumbsStore.titles[$router.resolve({ path }).meta.breadcrumb as string] ??
+                    $router.resolve({ path }).meta.title ??
+                    $route.path
+                }}
             </nuxt-link>
         </div>
     </nav>
 </template>
 
 <script setup lang="ts">
-const route = useRoute()
+import { useBreadcrumbsStore } from '~~/store/breadcrumbs'
 
-const breadcrumbs = computed(() => [
-    '/',
-    ...route.path
-        .split('/')
-        .filter((_) => _)
-        .reduce((acc, path, index, paths) => acc.concat(`/${paths.slice(0, index + 1).join('/')}`), [] as string[])
-])
+const route = useRoute()
+const breadcrumbsStore = useBreadcrumbsStore()
+
+const breadcrumbs = computed(() => breadcrumbsStore.parsePath(route.path))
 </script>

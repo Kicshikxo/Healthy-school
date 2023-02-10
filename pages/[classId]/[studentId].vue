@@ -97,9 +97,11 @@ import html2canvas from 'html2canvas'
 import shortUUID from 'short-uuid'
 import { Gender } from '@prisma/client'
 import { useStudentStore } from '~~/store/student'
+import { useClassStore } from '~~/store/class'
 
 definePageMeta({
-    title: `Информация по учащемуся`
+    title: `Информация по учащемуся`,
+    breadcrumb: `student`
 })
 
 const toast = useToast()
@@ -109,8 +111,11 @@ const router = useRouter()
 const studentPage = ref<HTMLElement>()
 const translator = shortUUID()
 
-const student = useStudentStore(translator.toUUID(route.params.studentId as string))
+const student = useStudentStore()
+const currentClass = useClassStore()
+
 student.setId(translator.toUUID(route.params.studentId as string))
+currentClass.setId(translator.toUUID(route.params.classId as string))
 
 const genderLocalization: { [key in Gender]: string } = {
     MALE: 'Мужской',

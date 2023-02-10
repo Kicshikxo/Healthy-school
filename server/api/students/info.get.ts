@@ -9,7 +9,7 @@ export default defineEventHandler(async (event) => {
 
     const query = getQuery(event) as { studentId: string }
 
-    const data = await prisma.student.findFirst({
+    return await prisma.student.findFirst({
         where: {
             AND: [{ id: query.studentId }, { class: { organizationId: tokenData.organizationId } }]
         },
@@ -45,5 +45,4 @@ export default defineEventHandler(async (event) => {
             }
         }
     })
-    return data
 })

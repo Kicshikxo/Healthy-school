@@ -105,10 +105,12 @@
 
 <script setup lang="ts">
 import { Gender, Student } from '@prisma/client'
+import { useClassStore } from '~~/store/class'
 import shortUUID from 'short-uuid'
 
 definePageMeta({
-    title: 'Список учащихся'
+    title: 'Список учащихся',
+    breadcrumb: 'class'
 })
 
 const route = useRoute()
@@ -116,6 +118,9 @@ const route = useRoute()
 const newStudent = ref<Student>({} as Student)
 const showDialog = ref(false)
 const translator = shortUUID()
+
+const currentClass = useClassStore()
+currentClass.setId(translator.toUUID(route.params.classId as string))
 
 const genderLocalization: { [key in Gender]: string } = {
     MALE: 'Мужской',
@@ -128,7 +133,7 @@ async function addStudent() {
         body: {
             studentData: {
                 ...newStudent.value,
-                classId: translator.toUUID(route.params.classId as string)
+                classId: currentClass.id
             }
         }
     })
@@ -146,7 +151,7 @@ const {
 } = useFetch('/api/students/list', {
     headers: useRequestHeaders() as HeadersInit,
     query: {
-        classId: translator.toUUID(route.params.classId as string)
+        classId: currentClass.id
     }
 })
 </script>
