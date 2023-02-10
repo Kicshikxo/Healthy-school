@@ -2,8 +2,9 @@
     <p-card
         class="health-component-body border-1 surface-border shadow-none"
         :class="{
-            'p-card-content-pb-0': !paddingBottom,
-            'p-card-content-pt-0': !paddingTop
+            'p-card-content-pb-0': !contentPaddingBottom,
+            'p-card-content-pt-0': !contentPaddingTop,
+            'p-card-title-mb-0': !titleMarginBottom
         }"
     >
         <template v-if="$slots.title" #title> <slot name="title"></slot> </template>
@@ -15,12 +16,14 @@
 <script setup lang="ts">
 withDefaults(
     defineProps<{
-        paddingBottom?: boolean
-        paddingTop?: boolean
+        contentPaddingBottom?: boolean
+        contentPaddingTop?: boolean
+        titleMarginBottom?: boolean
     }>(),
     {
-        paddingBottom: false,
-        paddingTop: true
+        contentPaddingBottom: false,
+        contentPaddingTop: true,
+        titleMarginBottom: true
     }
 )
 </script>
