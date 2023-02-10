@@ -4,6 +4,6 @@ const prisma = new PrismaClient()
 
 export default defineEventHandler(async (event) => {
     return await prisma.medicalHealthOption.findMany({
-        orderBy: [{ healthZone: 'asc' }, { title: 'asc' }]
+        orderBy: [{ medicalType: 'asc' }, { healthZone: 'asc' }, { title: 'asc' }]
     })
 })

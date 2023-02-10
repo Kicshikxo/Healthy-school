@@ -7,6 +7,6 @@ export default defineEventHandler(async (event) => {
         include: {
             recommendations: true
         },
-        orderBy: [{ healthZone: 'asc' }, { title: 'asc' }]
+        orderBy: [{ medicalType: 'asc' }, { healthZone: 'asc' }, { title: 'asc' }]
     })
 })
