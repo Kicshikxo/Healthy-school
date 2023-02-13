@@ -51,11 +51,6 @@
                     {{ new Date(data.birthdate).toLocaleDateString() }}
                 </template>
             </p-column>
-            <p-column field="class" header="Класс">
-                <template #body="{ data }">
-                    {{ data.class.number + data.class.liter }}
-                </template>
-            </p-column>
         </p-data-table>
 
         <p-dialog :modal="true" v-model:visible="showDialog" header="Добавить учащегося" class="p-fluid">
