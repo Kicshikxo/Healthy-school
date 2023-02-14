@@ -1,7 +1,7 @@
 <template>
     <health-component
         :loading="student.loading"
-        :allow-save="hasChanges"
+        :allow-save="true"
         :on-cancel="student.refresh"
         :on-save="student.current.psychological.save"
     >
