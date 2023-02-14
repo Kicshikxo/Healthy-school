@@ -301,10 +301,10 @@ export const useStudentStore = defineStore('student', () => {
     // Current psychological data
     const currentPsychologicalOptions = ref(useCloneDeep(psychologicalOptions.value))
     const currentPsychologicalSpecialistNotes = ref(useCloneDeep(psychologicalSpecialistNotes.value))
-    watch(psychologicalOptions, (value) => (currentPsychologicalOptions.value = value), {
+    watch(psychologicalOptions, (value) => (currentPsychologicalOptions.value = useCloneDeep(value)), {
         flush: 'sync'
     })
-    watch(psychologicalSpecialistNotes, (value) => (currentPsychologicalSpecialistNotes.value = value), {
+    watch(psychologicalSpecialistNotes, (value) => (currentPsychologicalSpecialistNotes.value = useCloneDeep(value)), {
         flush: 'sync'
     })
     const currentPsychologicalHealthZone = computed(() =>
