@@ -81,6 +81,7 @@ model MedicalHealth {
     student         Student               @relation(fields: [studentId], references: [id], onUpdate: Cascade, onDelete: Cascade)
     specialistNotes String?               @map("specialist_notes")
     options         MedicalHealthOption[] @relation(name: "student_medical_health_options")
+    logs            MedicalHealthLog[]
 
     @@map("student_medical_health")
 }
@@ -93,8 +94,20 @@ model MedicalHealthOption {
     selectionType   SelectionType                       @map("selection_type")
     medicalHealth   MedicalHealth[]                     @relation(name: "student_medical_health_options")
     recommendations MedicalHealthOptionRecommendation[]
+    logs            MedicalHealthLog[]
 
     @@map("medical_health_options")
+}
+
+model MedicalHealthLog {
+    id              Int                 @id(map: "student_medical_health_logs_pkey") @default(autoincrement()) @map("log_id")
+    medicalHealth   MedicalHealth?      @relation(fields: [medicalHealthId], references: [studentId], onUpdate: Cascade, onDelete: Cascade)
+    medicalHealthId String?             @map("medical_health_id") @db.Uuid
+    option          MedicalHealthOption @relation(fields: [optionId], references: [id], onUpdate: Cascade, onDelete: Cascade)
+    optionId        Int                 @map("option_id")
+    createdAt       DateTime            @default(now()) @map("created_at")
+
+    @@map("student_medical_health_logs")
 }
 
 model MedicalHealthOptionRecommendation {
@@ -110,6 +123,7 @@ model PedagogueHealth {
     studentId String                  @id(map: "pedagogue_health_pkey") @map("student_id") @db.Uuid
     student   Student                 @relation(fields: [studentId], references: [id], onUpdate: Cascade, onDelete: Cascade)
     options   PedagogueHealthOption[] @relation(name: "student_pedagogue_health_options")
+    logs      PedagogueHealthLog[]
 
     @@map("student_pedagogue_health")
 }
@@ -123,8 +137,20 @@ model PedagogueHealthOption {
     selectionType   SelectionType                         @map("selection_type")
     pedagogueHealth PedagogueHealth[]                     @relation(name: "student_pedagogue_health_options")
     recommendations PedagogueHealthOptionRecommendation[]
+    logs            PedagogueHealthLog[]
 
     @@map("pedagogue_health_options")
+}
+
+model PedagogueHealthLog {
+    id                Int                   @id(map: "student_pedagogue_health_logs_pkey") @default(autoincrement()) @map("log_id")
+    pedagogueHealth   PedagogueHealth?      @relation(fields: [pedagogueHealthId], references: [studentId], onUpdate: Cascade, onDelete: Cascade)
+    pedagogueHealthId String?               @map("pedagogue_health_id") @db.Uuid
+    option            PedagogueHealthOption @relation(fields: [optionId], references: [id], onUpdate: Cascade, onDelete: Cascade)
+    optionId          Int                   @map("option_id")
+    createdAt         DateTime              @default(now()) @map("created_at")
+
+    @@map("student_pedagogue_health_logs")
 }
 
 model PedagogueHealthOptionRecommendation {
@@ -141,6 +167,7 @@ model PhysicalHealth {
     student     Student                @relation(fields: [studentId], references: [id], onUpdate: Cascade, onDelete: Cascade)
     healthGroup HealthGroup            @default(BASIC) @map("health_group")
     options     PhysicalHealthOption[] @relation(name: "student_physical_health_options")
+    logs        PhysicalHealthLog[]
 
     @@map("student_physical_health")
 }
@@ -154,8 +181,20 @@ model PhysicalHealthOption {
     selectionType   SelectionType                         @map("selection_type")
     physicalHealth  PhysicalHealth[]                      @relation(name: "student_physical_health_options")
     recommendations PhysicallHealthOptionRecommendation[]
+    logs            PhysicalHealthLog[]
 
     @@map("physical_health_options")
+}
+
+model PhysicalHealthLog {
+    id               Int                  @id(map: "student_physical_health_logs_pkey") @default(autoincrement()) @map("log_id")
+    physicalHealth   PhysicalHealth?      @relation(fields: [physicalHealthId], references: [studentId], onUpdate: Cascade, onDelete: Cascade)
+    physicalHealthId String?              @map("physical_health_id") @db.Uuid
+    option           PhysicalHealthOption @relation(fields: [optionId], references: [id], onUpdate: Cascade, onDelete: Cascade)
+    optionId         Int                  @map("option_id")
+    createdAt        DateTime             @default(now()) @map("created_at")
+
+    @@map("student_physical_health_logs")
 }
 
 model PhysicallHealthOptionRecommendation {
@@ -172,6 +211,7 @@ model PsychologicalHealth {
     student         Student                     @relation(fields: [studentId], references: [id], onUpdate: Cascade, onDelete: Cascade)
     specialistNotes String?                     @map("specialist_notes")
     options         PsychologicalHealthOption[] @relation(name: "student_psychological_health_options")
+    logs            PsychologicalHealthLog[]
 
     @@map("student_psychological_health")
 }
@@ -185,8 +225,20 @@ model PsychologicalHealthOption {
     selectionType       SelectionType                             @map("selection_type")
     psychologicalHealth PsychologicalHealth[]                     @relation(name: "student_psychological_health_options")
     recommendations     PsychologicalHealthOptionRecommendation[]
+    logs                PsychologicalHealthLog[]
 
     @@map("psychological_health_options")
+}
+
+model PsychologicalHealthLog {
+    id                    Int                       @id(map: "student_psychological_health_logs_pkey") @default(autoincrement()) @map("log_id")
+    psychologicalHealth   PsychologicalHealth?      @relation(fields: [psychologicalHealthId], references: [studentId], onUpdate: Cascade, onDelete: Cascade)
+    psychologicalHealthId String?                   @map("psychological_health_id") @db.Uuid
+    option                PsychologicalHealthOption @relation(fields: [optionId], references: [id], onUpdate: Cascade, onDelete: Cascade)
+    optionId              Int                       @map("option_id")
+    createdAt             DateTime                  @default(now()) @map("created_at")
+
+    @@map("student_psychological_health_logs")
 }
 
 model PsychologicalHealthOptionRecommendation {
@@ -202,6 +254,7 @@ model SocialHealth {
     studentId String               @id(map: "student_social_health_pkey") @map("student_id") @db.Uuid
     student   Student              @relation(fields: [studentId], references: [id], onUpdate: Cascade, onDelete: Cascade)
     options   SocialHealthOption[] @relation(name: "student_social_health_options")
+    logs      SocialHealthLog[]
 
     @@map("student_social_health")
 }
@@ -214,8 +267,20 @@ model SocialHealthOption {
     selectionType   SelectionType                      @map("selection_type")
     socialHealth    SocialHealth[]                     @relation(name: "student_social_health_options")
     recommendations SocialHealthOptionRecommendation[]
+    logs            SocialHealthLog[]
 
     @@map("social_health_options")
+}
+
+model SocialHealthLog {
+    id             Int                @id(map: "student_social_health_logs_pkey") @default(autoincrement()) @map("log_id")
+    socialHealth   SocialHealth?      @relation(fields: [socialHealthId], references: [studentId], onUpdate: Cascade, onDelete: Cascade)
+    socialHealthId String?            @map("social_health_id") @db.Uuid
+    option         SocialHealthOption @relation(fields: [optionId], references: [id], onUpdate: Cascade, onDelete: Cascade)
+    optionId       Int                @map("option_id")
+    createdAt      DateTime           @default(now()) @map("created_at")
+
+    @@map("student_social_health_logs")
 }
 
 model SocialHealthOptionRecommendation {

@@ -8,6 +8,15 @@ export default defineEventHandler(async (event) => {
 
     const body: PhysicalHealth & { options: PhysicalHealthOption[] } = await readBody(event)
 
+    const studentOptions = await prisma.pedagogueHealth.findUnique({
+        where: {
+            studentId: body.studentId
+        },
+        select: {
+            options: true
+        }
+    })
+
     return prisma.physicalHealth.upsert({
         where: {
             studentId: body.studentId
@@ -19,6 +28,13 @@ export default defineEventHandler(async (event) => {
             healthGroup: body.healthGroup,
             options: {
                 set: body.options.map((recommendation) => ({ id: recommendation.id }))
+            },
+            logs: {
+                createMany: {
+                    data: body.options
+                        .filter((option) => !studentOptions?.options.map((option) => option.id).includes(option.id))
+                        .map((option) => ({ optionId: option.id }))
+                }
             }
         }
     })
