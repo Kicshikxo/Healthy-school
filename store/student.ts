@@ -89,16 +89,15 @@ export const useStudentStore = defineStore('student', () => {
         )
     )
     const medicalSpecialistNotes = computed(() => data.value?.medicalHealth?.specialistNotes ?? '')
-    const medicalHealthZone = computed(
-        () => medicalOptions.value.SINGLE.HEALTH_GROUP?.healthZone ?? HealthZone.GREEN
-        // Object.values(medicalOptions.value.SINGLE).reduce(
-        //     (acc, option) => healthZones[Math.max(healthZones.indexOf(acc), healthZones.indexOf(option.healthZone))],
-        //     medicalOptions.value.SINGLE.HEALTH_GROUP?.healthZone ?? HealthZone.GREEN
-        // )
-    )
+    const medicalHealthZone = computed(() => medicalOptions.value.SINGLE.HEALTH_GROUP?.healthZone ?? HealthZone.GREEN)
     // Current medical data
     const currentMedicalOptions = ref(useCloneDeep(medicalOptions.value))
     const currentMedicalSpecialistNotes = ref(useCloneDeep(medicalSpecialistNotes.value))
+    const hasMedicalChanges = computed(
+        () =>
+            !isEqual(medicalOptions.value, currentMedicalOptions.value) ||
+            !isEqual(medicalSpecialistNotes.value, currentMedicalSpecialistNotes.value)
+    )
     watch(medicalOptions, (value) => (currentMedicalOptions.value = useCloneDeep(value)), {
         flush: 'sync'
     })
@@ -107,10 +106,6 @@ export const useStudentStore = defineStore('student', () => {
     })
     const currentMedicalHealthZone = computed(
         () => currentMedicalOptions.value.SINGLE.HEALTH_GROUP?.healthZone ?? HealthZone.GREEN
-        // Object.values(currentMedicalOptions.value.SINGLE).reduce(
-        //     (acc, option) => healthZones[Math.max(healthZones.indexOf(acc), healthZones.indexOf(option.healthZone))],
-        //     currentMedicalOptions.value.SINGLE.HEALTH_GROUP?.healthZone ?? HealthZone.GREEN
-        // )
     )
     // Medical methods
     async function saveCurrentMedical() {
@@ -168,6 +163,7 @@ export const useStudentStore = defineStore('student', () => {
     )
     // Current pedagogue data
     const currentPedagogueOptions = ref(useCloneDeep(pedagogueOptions.value))
+    const hasPedagogueChanges = computed(() => !isEqual(pedagogueOptions.value, currentPedagogueOptions.value))
     watch(pedagogueOptions, (value) => (currentPedagogueOptions.value = useCloneDeep(value)), {
         flush: 'sync'
     })
@@ -218,6 +214,11 @@ export const useStudentStore = defineStore('student', () => {
     // Current physical data
     const currentPhysicalHealthGroup = ref(useCloneDeep(physicalHealthGroup.value))
     const currentPhysicalOptions = ref(useCloneDeep(physicalOptions.value))
+    const hasPhysicalChanges = computed(
+        () =>
+            !isEqual(physicalHealthGroup.value, currentPhysicalHealthGroup.value) ||
+            !isEqual(physicalHealthZone.value, currentPhysicalOptions.value)
+    )
     watch(
         currentPhysicalHealthGroup,
         () =>
@@ -289,7 +290,7 @@ export const useStudentStore = defineStore('student', () => {
                 data.value?.psychologicalHealth?.options.find((option) => option.psychologicalType === type) ??
                 educationOptions.value[type].find((option) => option.healthZone === HealthZone.GREEN)!
             return acc
-        }, {} as { [key in PsychologicalType]: PsychologicalHealthOption })
+        }, {} as { [key in PsychologicalType]?: PsychologicalHealthOption })
     })
     const psychologicalSpecialistNotes = computed(() => data.value?.psychologicalHealth?.specialistNotes ?? '')
     const psychologicalHealthZone = computed(() =>
@@ -301,6 +302,11 @@ export const useStudentStore = defineStore('student', () => {
     // Current psychological data
     const currentPsychologicalOptions = ref(useCloneDeep(psychologicalOptions.value))
     const currentPsychologicalSpecialistNotes = ref(useCloneDeep(psychologicalSpecialistNotes.value))
+    const hasPsychologicalChanges = computed(
+        () =>
+            !isEqual(psychologicalOptions.value, currentPsychologicalOptions.value) ||
+            !isEqual(psychologicalSpecialistNotes.value, currentPsychologicalSpecialistNotes.value)
+    )
     watch(psychologicalOptions, (value) => (currentPsychologicalOptions.value = useCloneDeep(value)), {
         flush: 'sync'
     })
@@ -343,6 +349,7 @@ export const useStudentStore = defineStore('student', () => {
     )
     // Current social data
     const currentSocialOptions = ref(useCloneDeep(socialOptions.value))
+    const hasSocialChanges = computed(() => !isEqual(socialOptions.value, currentSocialOptions.value))
     watch(socialOptions, (value) => (currentSocialOptions.value = value), {
         flush: 'sync'
     })
@@ -582,12 +589,14 @@ export const useStudentStore = defineStore('student', () => {
         current: {
             medical: {
                 save: saveCurrentMedical,
+                changed: hasMedicalChanges,
                 healthZone: currentMedicalHealthZone,
                 options: currentMedicalOptions,
                 specialistNotes: currentMedicalSpecialistNotes
             },
             pedagogue: {
                 save: saveCurrentPedagogue,
+                changed: hasPedagogueChanges,
                 healthZone: {
                     pedagogue: currentPedagogueHealthZone,
                     speech: currentSpeechHealthZone
@@ -596,12 +605,14 @@ export const useStudentStore = defineStore('student', () => {
             },
             physical: {
                 save: saveCurrentPhysical,
+                changed: hasPhysicalChanges,
                 healthZone: currentPhysicalHealthZone,
                 healthGroup: currentPhysicalHealthGroup,
                 options: currentPhysicalOptions
             },
             psychological: {
                 save: saveCurrentPsychological,
+                changed: hasPsychologicalChanges,
                 healthZone: currentPsychologicalHealthZone,
                 educationType: studentEducationType,
                 educationOptions: educationOptions,
@@ -610,6 +621,7 @@ export const useStudentStore = defineStore('student', () => {
             },
             social: {
                 save: saveCurrentSocial,
+                changed: hasSocialChanges,
                 healthZone: currentSocialHealthZone,
                 options: currentSocialOptions
             }

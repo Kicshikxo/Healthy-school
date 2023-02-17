@@ -1,7 +1,7 @@
 <template>
     <health-component
         :loading="student.loading"
-        :allow-save="hasChanges"
+        :allow-save="student.current.psychological.changed"
         :on-cancel="student.refresh"
         :on-save="student.current.psychological.save"
     >
@@ -52,12 +52,6 @@ import { usePsychologicalHealthStore } from '~~/store/health/psychological'
 
 const student = useStudentStore()
 const psychologicalHealth = usePsychologicalHealthStore()
-
-const hasChanges = computed(
-    () =>
-        JSON.stringify(student.current.psychological.options) !== JSON.stringify(student.psychological.options) ||
-        JSON.stringify(student.current.psychological.specialistNotes) !== JSON.stringify(student.psychological.specialistNotes)
-)
 
 const currentOptions = computed<{ title: string; type: PsychologicalType }[]>(() =>
     (student.current.psychological.educationType

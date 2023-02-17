@@ -1,7 +1,7 @@
 <template>
     <health-component
         :loading="student.loading"
-        :allow-save="hasChanges"
+        :allow-save="student.current.medical.changed"
         :on-cancel="student.refresh"
         :on-save="student.current.medical.save"
     >
@@ -91,12 +91,6 @@ import { useMedicalHealthStore } from '~~/store/health/medical'
 
 const student = useStudentStore()
 const medicalHealth = useMedicalHealthStore()
-
-const hasChanges = computed(
-    () =>
-        JSON.stringify(student.current.medical.options) !== JSON.stringify(student.medical.options) ||
-        JSON.stringify(student.current.medical.specialistNotes) !== JSON.stringify(student.medical.specialistNotes)
-)
 
 const healthZones: HealthZone[] = [HealthZone.GREEN, HealthZone.YELLOW, HealthZone.RED]
 

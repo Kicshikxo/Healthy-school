@@ -1,7 +1,7 @@
 <template>
     <health-component
         :loading="student.loading"
-        :allow-save="hasChanges"
+        :allow-save="student.current.pedagogue.changed"
         :on-cancel="student.refresh"
         :on-save="student.current.pedagogue.save"
     >
@@ -68,10 +68,6 @@ const student = useStudentStore()
 const pedagogueHealth = usePedagogueHealthStore()
 
 const activeTabIndex = ref(0)
-
-const hasChanges = computed(
-    () => JSON.stringify(student.current.pedagogue.options) !== JSON.stringify(student.pedagogue.options)
-)
 
 const pedagogueTab = computed<{ title: string; type: PedagogueType }[]>(() =>
     pedagogueHealth.tabTypes.PEDAGOGUE.map((type) => ({ title: pedagogueHealth.typeTitles[type], type }))

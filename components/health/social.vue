@@ -1,7 +1,7 @@
 <template>
     <health-component
         :loading="student.loading"
-        :allow-save="hasChanges"
+        :allow-save="student.current.social.changed"
         :on-cancel="student.refresh"
         :on-save="student.current.social.save"
     >
@@ -48,6 +48,4 @@ import { useSocialHealthStore } from '~~/store/health/social'
 
 const student = useStudentStore()
 const socialHealth = useSocialHealthStore()
-
-const hasChanges = computed(() => JSON.stringify(student.current.social.options) !== JSON.stringify(student.social.options))
 </script>

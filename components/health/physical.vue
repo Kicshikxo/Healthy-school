@@ -1,7 +1,7 @@
 <template>
     <health-component
         :loading="student.loading"
-        :allow-save="hasChanges"
+        :allow-save="student.current.physical.changed"
         :on-cancel="student.refresh"
         :on-save="student.current.physical.save"
     >
@@ -63,12 +63,6 @@ import { usePhysicalHealthStore } from '~~/store/health/physical'
 
 const student = useStudentStore()
 const physicalHealth = usePhysicalHealthStore()
-
-const hasChanges = computed(
-    () =>
-        JSON.stringify(student.current.physical.healthGroup) !== JSON.stringify(student.physical.healthGroup) ||
-        JSON.stringify(student.current.physical.options) !== JSON.stringify(student.physical.options)
-)
 
 const currentOptions = computed<{ title: string; type: PhysicalType }[]>(() =>
     (Object.keys(PhysicalType) as PhysicalType[])
