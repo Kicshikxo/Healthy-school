@@ -87,6 +87,9 @@
         <role-access role="CLASS_TEACHER">
             <health-class-teacher />
         </role-access>
+        <role-access role="OPERATOR">
+            <health-statistics />
+        </role-access>
     </div>
 </template>
 
