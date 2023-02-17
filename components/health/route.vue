@@ -96,7 +96,7 @@
 </template>
 
 <script setup lang="ts">
-import { ConclusionType, HealthZone } from '@prisma/client'
+import { HealthZone } from '@prisma/client'
 import { useStudentStore } from '~~/store/student'
 
 const student = useStudentStore()
