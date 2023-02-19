@@ -67,24 +67,25 @@ export const physicalHealthOptions: {
     selectionType: SelectionType
     recommendations?: { title: string }[]
 }[] = [
-    // {
-    //  title: 'Основная',
-    //  healthZone: HealthZone.GREEN,
-    //  physicalType: PhysicalType.HEALTH_GROUP,
-    //  selectionType: SelectionType.SINGLE
-    // },
-    // {
-    //  title: 'Подготовительная',
-    //  healthZone: HealthZone.YELLOW,
-    //  physicalType: PhysicalType.HEALTH_GROUP,
-    //  selectionType: SelectionType.SINGLE
-    // },
-    // {
-    //  title: 'Специальная',
-    //  healthZone: HealthZone.RED,
-    //  physicalType: PhysicalType.HEALTH_GROUP,
-    //  selectionType: SelectionType.SINGLE
-    // },
+    {
+        title: 'Соответствует нормативам',
+        healthZone: HealthZone.GREEN,
+        healthGroup: HealthGroup.BASIC,
+        physicalType: PhysicalType.PHYSICAL_TRAINING,
+        selectionType: SelectionType.SINGLE
+    },
+    {
+        title: 'Не соответствует нормативам',
+        healthZone: HealthZone.GREEN,
+        healthGroup: HealthGroup.BASIC,
+        physicalType: PhysicalType.PHYSICAL_TRAINING,
+        selectionType: SelectionType.SINGLE,
+        recommendations: [
+            {
+                title: 'Выполнение комплексов специальных упражнений для улучшения показателей конкретного двигательного качества или физической подготовки в целом (по рекомендации учителя физической культуры)'
+            }
+        ]
+    },
 
     {
         title: 'Соответствуют',
@@ -150,26 +151,6 @@ export const physicalHealthOptions: {
 
     {
         title: 'Соответствует нормативам',
-        healthZone: HealthZone.GREEN,
-        healthGroup: HealthGroup.BASIC,
-        physicalType: PhysicalType.PHYSICAL_TRAINING,
-        selectionType: SelectionType.SINGLE
-    },
-    {
-        title: 'Не соответствует нормативам',
-        healthZone: HealthZone.GREEN,
-        healthGroup: HealthGroup.BASIC,
-        physicalType: PhysicalType.PHYSICAL_TRAINING,
-        selectionType: SelectionType.SINGLE,
-        recommendations: [
-            {
-                title: 'Выполнение комплексов специальных упражнений для улучшения показателей конкретного двигательного качества или физической подготовки в целом (по рекомендации учителя физической культуры)'
-            }
-        ]
-    },
-
-    {
-        title: 'Соответствует нормативам',
         healthZone: HealthZone.YELLOW,
         healthGroup: HealthGroup.PREPARATORY,
         physicalType: PhysicalType.PHYSICAL_TRAINING,
@@ -189,6 +170,73 @@ export const physicalHealthOptions: {
         recommendations: [
             {
                 title: 'Повышение уровня физической подготовленности в ходе уроков физической культуры, секционных занятий, а также дополнительных занятий в группах ОФП, выполнение комплексов специальных упражнений для улучшения показателей конкретного двигательного качества или физической подготовки в целом (по рекомендации учителя физической культуры)'
+            }
+        ]
+    },
+
+    {
+        title: 'Не соответствуют',
+        healthZone: HealthZone.RED,
+        healthGroup: HealthGroup.SPECIAL,
+        physicalType: PhysicalType.FUNCTIONAL_INDICATORS,
+        selectionType: SelectionType.SINGLE,
+        recommendations: [
+            {
+                title: 'Расширение диапазона функциональных возможностей физиологических систем организма'
+            },
+            {
+                title: 'Обучение самоконтролю здоровья при выполнении физических упражнений'
+            },
+            {
+                title: 'Овладение комплексами упражнений, благоприятно воздействующими на состояние организма с учетом имеющегося заболевания'
+            },
+            {
+                title: 'Укрепление сердечно-сосудистой и дыхательной систем'
+            },
+            {
+                title: 'Использование дыхательных, корригирующих и общеразвивающих упражнений'
+            }
+        ]
+    },
+    {
+        title: 'Не соответвует возрасту',
+        healthZone: HealthZone.RED,
+        healthGroup: HealthGroup.SPECIAL,
+        physicalType: PhysicalType.PHYSICAL_DEVELOPMENT,
+        selectionType: SelectionType.SINGLE,
+        recommendations: [
+            {
+                title: 'Профилактика соматических нарушений: формирование и коррекция осанки, профилактика плоскостопия, коррекция массы тела и др.'
+            },
+            {
+                title: 'Адаптация организма к воздействию физических нагрузок'
+            },
+            {
+                title: 'Коррекция показателей физического развития и способностей'
+            }
+        ]
+    },
+    {
+        title: 'Не соответствует нормативам',
+        healthZone: HealthZone.RED,
+        healthGroup: HealthGroup.SPECIAL,
+        physicalType: PhysicalType.PHYSICAL_TRAINING,
+        selectionType: SelectionType.SINGLE,
+        recommendations: [
+            {
+                title: 'Организация физкультурных занятий по индивидуальной программе'
+            },
+            {
+                title: 'Строгое дозирование физической нагрузки'
+            },
+            {
+                title: 'Обучение основам техники движений и навыков'
+            },
+            {
+                title: 'Коррекция и развитие координационных способностей, физической подготовленности'
+            },
+            {
+                title: 'Воспитание умения самостоятельно заниматься физическими упражнениями, сознательно применять их в целях отдыха, тренировки, повышения работоспособности'
             }
         ]
     }
