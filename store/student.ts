@@ -217,7 +217,7 @@ export const useStudentStore = defineStore('student', () => {
     const hasPhysicalChanges = computed(
         () =>
             !isEqual(physicalHealthGroup.value, currentPhysicalHealthGroup.value) ||
-            !isEqual(physicalHealthZone.value, currentPhysicalOptions.value)
+            !isEqual(physicalOptions.value, currentPhysicalOptions.value)
     )
     watch(
         currentPhysicalHealthGroup,
@@ -410,16 +410,17 @@ export const useStudentStore = defineStore('student', () => {
                             conclusion.healthZone === medicalHealthZone.value
                     )?.recommendations as { title: string }[]
                 },
-                ...(Object.keys(MedicalType) as MedicalType[]).map((type) => ({
-                    title: medicalHealth.typeTitles[type],
-                    healthZone: medicalOptions.value.CHECKBOX[type]?.healthZone,
-                    list:
-                        medicalHealth.optionsWithRecommendations?.find(
-                            (option) =>
-                                option.medicalType === type &&
-                                option.healthZone === medicalOptions.value.CHECKBOX[type]?.healthZone
-                        )?.recommendations ?? []
-                }))
+                ...Object.values(medicalOptions.value.CHECKBOX)
+                    .filter((option) => option)
+                    .map((option) => ({
+                        title: medicalHealth.typeTitles[option.medicalType],
+                        subtitle: option.title,
+                        healthZone: option.healthZone,
+                        list:
+                            medicalHealth.optionsWithRecommendations?.find(
+                                (optionWithRecommendations) => optionWithRecommendations.id === option.id
+                            )?.recommendations ?? []
+                    }))
             ].filter(({ list }) => list?.length),
             notes: [
                 {
@@ -446,15 +447,17 @@ export const useStudentStore = defineStore('student', () => {
                             conclusion.healthZone === pedagogueHealthZone.value
                     )?.recommendations as { title: string }[]
                 },
-                ...pedagogueHealth.tabTypes.PEDAGOGUE.map((type) => ({
-                    title: pedagogueHealth.typeTitles[type],
-                    subtitle: pedagogueOptions.value[type]?.title,
-                    healthZone: pedagogueOptions.value[type]?.healthZone,
-                    list:
-                        pedagogueHealth.optionsWithRecommendations?.find(
-                            (option) => option.id === pedagogueOptions.value[type]?.id
-                        )?.recommendations ?? []
-                }))
+                ...Object.values(pedagogueOptions.value)
+                    .filter((option) => option && option.pedagogueTab === PedagogueTab.PEDAGOGUE)
+                    .map((option) => ({
+                        title: pedagogueHealth.typeTitles[option.pedagogueType],
+                        subtitle: option.title,
+                        healthZone: option.healthZone,
+                        list:
+                            pedagogueHealth.optionsWithRecommendations?.find(
+                                (optionWithRecommendations) => optionWithRecommendations.id === option.id
+                            )?.recommendations ?? []
+                    }))
             ].filter(({ list }) => list?.length)
         },
         SPEECH: {
@@ -474,15 +477,17 @@ export const useStudentStore = defineStore('student', () => {
                             conclusion.healthZone === speechHealthZone.value
                     )?.recommendations as { title: string }[]
                 },
-                ...pedagogueHealth.tabTypes.SPEECH_THERAPIST.map((type) => ({
-                    title: pedagogueHealth.typeTitles[type],
-                    subtitle: pedagogueOptions.value[type]?.title,
-                    healthZone: pedagogueOptions.value[type]?.healthZone,
-                    list:
-                        pedagogueHealth.optionsWithRecommendations?.find(
-                            (option) => option.id === pedagogueOptions.value[type]?.id
-                        )?.recommendations ?? []
-                }))
+                ...Object.values(pedagogueOptions.value)
+                    .filter((option) => option && option.pedagogueTab === PedagogueTab.SPEECH_THERAPIST)
+                    .map((option) => ({
+                        title: pedagogueHealth.typeTitles[option.pedagogueType],
+                        subtitle: option.title,
+                        healthZone: option.healthZone,
+                        list:
+                            pedagogueHealth.optionsWithRecommendations?.find(
+                                (optionWithRecommendations) => optionWithRecommendations.id === option.id
+                            )?.recommendations ?? []
+                    }))
             ].filter(({ list }) => list?.length)
         },
         PHYSICAL: {
@@ -502,15 +507,17 @@ export const useStudentStore = defineStore('student', () => {
                             conclusion.healthZone === physicalHealthZone.value
                     )?.recommendations as { title: string }[]
                 },
-                ...(Object.keys(PhysicalType) as PhysicalType[]).map((type) => ({
-                    title: physicalHealth.typeTitles[type],
-                    subtitle: physicalOptions.value[type]?.title,
-                    healthZone: physicalOptions.value[type]?.healthZone,
-                    list:
-                        physicalHealth.optionsWithRecommendations?.find(
-                            (option) => option.id === physicalOptions.value[type]?.id
-                        )?.recommendations ?? []
-                }))
+                ...Object.values(physicalOptions.value)
+                    .filter((option) => option)
+                    .map((option) => ({
+                        title: physicalHealth.typeTitles[option.physicalType],
+                        subtitle: option.title,
+                        healthZone: option.healthZone,
+                        list:
+                            physicalHealth.optionsWithRecommendations?.find(
+                                (optionWithRecommendations) => optionWithRecommendations.id === option.id
+                            )?.recommendations ?? []
+                    }))
             ].filter(({ list }) => list?.length)
         },
         PSYCHOLOGICAL: {
@@ -531,17 +538,17 @@ export const useStudentStore = defineStore('student', () => {
                             conclusion.healthZone === psychologicalHealthZone.value
                     )?.recommendations as { title: string }[]
                 },
-                ...(Object.keys(PsychologicalType) as PsychologicalType[]).map((type) => ({
-                    title: psychologicalHealth.typeTitles[type],
-                    subtitle: psychologicalOptions.value[type]?.title,
-                    healthZone: psychologicalOptions.value[type]?.healthZone,
-                    list:
-                        psychologicalHealth.optionsWithRecommendations?.find(
-                            (option) =>
-                                option.psychologicalType === type &&
-                                option.healthZone === psychologicalOptions.value[type]?.healthZone
-                        )?.recommendations ?? []
-                }))
+                ...Object.values(psychologicalOptions.value)
+                    .filter((option) => option)
+                    .map((option) => ({
+                        title: psychologicalHealth.typeTitles[option.psychologicalType],
+                        subtitle: option.title,
+                        healthZone: option.healthZone,
+                        list:
+                            psychologicalHealth.optionsWithRecommendations?.find(
+                                (optionWithRecommendations) => optionWithRecommendations.id === option.id
+                            )?.recommendations ?? []
+                    }))
             ].filter(({ list }) => list?.length),
             notes: [
                 {
@@ -567,14 +574,17 @@ export const useStudentStore = defineStore('student', () => {
                             conclusion.healthZone === socialHealthZone.value
                     )?.recommendations as { title: string }[]
                 },
-                ...(Object.keys(SocialType) as SocialType[]).map((type) => ({
-                    title: socialHealth.typeTitles[type],
-                    healthZone: socialOptions.value.find((option) => option.socialType === type)?.healthZone,
-                    list:
-                        socialHealth.optionsWithRecommendations?.find(
-                            (option) => option.id === socialOptions.value.find((option) => option.socialType === type)?.id
-                        )?.recommendations ?? []
-                }))
+                ...Object.values(socialOptions.value)
+                    .filter((option) => option)
+                    .map((option) => ({
+                        title: socialHealth.typeTitles[option.socialType],
+                        subtitle: option.title,
+                        healthZone: option.healthZone,
+                        list:
+                            socialHealth.optionsWithRecommendations?.find(
+                                (optionWithRecommendations) => optionWithRecommendations.id === option.id
+                            )?.recommendations ?? []
+                    }))
             ].filter(({ list }) => list?.length)
         }
     }))
