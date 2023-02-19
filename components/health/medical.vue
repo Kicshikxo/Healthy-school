@@ -19,7 +19,7 @@
                                     :disabled="!enableEditing || loading"
                                     :loading="loading"
                                     :options="
-                                        medicalHealth.typedOptions[type]
+                                        (medicalHealth.typedOptions[type] ?? [])
                                             .filter(
                                                 (option) =>
                                                     option.medicalType === MedicalType.HEALTH_GROUP ||
