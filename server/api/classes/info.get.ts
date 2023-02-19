@@ -1,5 +1,4 @@
 import { PrismaClient } from '@prisma/client'
-import readTokenData from '~~/server/utils/readTokenData'
 
 const prisma = new PrismaClient()
 

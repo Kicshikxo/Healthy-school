@@ -1,5 +1,4 @@
 import { PrismaClient, Role, Student } from '@prisma/client'
-import checkRole from '~~/server/utils/checkRole'
 
 const prisma = new PrismaClient()
 
