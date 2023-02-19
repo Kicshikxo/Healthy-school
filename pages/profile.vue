@@ -7,14 +7,11 @@
         <div>
             {{ state.status }}
         </div>
-        <div>
-            <p-button label="Выйти" @click="signOut().then(() => $router.push('/login'))" />
-        </div>
     </div>
 </template>
 
 <script setup lang="ts">
-const { signOut, state } = useSession()
+const { state } = useAuth()
 
 definePageMeta({
     title: 'Профиль'
