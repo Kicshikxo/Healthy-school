@@ -1,5 +1,4 @@
 import { PrismaClient, PsychologicalHealth, PsychologicalHealthOption, Role } from '@prisma/client'
-import checkRole from '~~/server/utils/checkRole'
 
 const prisma = new PrismaClient()
 
@@ -8,7 +7,7 @@ export default defineEventHandler(async (event) => {
 
     const body: PsychologicalHealth & { options: PsychologicalHealthOption[] } = await readBody(event)
 
-    const studentOptions = await prisma.pedagogueHealth.findUnique({
+    const student = await prisma.psychologicalHealth.findUnique({
         where: {
             studentId: body.studentId
         },
@@ -29,10 +28,10 @@ export default defineEventHandler(async (event) => {
                 set: body.options.map((option) => ({ id: option.id }))
             },
             specialistNotes: body.specialistNotes,
-            logs: {
+            optionsLogs: {
                 createMany: {
                     data: body.options
-                        .filter((option) => !studentOptions?.options.map((option) => option.id).includes(option.id))
+                        .filter((option) => !student?.options.map((option) => option.id).includes(option.id))
                         .map((option) => ({ optionId: option.id }))
                 }
             }
