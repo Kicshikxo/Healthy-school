@@ -8,11 +8,11 @@
                         :options="logs.municipalities.list"
                         v-model="logs.municipalities.selected"
                         optionLabel="name"
-                        placeholder="Выберите муниципалитет"
+                        placeholder="Выберите муниципальное образование"
                         id="select-organization"
                         class="w-full"
                     />
-                    <label for="select-organization">Муниципалитет</label>
+                    <label for="select-organization">Муниципальное образование</label>
                 </span>
 
                 <span class="p-float-label">
@@ -39,7 +39,18 @@
                         placeholder="Выберите класс"
                         id="select-class"
                         class="w-full"
-                    />
+                    >
+                        <template #value="{ value }">
+                            <span v-if="value">
+                                {{ value.number }}{{ value.liter }} ( {{ value._count.students }} человек )
+                            </span>
+                        </template>
+                        <template #option="{ option }">
+                            <span v-if="option">
+                                {{ option.number }}{{ option.liter }} ( {{ option._count.students }} человек )
+                            </span>
+                        </template>
+                    </p-dropdown>
                     <label for="select-class">Класс</label>
                 </span>
             </div>
@@ -93,6 +104,10 @@ import { ConclusionType, HealthZone } from '@prisma/client'
 import { useLogsStore } from '~~/store/logs'
 import { useConclusionsStore } from '~~/store/health/conclusions'
 
+definePageMeta({
+    title: 'Статистика'
+})
+
 const logs = useLogsStore()
 const conclusion = useConclusionsStore()
 
@@ -141,14 +156,12 @@ const chartOptions = computed(() => ({
                 display: true,
                 text: 'Количество человек'
             },
+            min: 0,
+            max: logs.loading ? 0 : logs.classes.selected?._count.students ?? 0,
             ticks: {
                 stepSize: 1
             }
         }
     }
 }))
-
-definePageMeta({
-    title: 'Статистика'
-})
 </script>
