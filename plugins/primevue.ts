@@ -1,5 +1,7 @@
 import PrimeVue from 'primevue/config'
 import ToastService from 'primevue/toastservice'
+import ConfirmationService from 'primevue/confirmationservice'
+import ConfirmPopup from 'primevue/confirmpopup/ConfirmPopup.vue'
 import Button from 'primevue/button/Button.vue'
 import ToggleButton from 'primevue/togglebutton/ToggleButton.vue'
 import Checkbox from 'primevue/checkbox/Checkbox.vue'
@@ -24,10 +26,13 @@ import Calendar from 'primevue/calendar/Calendar.vue'
 import TabView from 'primevue/tabview/TabView.vue'
 import TabPanel from 'primevue/tabpanel/TabPanel.vue'
 import Chip from 'primevue/chip/Chip.vue'
+import Menu from 'primevue/menu/Menu.vue'
 
 export default defineNuxtPlugin((nuxtApp) => {
     nuxtApp.vueApp.use(PrimeVue, { locale, ripple: true })
     nuxtApp.vueApp.use(ToastService)
+    nuxtApp.vueApp.use(ConfirmationService)
+    nuxtApp.vueApp.component('p-confirm-popup', ConfirmPopup)
     nuxtApp.vueApp.component('p-button', Button)
     nuxtApp.vueApp.component('p-toggle-button', ToggleButton)
     nuxtApp.vueApp.component('p-checkbox', Checkbox)
@@ -52,6 +57,7 @@ export default defineNuxtPlugin((nuxtApp) => {
     nuxtApp.vueApp.component('p-tab-view', TabView)
     nuxtApp.vueApp.component('p-tab-panel', TabPanel)
     nuxtApp.vueApp.component('p-chip', Chip)
+    nuxtApp.vueApp.component('p-menu', Menu)
 })
 
 const locale = {
