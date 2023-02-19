@@ -7,9 +7,9 @@
                     <nuxt-img
                         v-else
                         :src="
-                            student.data?.gender === 'MALE'
-                                ? 'images/avatars/persona 0-0.png'
-                                : 'images/avatars/persona 0-1.png'
+                            student.data?.gender === 'FEMALE'
+                                ? 'images/avatars/persona 0-1.png'
+                                : 'images/avatars/persona 0-0.png'
                         "
                         alt="student avatar"
                         width="96"
@@ -64,7 +64,12 @@
                         <p-button icon="pi pi-file-pdf" class="p-button-rounded p-button-secondary" @click="saveToPDF" />
                     </role-access>
                     <role-access role="CLASS_TEACHER">
-                        <p-button icon="pi pi-trash" class="p-button-rounded p-button-danger" @click="deleteStudent" />
+                        <p-button
+                            icon="pi pi-trash"
+                            class="p-button-rounded p-button-danger"
+                            @click="confirmDeleteStudent($event)"
+                        />
+                        <p-confirm-popup></p-confirm-popup>
                     </role-access>
                 </div>
             </div>
@@ -92,6 +97,7 @@
 
 <script setup lang="ts">
 import { useToast } from 'primevue/usetoast'
+import { useConfirm } from 'primevue/useconfirm'
 import jsPDF from 'jspdf'
 import html2canvas from 'html2canvas'
 import shortUUID from 'short-uuid'
@@ -105,6 +111,8 @@ definePageMeta({
 })
 
 const toast = useToast()
+const confirm = useConfirm()
+
 const route = useRoute()
 const router = useRouter()
 
@@ -120,6 +128,24 @@ currentClass.setId(translator.toUUID(route.params.classId as string))
 const genderLocalization: { [key in Gender]: string } = {
     MALE: 'Мужской',
     FEMALE: 'Женский'
+}
+
+async function confirmDeleteStudent(event: MouseEvent) {
+    confirm.require({
+        target: event.currentTarget as HTMLElement,
+        icon: 'pi pi-info-circle',
+        message: 'Вы действительно хотите удалить учащегося?',
+        acceptClass: 'p-button-danger',
+        accept: async () => {
+            await deleteStudent()
+            toast.add({
+                severity: 'success',
+                summary: 'Успешно',
+                detail: 'Учащийся удалён',
+                life: 3000
+            })
+        }
+    })
 }
 
 async function deleteStudent() {
