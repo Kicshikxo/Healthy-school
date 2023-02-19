@@ -1,5 +1,5 @@
 <template>
-    <header class="flex justify-content-between w-full h-4rem py-3 px-5 border-bottom-1 border-primary-600 shadow-1">
+    <header class="app-header flex justify-content-between w-full h-4rem py-3 px-5 border-bottom-1 border-primary-600 shadow-1">
         <nav class="flex align-items-center">
             <nuxt-img src="images/logo.png" alt="logo" width="48" height="48" class="mr-5" />
             <nuxt-link
@@ -20,12 +20,12 @@
             </role-access>
         </nav>
         <nav class="flex align-items-center">
-            <nuxt-link
-                to="/profile"
-                class="flex px-3 py-1 align-items-center hover:bg-primary-600 font-medium border-round transition-colors transition-duration-150 cursor-pointer no-underline"
+            <div
+                class="flex px-2 py-1 align-items-center hover:bg-primary-600 font-medium border-round transition-colors transition-duration-150 cursor-pointer no-underline"
+                @click="menu.toggle($event)"
             >
-                <nuxt-img :src="avatarSrc" alt="avatar" width="48" height="48" class="border-circle" />
-                <div class="block ml-2">
+                <nuxt-img :src="avatarSrc" alt="avatar" width="48" height="48" class="border-circle mr-2" />
+                <div class="block">
                     <div class="text-primary-50 font-medium">
                         {{ data?.secondName }}
                         {{ data?.firstName }}
@@ -35,15 +35,42 @@
                         {{ roleLocalization[data?.role!] }}
                     </span>
                 </div>
-            </nuxt-link>
+            </div>
+            <p-menu ref="menu" :model="menuItems" :popup="true" appendTo=".app-header" />
         </nav>
     </header>
 </template>
 
 <script setup lang="ts">
 import { Role } from '@prisma/client'
+import { MenuItem } from 'primevue/menuitem'
 
-const { data } = useSessionState()
+const router = useRouter()
+const { signOut } = useAuth()
+const { data } = useAuthState()
+
+const menu = ref()
+const menuItems = ref<MenuItem[]>([
+    {
+        items: [
+            {
+                label: 'Профиль',
+                icon: 'pi pi-user',
+                disabled: () => router.currentRoute.value.path === '/profile',
+                to: '/profile'
+            },
+            {
+                separator: true
+            },
+            {
+                label: 'Выйти',
+                icon: 'pi pi-sign-out',
+                class: 'p-menuitem-red',
+                command: () => signOut({ redirectTo: '/login' })
+            }
+        ]
+    }
+])
 
 const roleLocalization: { [key in Role]: string } = {
     OPERATOR: 'Оператор',
@@ -57,3 +84,14 @@ const roleLocalization: { [key in Role]: string } = {
 
 const avatarSrc = `images/avatars/persona ${~~(Math.random() * 4)}-${~~(Math.random() * 3)}.png`
 </script>
+
+<style>
+.app-header .p-submenu-header {
+    display: none;
+}
+
+.p-menuitem.p-menuitem-red .p-menuitem-text,
+.p-menuitem.p-menuitem-red .p-menuitem-icon {
+    color: var(--red-500) !important;
+}
+</style>
