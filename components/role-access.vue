@@ -7,5 +7,5 @@ import { Role } from '@prisma/client'
 
 const props = defineProps<{ role?: Role; roles?: Role[] }>()
 
-const { data } = useSessionState()
+const { data } = useAuthState()
 </script>

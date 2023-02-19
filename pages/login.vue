@@ -47,10 +47,8 @@ definePageMeta({
     middleware: 'unauth'
 })
 
-const { signIn } = useSession()
-
-const router = useRouter()
 const toast = useToast()
+const { signIn } = useAuth()
 
 const usernameInput = ref()
 const passwordInput = ref()
@@ -70,14 +68,12 @@ function focusPassword() {
 async function tryLogin() {
     loading.value = true
 
-    const { user, error } = await signIn({
+    const { error } = await signIn({
         username: username.value,
-        password: password.value
+        password: password.value,
+        redirectTo: '/'
     })
 
-    if (user) {
-        return router.push('/')
-    }
     if (error) {
         toast.add({
             severity: 'error',

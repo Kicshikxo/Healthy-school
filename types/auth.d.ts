@@ -9,12 +9,17 @@ declare global {
     interface SingInOptions {
         username?: string
         password?: string
+        redirectTo?: string
     }
 
     interface SignInResult {
         status: number
         error: string | null
         user: User | null
+    }
+
+    interface SignOutOptions {
+        redirectTo?: string
     }
 
     interface AuthTokenData {
@@ -38,4 +43,7 @@ declare global {
         error: string | null
         data: SessionData | null
     }
+
+    type Without<T, U> = { [P in Exclude<keyof T, keyof U>]?: never }
+    type XOR<T, U> = T | U extends object ? (Without<T, U> & U) | (Without<U, T> & T) : T | U
 }

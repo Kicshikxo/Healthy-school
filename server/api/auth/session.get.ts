@@ -1,34 +1,11 @@
 import crc32 from 'crc/crc32'
-import jwt from 'jsonwebtoken'
 import { PrismaClient } from '@prisma/client'
 
 const prisma = new PrismaClient()
 
 export default defineEventHandler(async (event) => {
-    const authToken = getCookie(event, 'auth-token')
-    if (!authToken) {
-        return sendError(
-            event,
-            createError({
-                statusCode: 401,
-                statusMessage: 'Unable to read auth token'
-            })
-        )
-    }
-
-    let tokenData: AuthTokenData
-
-    try {
-        tokenData = jwt.verify(authToken!, process.env.SECRET_KEY!) as AuthTokenData
-    } catch (e) {
-        return sendError(
-            event,
-            createError({
-                statusCode: 401,
-                statusMessage: 'Invalid auth token'
-            })
-        )
-    }
+    const tokenData = readTokenData(event)
+    if (!tokenData) return
 
     const user = await prisma.user.findUnique({
         where: { id: tokenData.id }
