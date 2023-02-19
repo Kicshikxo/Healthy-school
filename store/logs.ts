@@ -2,6 +2,7 @@ import {
     Class,
     ConclusionType,
     EducationalOrganization,
+    HealthGroup,
     HealthZone,
     MedicalHealthOption,
     MedicalType,
@@ -18,7 +19,7 @@ import {
 import { defineStore } from 'pinia'
 
 export const useLogsStore = defineStore('logs', () => {
-    const selectedEndDate = ref<Date>()
+    const selectedEndDate = ref<Date>(new Date())
     const endDate = computed(() => selectedEndDate.value?.toJSON())
 
     const selectedMunicipality = ref<Municipality>()
@@ -27,7 +28,13 @@ export const useLogsStore = defineStore('logs', () => {
     const selectedOrganization = ref<EducationalOrganization>()
     const selectedOrganizationId = computed(() => selectedOrganization.value?.id)
 
-    const selectedClass = ref<Class>()
+    const selectedClass = ref<
+        Class & {
+            _count: {
+                students: number
+            }
+        }
+    >()
     const selectedClassId = computed(() => selectedClass.value?.id)
 
     const { data: municipalities, pending: loadingMunicipalities } = useFetch('/api/municipalities/list')
@@ -55,30 +62,38 @@ export const useLogsStore = defineStore('logs', () => {
     })
 
     const healthZones: HealthZone[] = [HealthZone.GREEN, HealthZone.YELLOW, HealthZone.RED]
+    const healthGroups: HealthGroup[] = [HealthGroup.BASIC, HealthGroup.PREPARATORY, HealthGroup.SPECIAL]
+    function healthGroupToHealthZone(healthGroup: HealthGroup) {
+        return healthZones[healthGroups.indexOf(healthGroup)]
+    }
 
     const studentsWithHealthZones = computed<(Student & { healthZones: { [key in ConclusionType]?: HealthZone } })[]>(() =>
         (logs.value ?? []).map((student) => {
             const medicalOptions = (Object.keys(MedicalType) as MedicalType[]).reduce((acc, type) => {
-                acc[type] = student.medicalHealth?.logs.map((log) => log.option).find((option) => option.medicalType === type)
+                acc[type] = student.medicalHealth?.optionsLogs
+                    .map((log) => log.option)
+                    .find((option) => option.medicalType === type)
                 return acc
             }, {} as { [key in MedicalType]?: MedicalHealthOption })
 
             const pedagogueOptions = (Object.keys(PedagogueType) as PedagogueType[]).reduce((acc, type) => {
-                acc[type] = student.pedagogueHealth?.logs
+                acc[type] = student.pedagogueHealth?.optionsLogs
                     .map((log) => log.option)
                     .find((option) => option.pedagogueType === type)
                 return acc
             }, {} as { [key in PedagogueType]?: PedagogueHealthOption })
 
             const psychologicalOptions = (Object.keys(PsychologicalType) as PsychologicalType[]).reduce((acc, type) => {
-                acc[type] = student.psychologicalHealth?.logs
+                acc[type] = student.psychologicalHealth?.optionsLogs
                     .map((log) => log.option)
                     .find((option) => option.psychologicalType === type)
                 return acc
             }, {} as { [key in PsychologicalType]?: PsychologicalHealthOption })
 
             const socialOptions = (Object.keys(SocialType) as SocialType[]).reduce((acc, type) => {
-                acc[type] = student.socialHealth?.logs.map((log) => log.option).find((option) => option.socialType === type)
+                acc[type] = student.socialHealth?.optionsLogs
+                    .map((log) => log.option)
+                    .find((option) => option.socialType === type)
                 return acc
             }, {} as { [key in SocialType]?: SocialHealthOption })
 
@@ -100,7 +115,9 @@ export const useLogsStore = defineStore('logs', () => {
                                 healthZones[Math.max(healthZones.indexOf(acc), healthZones.indexOf(option.healthZone))],
                             'GREEN' as HealthZone
                         ),
-                    PHYSICAL: HealthZone.GREEN,
+                    PHYSICAL: healthGroupToHealthZone(
+                        student.physicalHealth?.healthGroupLogs?.at(0)?.healthGroup ?? HealthGroup.BASIC
+                    ),
                     PSYCHOLOGICAL: Object.values(psychologicalOptions)
                         .filter((option) => option)
                         .reduce(

@@ -1,30 +1,26 @@
 import { PrismaClient, Role } from '@prisma/client'
-import checkRole from '~~/server/utils/checkRole'
 
 const prisma = new PrismaClient()
 
 export default defineEventHandler(async (event) => {
     if (!checkRole(event, { role: Role.OPERATOR })) return
 
-    const query = getQuery(event) as { classId?: string; startDate?: string; endDate?: string }
+    const query = getQuery(event) as { classId?: string; endDate?: string }
 
     if (!query.classId) return sendError(event, createError({ statusCode: 400, statusMessage: 'Class ID is not provided' }))
 
     return await prisma.student.findMany({
         where: {
-            class: {
-                id: query.classId
-            }
+            classId: query.classId
         },
         include: {
             medicalHealth: {
                 select: {
                     options: true,
-                    logs: {
+                    optionsLogs: {
                         where: {
                             createdAt: {
                                 lt: query.endDate ? new Date(query.endDate) : undefined
-                                // gt: query.startDate ? new Date(query.startDate) : undefined
                             }
                         },
                         orderBy: {
@@ -39,11 +35,10 @@ export default defineEventHandler(async (event) => {
             pedagogueHealth: {
                 select: {
                     options: true,
-                    logs: {
+                    optionsLogs: {
                         where: {
                             createdAt: {
                                 lt: query.endDate ? new Date(query.endDate) : undefined
-                                // gt: query.startDate ? new Date(query.startDate) : undefined
                             }
                         },
                         orderBy: {
@@ -58,11 +53,10 @@ export default defineEventHandler(async (event) => {
             physicalHealth: {
                 select: {
                     options: true,
-                    logs: {
+                    optionsLogs: {
                         where: {
                             createdAt: {
                                 lt: query.endDate ? new Date(query.endDate) : undefined
-                                // gt: query.startDate ? new Date(query.startDate) : undefined
                             }
                         },
                         orderBy: {
@@ -71,17 +65,27 @@ export default defineEventHandler(async (event) => {
                         select: {
                             option: true
                         }
+                    },
+                    healthGroupLogs: {
+                        where: {
+                            createdAt: {
+                                lt: query.endDate ? new Date(query.endDate) : undefined
+                            }
+                        },
+                        orderBy: {
+                            createdAt: 'desc'
+                        },
+                        take: 1
                     }
                 }
             },
             psychologicalHealth: {
                 select: {
                     options: true,
-                    logs: {
+                    optionsLogs: {
                         where: {
                             createdAt: {
                                 lt: query.endDate ? new Date(query.endDate) : undefined
-                                // gt: query.startDate ? new Date(query.startDate) : undefined
                             }
                         },
                         orderBy: {
@@ -96,11 +100,10 @@ export default defineEventHandler(async (event) => {
             socialHealth: {
                 select: {
                     options: true,
-                    logs: {
+                    optionsLogs: {
                         where: {
                             createdAt: {
                                 lt: query.endDate ? new Date(query.endDate) : undefined
-                                // gt: query.startDate ? new Date(query.startDate) : undefined
                             }
                         },
                         orderBy: {
