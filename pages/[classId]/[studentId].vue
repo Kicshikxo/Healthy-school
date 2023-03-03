@@ -46,7 +46,7 @@
                                     <div v-else>{{ student.data?.class.number! + student.data?.class.liter! }}</div>
                                 </div>
                             </div>
-                            <div class="flex flex-column w-8rem">
+                            <div class="flex flex-column w-9rem">
                                 <div class="text-500">СНИЛС</div>
                                 <div class="flex align-items-end h-1rem mt-2 text-700">
                                     <p-skeleton v-if="student.loading" class="max-w-30rem" />
@@ -106,8 +106,8 @@ import { useStudentStore } from '~~/store/student'
 import { useClassStore } from '~~/store/class'
 
 definePageMeta({
-    title: `Информация по учащемуся`,
-    breadcrumb: `student`
+    title: 'Информация по учащемуся',
+    breadcrumb: 'student'
 })
 
 const toast = useToast()
