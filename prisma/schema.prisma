@@ -8,55 +8,79 @@ datasource db {
 }
 
 model Municipality {
-    id                      String                    @id() @default(dbgenerated("gen_random_uuid()")) @map("municipality_id") @db.Uuid
-    name                    String                    @unique @map("municipality_name") @db.VarChar(255)
-    EducationalOrganization EducationalOrganization[]
+    id            String                    @id() @default(dbgenerated("gen_random_uuid()")) @map("municipality_id") @db.Uuid
+    name          String                    @unique @map("municipality_name") @db.VarChar(255)
+    organizations EducationalOrganization[]
 
     @@map("municipalities")
 }
 
 model EducationalOrganization {
-    id             String       @id() @default(dbgenerated("gen_random_uuid()")) @map("organization_id") @db.Uuid
-    municipality   Municipality @relation(fields: [municipalityId], references: [id], onUpdate: Cascade, onDelete: Cascade)
-    municipalityId String       @map("municipality_id") @db.Uuid
-    name           String       @unique @map("organization_name") @db.VarChar(255)
-    users          User[]
+    id             String             @id() @default(dbgenerated("gen_random_uuid()")) @map("organization_id") @db.Uuid
+    municipality   Municipality       @relation(fields: [municipalityId], references: [id], onUpdate: Cascade, onDelete: Cascade)
+    municipalityId String             @map("municipality_id") @db.Uuid
+    name           String             @unique @map("organization_name") @db.VarChar(255)
+    users          UserOrganization[]
     classes        Class[]
 
     @@map("educational_organizations")
 }
 
 model User {
-    id             String                  @id() @default(dbgenerated("gen_random_uuid()")) @map("user_id") @db.Uuid
-    organization   EducationalOrganization @relation(fields: [organizationId], references: [id], onUpdate: Cascade, onDelete: Cascade)
-    organizationId String                  @map("organization_id") @db.Uuid
-    role           Role                    @map("role")
-    username       String                  @unique @map("username") @db.VarChar(64)
-    password       String                  @map("password") @db.Char(60)
-    secondName     String                  @map("second_name") @db.VarChar(64)
-    firstName      String                  @map("first_name") @db.VarChar(64)
-    middleName     String                  @map("middle_name") @db.VarChar(64)
-    createdAt      DateTime                @default(now()) @map("created_at")
-    updatedAt      DateTime                @default(now()) @updatedAt @map("updated_at")
+    id           String            @id() @default(dbgenerated("gen_random_uuid()")) @map("user_id") @db.Uuid
+    organization UserOrganization?
+    class        ClassTeacher?
+    role         Role              @map("role")
+    username     String            @unique @map("username") @db.VarChar(64)
+    password     String            @map("password") @db.Char(60)
+    secondName   String            @map("second_name") @db.VarChar(64)
+    firstName    String            @map("first_name") @db.VarChar(64)
+    middleName   String            @map("middle_name") @db.VarChar(64)
+    createdAt    DateTime          @default(now()) @map("created_at")
+    updatedAt    DateTime          @default(now()) @updatedAt @map("updated_at")
 
     @@map("users")
 }
 
+model UserOrganization {
+    user           User                     @relation(fields: [userId], references: [id], onUpdate: Cascade, onDelete: Cascade)
+    userId         String                   @id() @map("user_id") @db.Uuid
+    organization   EducationalOrganization? @relation(fields: [organizationId], references: [id], onUpdate: Cascade, onDelete: Cascade)
+    organizationId String                   @map("organization_id") @db.Uuid
+
+    createdAt DateTime @default(now()) @map("created_at")
+
+    @@map("users_organizations")
+}
+
 model Class {
     id             String                  @id() @default(dbgenerated("gen_random_uuid()")) @map("class_id") @db.Uuid
-    organization   EducationalOrganization @relation(fields: [organizationId], references: [id])
+    organization   EducationalOrganization @relation(fields: [organizationId], references: [id], onUpdate: Cascade, onDelete: Cascade)
     organizationId String                  @map("organization_id") @db.Uuid
     number         Int                     @map("number")
     liter          String                  @map("liter") @db.Char(1)
     academicYear   String                  @map("academic_year") @db.Char(9)
     students       Student[]
+    teachers       ClassTeacher[]
 
+    @@unique([organizationId, number, liter, academicYear])
     @@map("classes")
+}
+
+model ClassTeacher {
+    user    User   @relation(fields: [userId], references: [id], onUpdate: Cascade, onDelete: Cascade)
+    userId  String @id() @map("user_id") @db.Uuid
+    class   Class  @relation(fields: [classId], references: [id], onUpdate: Cascade, onDelete: Cascade)
+    classId String @map("class_id") @db.Uuid
+
+    createdAt DateTime @default(now()) @map("created_at")
+
+    @@map("class_teachers")
 }
 
 model Student {
     id         String   @id() @default(dbgenerated("gen_random_uuid()")) @map("student_id") @db.Uuid
-    class      Class    @relation(fields: [classId], references: [id])
+    class      Class    @relation(fields: [classId], references: [id], onUpdate: Cascade, onDelete: Cascade)
     classId    String   @map("class_id") @db.Uuid
     snils      String   @unique @map("snils") @db.Char(14)
     secondName String   @map("second_name") @db.VarChar(64)
@@ -100,18 +124,18 @@ model MedicalHealthOption {
 }
 
 model MedicalHealthOptionRecommendation {
-    id       Int                  @id() @default(autoincrement()) @map("recommendation_id")
-    option   MedicalHealthOption? @relation(fields: [optionId], references: [id], onUpdate: Cascade, onDelete: Cascade)
-    optionId Int                  @map("option_id")
-    title    String               @map("title")
+    id       Int                 @id() @default(autoincrement()) @map("recommendation_id")
+    option   MedicalHealthOption @relation(fields: [optionId], references: [id], onUpdate: Cascade, onDelete: Cascade)
+    optionId Int                 @map("option_id")
+    title    String              @map("title")
 
     @@map("medical_health_options_recommendations")
 }
 
 model MedicalHealthOptionLog {
     id              Int                 @id() @default(autoincrement()) @map("log_id")
-    medicalHealth   MedicalHealth?      @relation(fields: [medicalHealthId], references: [studentId], onUpdate: Cascade, onDelete: Cascade)
-    medicalHealthId String?             @map("medical_health_id") @db.Uuid
+    medicalHealth   MedicalHealth       @relation(fields: [medicalHealthId], references: [studentId], onUpdate: Cascade, onDelete: Cascade)
+    medicalHealthId String              @map("medical_health_id") @db.Uuid
     option          MedicalHealthOption @relation(fields: [optionId], references: [id], onUpdate: Cascade, onDelete: Cascade)
     optionId        Int                 @map("option_id")
     createdAt       DateTime            @default(now()) @map("created_at")
@@ -143,18 +167,18 @@ model PedagogueHealthOption {
 }
 
 model PedagogueHealthOptionRecommendation {
-    id       Int                    @id() @default(autoincrement()) @map("recommendation_id")
-    option   PedagogueHealthOption? @relation(fields: [optionId], references: [id], onUpdate: Cascade, onDelete: Cascade)
-    optionId Int                    @map("option_id")
-    title    String                 @map("title")
+    id       Int                   @id() @default(autoincrement()) @map("recommendation_id")
+    option   PedagogueHealthOption @relation(fields: [optionId], references: [id], onUpdate: Cascade, onDelete: Cascade)
+    optionId Int                   @map("option_id")
+    title    String                @map("title")
 
     @@map("pedagogue_health_options_recommendations")
 }
 
 model PedagogueHealthOptionLog {
     id                Int                   @id() @default(autoincrement()) @map("log_id")
-    pedagogueHealth   PedagogueHealth?      @relation(fields: [pedagogueHealthId], references: [studentId], onUpdate: Cascade, onDelete: Cascade)
-    pedagogueHealthId String?               @map("pedagogue_health_id") @db.Uuid
+    pedagogueHealth   PedagogueHealth       @relation(fields: [pedagogueHealthId], references: [studentId], onUpdate: Cascade, onDelete: Cascade)
+    pedagogueHealthId String                @map("pedagogue_health_id") @db.Uuid
     option            PedagogueHealthOption @relation(fields: [optionId], references: [id], onUpdate: Cascade, onDelete: Cascade)
     optionId          Int                   @map("option_id")
     createdAt         DateTime              @default(now()) @map("created_at")
@@ -198,8 +222,8 @@ model PhysicalHealthOptionRecommendation {
 
 model PhysicalHealthOptionLog {
     id               Int                  @id() @default(autoincrement()) @map("log_id")
-    physicalHealth   PhysicalHealth?      @relation(fields: [physicalHealthId], references: [studentId], onUpdate: Cascade, onDelete: Cascade)
-    physicalHealthId String?              @map("physical_health_id") @db.Uuid
+    physicalHealth   PhysicalHealth       @relation(fields: [physicalHealthId], references: [studentId], onUpdate: Cascade, onDelete: Cascade)
+    physicalHealthId String               @map("physical_health_id") @db.Uuid
     option           PhysicalHealthOption @relation(fields: [optionId], references: [id], onUpdate: Cascade, onDelete: Cascade)
     optionId         Int                  @map("option_id")
     createdAt        DateTime             @default(now()) @map("created_at")
@@ -208,11 +232,11 @@ model PhysicalHealthOptionLog {
 }
 
 model PhysicalHealthGroupLog {
-    id               Int             @id() @default(autoincrement()) @map("log_id")
-    physicalHealth   PhysicalHealth? @relation(fields: [physicalHealthId], references: [studentId], onUpdate: Cascade, onDelete: Cascade)
-    physicalHealthId String?         @map("physical_health_id") @db.Uuid
-    healthGroup      HealthGroup     @map("health_group")
-    createdAt        DateTime        @default(now()) @map("created_at")
+    id               Int            @id() @default(autoincrement()) @map("log_id")
+    physicalHealth   PhysicalHealth @relation(fields: [physicalHealthId], references: [studentId], onUpdate: Cascade, onDelete: Cascade)
+    physicalHealthId String         @map("physical_health_id") @db.Uuid
+    healthGroup      HealthGroup    @map("health_group")
+    createdAt        DateTime       @default(now()) @map("created_at")
 
     @@map("_student_physical_health_group_logs")
 }
@@ -242,18 +266,18 @@ model PsychologicalHealthOption {
 }
 
 model PsychologicalHealthOptionRecommendation {
-    id       Int                        @id() @default(autoincrement()) @map("recommendation_id")
-    option   PsychologicalHealthOption? @relation(fields: [optionId], references: [id], onUpdate: Cascade, onDelete: Cascade)
-    optionId Int                        @map("option_id")
-    title    String                     @map("title")
+    id       Int                       @id() @default(autoincrement()) @map("recommendation_id")
+    option   PsychologicalHealthOption @relation(fields: [optionId], references: [id], onUpdate: Cascade, onDelete: Cascade)
+    optionId Int                       @map("option_id")
+    title    String                    @map("title")
 
     @@map("psychological_health_options_recommendations")
 }
 
 model PsychologicalHealthOptionLog {
     id                    Int                       @id() @default(autoincrement()) @map("log_id")
-    psychologicalHealth   PsychologicalHealth?      @relation(fields: [psychologicalHealthId], references: [studentId], onUpdate: Cascade, onDelete: Cascade)
-    psychologicalHealthId String?                   @map("psychological_health_id") @db.Uuid
+    psychologicalHealth   PsychologicalHealth       @relation(fields: [psychologicalHealthId], references: [studentId], onUpdate: Cascade, onDelete: Cascade)
+    psychologicalHealthId String                    @map("psychological_health_id") @db.Uuid
     option                PsychologicalHealthOption @relation(fields: [optionId], references: [id], onUpdate: Cascade, onDelete: Cascade)
     optionId              Int                       @map("option_id")
     createdAt             DateTime                  @default(now()) @map("created_at")
@@ -284,18 +308,18 @@ model SocialHealthOption {
 }
 
 model SocialHealthOptionRecommendation {
-    id       Int                 @id() @default(autoincrement()) @map("recommendation_id")
-    option   SocialHealthOption? @relation(fields: [optionId], references: [id], onUpdate: Cascade, onDelete: Cascade)
-    optionId Int?                @map("option_id")
-    title    String              @map("title")
+    id       Int                @id() @default(autoincrement()) @map("recommendation_id")
+    option   SocialHealthOption @relation(fields: [optionId], references: [id], onUpdate: Cascade, onDelete: Cascade)
+    optionId Int                @map("option_id")
+    title    String             @map("title")
 
     @@map("social_health_options_recommendations")
 }
 
 model SocialHealthOptionLog {
     id             Int                @id() @default(autoincrement()) @map("log_id")
-    socialHealth   SocialHealth?      @relation(fields: [socialHealthId], references: [studentId], onUpdate: Cascade, onDelete: Cascade)
-    socialHealthId String?            @map("social_health_id") @db.Uuid
+    socialHealth   SocialHealth       @relation(fields: [socialHealthId], references: [studentId], onUpdate: Cascade, onDelete: Cascade)
+    socialHealthId String             @map("social_health_id") @db.Uuid
     option         SocialHealthOption @relation(fields: [optionId], references: [id], onUpdate: Cascade, onDelete: Cascade)
     optionId       Int                @map("option_id")
     createdAt      DateTime           @default(now()) @map("created_at")
@@ -314,16 +338,17 @@ model Conclusion {
 }
 
 model ConclusionRecommendation {
-    id           Int         @id() @default(autoincrement()) @map("recommendation_id")
-    conclusion   Conclusion? @relation(fields: [conclusionId], references: [id], onUpdate: Cascade, onDelete: Cascade)
-    conclusionId Int         @map("conclusion_id")
-    title        String      @map("title")
+    id           Int        @id() @default(autoincrement()) @map("recommendation_id")
+    conclusion   Conclusion @relation(fields: [conclusionId], references: [id], onUpdate: Cascade, onDelete: Cascade)
+    conclusionId Int        @map("conclusion_id")
+    title        String     @map("title")
 
     @@map("conclusions_recommendations")
 }
 
 enum Role {
     OPERATOR
+    SCHOOL_OPERATOR
     CLASS_TEACHER
     HEALTH_WORKER
     PEDAGOGUE

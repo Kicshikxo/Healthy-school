@@ -8,7 +8,8 @@ export default defineEventHandler(async (event) => {
     if (!tokenData) return
 
     const user = await prisma.user.findUnique({
-        where: { id: tokenData.id }
+        where: { id: tokenData.id },
+        include: { organization: true }
     })
 
     if (!user) {
@@ -33,7 +34,7 @@ export default defineEventHandler(async (event) => {
 
     return {
         id: user.id,
-        organizationId: user.organizationId,
+        organizationId: user.organization?.organizationId,
         role: user.role,
         firstName: user.firstName,
         secondName: user.secondName,

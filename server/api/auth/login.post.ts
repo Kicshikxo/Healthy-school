@@ -19,9 +19,8 @@ export default defineEventHandler(async (event) => {
     }
 
     const user = await prisma.user.findFirst({
-        where: {
-            username: loginData.username
-        }
+        where: { username: loginData.username },
+        include: { organization: true }
     })
     if (user && (await compare(loginData.password, user!.password))) {
         setCookie(
@@ -30,7 +29,7 @@ export default defineEventHandler(async (event) => {
             jwt.sign(
                 {
                     id: user.id,
-                    organizationId: user.organizationId,
+                    organizationId: user.organization?.organizationId,
                     role: user.role,
                     password: crc32(user.password).toString(16)
                 } as AuthTokenData,

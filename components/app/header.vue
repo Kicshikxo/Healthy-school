@@ -74,6 +74,7 @@ const menuItems = ref<MenuItem[]>([
 
 const roleLocalization: { [key in Role]: string } = {
     OPERATOR: 'Оператор',
+    SCHOOL_OPERATOR: 'Оператор школы',
     CLASS_TEACHER: 'Классный руководитель',
     HEALTH_WORKER: 'Медицинский работник',
     PEDAGOGUE: 'Педагог',
