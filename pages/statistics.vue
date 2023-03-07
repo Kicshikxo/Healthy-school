@@ -103,11 +103,7 @@
                 </div>
 
                 <p-card v-if="classLogs.classes.selected" class="shadow-none border-1 surface-border">
-                    <template #title>
-                        <div class="flex justify-content-between">
-                            <span>Графики здоровья</span>
-                        </div>
-                    </template>
+                    <template #title> Динамика изменений показателей здоровья </template>
                     <template #content>
                         <p-tab-view v-model="activeConclusionTabIndex" :scrollable="true">
                             <p-tab-panel
@@ -122,6 +118,70 @@
                                 />
                             </p-tab-panel>
                         </p-tab-view>
+                    </template>
+                </p-card>
+
+                <p-card v-if="classLogs.classes.selected" class="shadow-none border-1 surface-border">
+                    <template #title> Показатели здоровья </template>
+                    <template #content>
+                        <div class="grid gap-2 text-lg text-center">
+                            <div class="col-3"></div>
+                            <div class="col grid grid-nogutter bg-green-100 border-round-top">
+                                <div class="col-6 p-1">Начало периода</div>
+                                <div class="col-6 p-1">Конец периода</div>
+                            </div>
+                            <div class="col grid grid-nogutter bg-yellow-100 border-round-top">
+                                <div class="col-6 p-1">Начало периода</div>
+                                <div class="col-6 p-1">Конец периода</div>
+                            </div>
+                            <div class="col grid grid-nogutter bg-red-100 border-round-top">
+                                <div class="col-6 p-1">Начало периода</div>
+                                <div class="col-6 p-1">Конец периода</div>
+                            </div>
+                        </div>
+                        <div
+                            v-for="conclusionType in (Object.keys(ConclusionType) as ConclusionType[])"
+                            class="grid gap-2 align-items-center text-center"
+                        >
+                            <div class="col-3 py-3 text-lg text-left">{{ conclusions.typeTitles[conclusionType] }}</div>
+                            <div
+                                v-for="healthZone in (Object.keys(HealthZone) as HealthZone[])"
+                                class="col grid grid-nogutter py-3"
+                                :class="{
+                                    'bg-green-100': healthZone === HealthZone.GREEN,
+                                    'bg-yellow-100': healthZone === HealthZone.YELLOW,
+                                    'bg-red-100': healthZone === HealthZone.RED
+                                }"
+                            >
+                                <div class="col-6">
+                                    {{ { ...classLogs.monthlyCount.at(0)?.count[conclusionType] }[healthZone] }}
+                                </div>
+                                <div class="col-6 flex justify-content-between">
+                                    <i class="pi pi-minus opacity-0" />
+                                    <span> {{ { ...classLogs.monthlyCount.at(-1)?.count[conclusionType] }[healthZone] }}</span>
+                                    <i
+                                        class="pi"
+                                        :class="{
+                                            'pi-minus':
+                                                ({ ...classLogs.monthlyCount.at(-1)?.count[conclusionType] }[healthZone] ?? 0) -
+                                                    ({ ...classLogs.monthlyCount.at(0)?.count[conclusionType] }[healthZone] ??
+                                                        0) ===
+                                                0,
+                                            'pi-chevron-up':
+                                                ({ ...classLogs.monthlyCount.at(-1)?.count[conclusionType] }[healthZone] ?? 0) -
+                                                    ({ ...classLogs.monthlyCount.at(0)?.count[conclusionType] }[healthZone] ??
+                                                        0) >
+                                                0,
+                                            'pi-chevron-down':
+                                                ({ ...classLogs.monthlyCount.at(-1)?.count[conclusionType] }[healthZone] ?? 0) -
+                                                    ({ ...classLogs.monthlyCount.at(0)?.count[conclusionType] }[healthZone] ??
+                                                        0) <
+                                                0
+                                        }"
+                                    />
+                                </div>
+                            </div>
+                        </div>
                     </template>
                 </p-card>
             </div>
@@ -216,7 +276,7 @@ const chartOptions = computed(() => ({
                 text: 'Количество человек'
             },
             min: 0,
-            max: classLogs.classes.selected?._count.students,
+            max: classLogs.classes.selected?._count.students ?? 0,
             ticks: {
                 stepSize: 1
             }
