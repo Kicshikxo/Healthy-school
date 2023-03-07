@@ -534,10 +534,12 @@ async function createUser() {
         name: 'organizationId',
         message: 'Выберите образовательную организацию для добавления в неё пользователя',
         hint: ' ',
-        choices: organizations.map((organization) => ({
-            title: organization.name,
-            value: organization.id
-        }))
+        choices: organizations
+            .map((organization) => ({
+                title: organization.name,
+                value: organization.id
+            }))
+            .concat({ title: 'Не указана (только для оператора)', value: 'none' })
     })
     if (organizationId === undefined) return
 
@@ -567,7 +569,9 @@ async function createUser() {
             name: 'role',
             message: 'Выберите роль пользователя',
             hint: ' ',
-            choices: (Object.keys(Role) as Role[]).map((role) => ({ title: roleLocalization[role], value: role }))
+            choices: (Object.keys(Role) as Role[])
+                .filter((role) => !(organizationId === 'none' && role !== Role.OPERATOR))
+                .map((role) => ({ title: roleLocalization[role], value: role }))
         },
         {
             type: 'text',
@@ -611,11 +615,14 @@ async function createUser() {
                     middleName: userData.middleName,
 
                     role: userData.role,
-                    organization: {
-                        create: {
-                            organizationId: organizationId
-                        }
-                    }
+                    organization:
+                        organizationId != 'none'
+                            ? {
+                                  create: {
+                                      organizationId: organizationId
+                                  }
+                              }
+                            : undefined
                 }
             }),
         { text: 'Создание пользователя' }
