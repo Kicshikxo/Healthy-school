@@ -1,115 +1,134 @@
 <template>
-    <div class="flex flex-column gap-2 p-5">
-        <div class="grid">
-            <div class="col flex flex-column justify-content-between gap-5 p-2 pt-5">
-                <span class="p-float-label">
-                    <p-dropdown
-                        :loading="logs.municipalities.loading"
-                        :options="logs.municipalities.list"
-                        v-model="logs.municipalities.selected"
-                        optionLabel="name"
-                        placeholder="Выберите муниципальное образование"
-                        id="select-organization"
-                        class="w-full"
-                    />
-                    <label for="select-organization">Муниципальное образование</label>
-                </span>
+    <p-tab-view v-model="activeTabIndex">
+        <p-tab-panel header="По классу">
+            <div class="flex flex-column gap-2 p-5 pt-2">
+                <div class="grid">
+                    <div class="col flex flex-column justify-content-between">
+                        <span class="field">
+                            <label for="select-municipaly">Муниципальное образование</label>
+                            <p-dropdown
+                                :loading="classLogs.municipalities.loading"
+                                :options="classLogs.municipalities.list"
+                                v-model="classLogs.municipalities.selected"
+                                optionLabel="name"
+                                placeholder="Выберите муниципальное образование"
+                                id="select-municipaly"
+                                class="w-full"
+                            />
+                        </span>
 
-                <span class="p-float-label">
-                    <p-dropdown
-                        :loading="logs.organizations.loading"
-                        :disabled="!logs.municipalities.selected"
-                        :options="logs.organizations.list"
-                        v-model="logs.organizations.selected"
-                        optionLabel="name"
-                        placeholder="Выберите образовательную организацию"
-                        id="select-organization"
-                        class="w-full"
-                    />
-                    <label for="select-organization">Образовательная огранизация</label>
-                </span>
+                        <span class="field">
+                            <label for="select-organization" :class="{ 'opacity-60': !classLogs.municipalities.selected }"
+                                >Образовательная огранизация</label
+                            >
+                            <p-dropdown
+                                :loading="classLogs.organizations.loading"
+                                :disabled="!classLogs.municipalities.selected"
+                                :options="classLogs.organizations.list"
+                                v-model="classLogs.organizations.selected"
+                                optionLabel="name"
+                                placeholder="Выберите образовательную организацию"
+                                id="select-organization"
+                                class="w-full"
+                            />
+                        </span>
 
-                <span class="p-float-label">
-                    <p-dropdown
-                        :loading="logs.classes.loading"
-                        :disabled="!logs.organizations.selected"
-                        :options="logs.classes.list"
-                        v-model="logs.classes.selected"
-                        optionLabel="number"
-                        placeholder="Выберите класс"
-                        id="select-class"
-                        class="w-full"
-                    >
-                        <template #value="{ value }">
-                            <span v-if="value">
-                                {{ value.number }}{{ value.liter }} ( {{ value._count.students }} человек )
-                            </span>
-                        </template>
-                        <template #option="{ option }">
-                            <span v-if="option">
-                                {{ option.number }}{{ option.liter }} ( {{ option._count.students }} человек )
-                            </span>
-                        </template>
-                    </p-dropdown>
-                    <label for="select-class">Класс</label>
-                </span>
-            </div>
-            <div class="w-16rem p-2">
-                <p-calendar :inline="true" view="month" v-model="logs.selectedEndDate" class="w-full h-full" />
-            </div>
-        </div>
+                        <span class="field">
+                            <label for="select-class" :class="{ 'opacity-60': !classLogs.organizations.selected }">Класс</label>
+                            <p-dropdown
+                                :loading="classLogs.classes.loading"
+                                :disabled="!classLogs.organizations.selected"
+                                :options="classLogs.classes.list"
+                                v-model="classLogs.classes.selected"
+                                optionLabel="number"
+                                placeholder="Выберите класс"
+                                id="select-class"
+                                class="w-full"
+                            >
+                                <template v-if="classLogs.organizations.selected" #value="{ value }">
+                                    <span v-if="value">
+                                        {{ value.number }}{{ value.liter }} ( {{ value._count.students }} человек )
+                                    </span>
+                                </template>
+                                <template v-if="classLogs.organizations.selected" #option="{ option }">
+                                    <span v-if="option">
+                                        {{ option.number }}{{ option.liter }} ( {{ option._count.students }} человек )
+                                    </span>
+                                </template>
+                            </p-dropdown>
+                        </span>
+                    </div>
+                    <div class="flex flex-column justify-content-between w-16rem p-2">
+                        <span class="field">
+                            <label for="class-start-date">Начало диапазона</label>
+                            <p-calendar
+                                inputId="class-start-date"
+                                view="month"
+                                dateFormat="MM yy"
+                                :maxDate="classLogs.selectedEndDate"
+                                v-model="classLogs.selectedStartDate"
+                                :manualInput="false"
+                                class="w-full"
+                                :showIcon="true"
+                            />
+                        </span>
+                        <span class="field">
+                            <label for="class-end-date">Конец диапазона</label>
+                            <p-calendar
+                                inputId="class-end-date"
+                                view="month"
+                                dateFormat="MM yy"
+                                :minDate="classLogs.selectedStartDate"
+                                v-model="classLogs.selectedEndDate"
+                                :manualInput="false"
+                                class="w-full"
+                                :showIcon="true"
+                            />
+                        </span>
+                    </div>
+                </div>
 
-        <p-card class="shadow-none border-1 surface-border" :class="{ 'opacity-60': logs.loading }">
-            <template #title
-                ><div class="flex justify-content-between">
-                    <span>График здоровья</span>
-                    <p-button
-                        :loading="logs.loading"
-                        icon="pi pi-refresh"
-                        label="Обновить"
-                        class="p-button-primary"
-                        @click="logs.refresh"
-                    /></div
-            ></template>
-            <template #content>
-                <p-chart type="bar" :data="chartData" :options="chartOptions" class="w-full" style="height: 40rem" />
-            </template>
-        </p-card>
-        <p-card
-            class="shadow-none border-1 surface-border p-card-content-pb-0 p-card-content-pt-0"
-            :class="{ 'opacity-60': logs.loading }"
-        >
-            <template #title> Список учащихся </template>
-            <template #content>
-                <p-card v-for="student in logs.students" class="shadow-none">
-                    <template #title>{{ student.secondName }} {{ student.firstName }} {{ student.middleName }}</template>
-                    <template #content>
-                        <div class="flex flex-wrap gap-2">
-                            <p-chip v-for="conclusionType in (Object.keys(ConclusionType) as ConclusionType[])" class="p-2">
-                                <health-zone-indicator
-                                    :healthZone="student.healthZones[conclusionType]"
-                                    :label="conclusion.typeTitles[conclusionType]"
-                                />
-                            </p-chip>
+                <p-card v-if="classLogs.classes.selected" class="shadow-none border-1 surface-border">
+                    <template #title>
+                        <div class="flex justify-content-between">
+                            <span>Графики здоровья</span>
                         </div>
                     </template>
+                    <template #content>
+                        <p-tab-view v-model="activeConclusionTabIndex" :scrollable="true">
+                            <p-tab-panel
+                                v-for="conclusionType in (Object.keys(ConclusionType) as ConclusionType[])"
+                                :header="conclusions.typeTitles[conclusionType]"
+                            >
+                                <p-chart
+                                    :data="chartsData[conclusionType]"
+                                    :options="chartOptions"
+                                    class="w-full"
+                                    style="height: 40rem"
+                                />
+                            </p-tab-panel>
+                        </p-tab-view>
+                    </template>
                 </p-card>
-            </template>
-        </p-card>
-    </div>
+            </div>
+        </p-tab-panel>
+    </p-tab-view>
 </template>
 
 <script setup lang="ts">
 import { ConclusionType, HealthZone } from '@prisma/client'
-import { useLogsStore } from '~~/store/logs'
+import { useClassLogsStore } from '~~/store/logs/class'
 import { useConclusionsStore } from '~~/store/health/conclusions'
 
 definePageMeta({
     title: 'Статистика'
 })
 
-const logs = useLogsStore()
-const conclusion = useConclusionsStore()
+const activeTabIndex = ref(0)
+const activeConclusionTabIndex = ref(0)
+
+const classLogs = useClassLogsStore()
+const conclusions = useConclusionsStore()
 
 const barColors = ref<{ [key in HealthZone]: string }>({
     GREEN: '#22C55E',
@@ -125,41 +144,70 @@ onBeforeMount(() => {
     barColors.value.RED = styles.getPropertyValue('--red-400') || barColors.value.RED
 })
 
-const chartData = computed(() => ({
-    labels: (Object.keys(ConclusionType) as ConclusionType[]).map((type) => conclusion.typeTitles[type]),
-    datasets: [
-        {
-            label: 'Зелёная группа здоровья',
-            backgroundColor: barColors.value.GREEN,
-            data: (Object.keys(ConclusionType) as ConclusionType[]).map((type) => logs.studentsCount[type]?.GREEN ?? 0)
-        },
-        {
-            label: 'Жёлтая группа здоровья',
-            backgroundColor: barColors.value.YELLOW,
-            data: (Object.keys(ConclusionType) as ConclusionType[]).map((type) => logs.studentsCount[type]?.YELLOW ?? 0)
-        },
-        {
-            label: 'Красная группа здоровья',
-            backgroundColor: barColors.value.RED,
-            data: (Object.keys(ConclusionType) as ConclusionType[]).map((type) => logs.studentsCount[type]?.RED ?? 0)
+const monthNames = [
+    'Декабрь',
+    'Январь',
+    'Февраль',
+    'Март',
+    'Апрель',
+    'Май',
+    'Июнь',
+    'Июль',
+    'Август',
+    'Сентябрь',
+    'Октябрь',
+    'Ноябрь'
+]
+
+const chartsData = computed(() =>
+    (Object.keys(ConclusionType) as ConclusionType[]).reduce((acc, type) => {
+        acc[type] = {
+            labels: classLogs.monthlyCount.map((month) => monthNames[month.date.getMonth()]),
+            datasets: [
+                {
+                    type: 'bar',
+                    label: 'Зелёная группа здоровья',
+                    backgroundColor: barColors.value.GREEN,
+                    data: classLogs.monthlyCount.map((month) => month.count[type]?.GREEN)
+                },
+                {
+                    type: 'bar',
+                    label: 'Жёлтая группа здоровья',
+                    backgroundColor: barColors.value.YELLOW,
+                    data: classLogs.monthlyCount.map((month) => month.count[type]?.YELLOW)
+                },
+                {
+                    type: 'bar',
+                    label: 'Красная группа здоровья',
+                    backgroundColor: barColors.value.RED,
+                    data: classLogs.monthlyCount.map((month) => month.count[type]?.RED)
+                }
+            ]
         }
-    ]
-}))
+        return acc
+    }, {} as { [key in ConclusionType]: any })
+)
 
 const chartOptions = computed(() => ({
-    indexAxis: 'y',
+    animation: false,
     responsive: true,
     maintainAspectRatio: false,
     scales: {
-        x: {
+        y: {
             title: {
                 display: true,
                 text: 'Количество человек'
             },
             min: 0,
-            max: logs.loading ? 0 : logs.classes.selected?._count.students ?? 0,
+            max: classLogs.classes.selected?._count.students,
             ticks: {
                 stepSize: 1
+            }
+        },
+        x: {
+            title: {
+                display: true,
+                text: 'Месяц'
             }
         }
     }
