@@ -176,7 +176,7 @@ const monthNames = [
 const chartsData = computed(() =>
     (Object.keys(ConclusionType) as ConclusionType[]).reduce((acc, type) => {
         acc[type] = {
-            labels: classLogs.monthlyCount.map((month) => monthNames[month.date.getMonth()]),
+            labels: classLogs.monthlyCount.map((month) => `${monthNames[month.date.getMonth()]} ${month.date.getFullYear()}`),
             datasets: [
                 {
                     type: 'bar',
