@@ -65,6 +65,13 @@
                                 inputId="class-start-date"
                                 view="month"
                                 dateFormat="MM yy"
+                                :minDate="
+                                    new Date(
+                                        classLogs.selectedEndDate.getFullYear(),
+                                        classLogs.selectedEndDate.getMonth() - 12,
+                                        1
+                                    )
+                                "
                                 :maxDate="classLogs.selectedEndDate"
                                 v-model="classLogs.selectedStartDate"
                                 :manualInput="false"
@@ -79,6 +86,13 @@
                                 view="month"
                                 dateFormat="MM yy"
                                 :minDate="classLogs.selectedStartDate"
+                                :maxDate="
+                                    new Date(
+                                        classLogs.selectedStartDate.getFullYear(),
+                                        classLogs.selectedStartDate.getMonth() + 12,
+                                        1
+                                    )
+                                "
                                 v-model="classLogs.selectedEndDate"
                                 :manualInput="false"
                                 class="w-full"
@@ -168,18 +182,21 @@ const chartsData = computed(() =>
                     type: 'bar',
                     label: 'Зелёная группа здоровья',
                     backgroundColor: barColors.value.GREEN,
+                    borderRadius: 8,
                     data: classLogs.monthlyCount.map((month) => month.count[type]?.GREEN)
                 },
                 {
                     type: 'bar',
                     label: 'Жёлтая группа здоровья',
                     backgroundColor: barColors.value.YELLOW,
+                    borderRadius: 8,
                     data: classLogs.monthlyCount.map((month) => month.count[type]?.YELLOW)
                 },
                 {
                     type: 'bar',
                     label: 'Красная группа здоровья',
                     backgroundColor: barColors.value.RED,
+                    borderRadius: 8,
                     data: classLogs.monthlyCount.map((month) => month.count[type]?.RED)
                 }
             ]
