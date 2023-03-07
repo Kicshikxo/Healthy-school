@@ -35,13 +35,10 @@ export const useClassLogsStore = defineStore('classLogs', () => {
     const monthlyData = computed(() => {
         return [
             ...Array(
-                Math.min(
-                    selectedEndDate.value.getMonth() -
-                        selectedStartDate.value.getMonth() +
-                        12 * (selectedEndDate.value.getFullYear() - selectedStartDate.value.getFullYear()) +
-                        1,
-                    20
-                )
+                selectedEndDate.value.getMonth() -
+                    selectedStartDate.value.getMonth() +
+                    12 * (selectedEndDate.value.getFullYear() - selectedStartDate.value.getFullYear()) +
+                    1
             ).keys()
         ]
             .map((index) => {
