@@ -10,6 +10,23 @@ export default defineEventHandler(async (event) => {
             municipality: {
                 id: query.municipalityId
             }
+        },
+        include: {
+            _count: {
+                select: {
+                    classes: true
+                }
+            },
+            classes: {
+                select: {
+                    id: true,
+                    _count: {
+                        select: {
+                            students: true
+                        }
+                    }
+                }
+            }
         }
     })
 })
