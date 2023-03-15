@@ -5,7 +5,9 @@ export const useOrganizationLogsStore = defineStore('organizationLogs', () => {
     const selectedStartDate = ref<Date>(new Date())
     const selectedEndDate = ref<Date>(new Date())
 
-    const selectedMunicipality = ref<Municipality>()
+    const selectedMunicipality = ref<
+        Municipality & { _count: { organizations: number }; organizations: { classes: { _count: { students: number } }[] }[] }
+    >()
     const selectedMunicipalityId = computed(() => selectedMunicipality.value?.id)
 
     const selectedOrganization = ref<EducationalOrganization & { classes: { id: string; _count: { students: number } }[] }>()
@@ -32,7 +34,7 @@ export const useOrganizationLogsStore = defineStore('organizationLogs', () => {
                 return {
                     date: endDate,
                     students: selectedOrganizationId.value
-                        ? useFetch('/api/students/logs/organization/list', {
+                        ? useFetch('/api/students/logs/list', {
                               headers: useRequestHeaders() as HeadersInit,
                               query: {
                                   organizationId: selectedOrganizationId.value,
@@ -45,7 +47,7 @@ export const useOrganizationLogsStore = defineStore('organizationLogs', () => {
             .reverse()
     })
 
-    watchEffect(() => monthlyData.value) // Лютый костыль
+    watchEffect(() => monthlyData.value) // Лютый костыль для графика
 
     const monthlyCount = computed<
         {
