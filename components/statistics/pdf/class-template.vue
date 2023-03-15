@@ -26,7 +26,7 @@
                                     0
                                 )),
                             0
-                        )
+                        ) ?? 0
                     }}
                     человек
                 </span>
@@ -43,7 +43,7 @@
                         classLogs.organizations.selected?.classes.reduce(
                             (acc, currentClass) => (acc += currentClass._count.students),
                             0
-                        )
+                        ) ?? 0
                     }}
                     человек
                 </span>
