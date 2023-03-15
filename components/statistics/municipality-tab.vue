@@ -3,68 +3,27 @@
         <div class="grid">
             <div class="col flex flex-column">
                 <span class="field">
-                    <label for="select-municipaly"> Муниципальное образование </label>
+                    <label for="select-municipaly">Муниципальное образование</label>
                     <p-dropdown
-                        :loading="classLogs.municipalities.loading"
-                        :options="classLogs.municipalities.list"
-                        v-model="classLogs.municipalities.selected"
+                        :loading="municipalityLogs.municipalities.loading"
+                        :options="municipalityLogs.municipalities.list"
+                        v-model="municipalityLogs.municipalities.selected"
                         optionLabel="name"
                         placeholder="Выберите муниципальное образование"
                         id="select-municipaly"
                         class="w-full"
                     />
                 </span>
-
-                <span class="field">
-                    <label for="select-organization" :class="{ 'opacity-60': !classLogs.municipalities.selected }">
-                        Образовательная огранизация
-                    </label>
-                    <p-dropdown
-                        :loading="classLogs.organizations.loading"
-                        :disabled="!classLogs.municipalities.selected"
-                        :options="classLogs.organizations.list"
-                        v-model="classLogs.organizations.selected"
-                        optionLabel="name"
-                        placeholder="Выберите образовательную организацию"
-                        id="select-organization"
-                        class="w-full"
-                    />
-                </span>
-
-                <span class="field">
-                    <label for="select-class" :class="{ 'opacity-60': !classLogs.organizations.selected }">Класс</label>
-                    <p-dropdown
-                        :loading="classLogs.classes.loading"
-                        :disabled="!classLogs.organizations.selected"
-                        :options="classLogs.classes.list"
-                        v-model="classLogs.classes.selected"
-                        optionLabel="number"
-                        placeholder="Выберите класс"
-                        id="select-class"
-                        class="w-full"
-                    >
-                        <template v-if="classLogs.organizations.selected" #value="{ value }">
-                            <span v-if="value">
-                                {{ value.number }}{{ value.liter }} ( {{ value._count.students }} человек )
-                            </span>
-                        </template>
-                        <template v-if="classLogs.organizations.selected" #option="{ option }">
-                            <span v-if="option">
-                                {{ option.number }}{{ option.liter }} ( {{ option._count.students }} человек )
-                            </span>
-                        </template>
-                    </p-dropdown>
-                </span>
             </div>
             <div class="flex flex-column w-16rem p-2">
                 <statistics-range-selector
-                    v-model:startDate="classLogs.selectedStartDate"
-                    v-model:endDate="classLogs.selectedEndDate"
+                    v-model:startDate="municipalityLogs.selectedStartDate"
+                    v-model:endDate="municipalityLogs.selectedEndDate"
                 />
             </div>
         </div>
 
-        <p-card v-if="classLogs.classes.selected" class="shadow-none border-1 surface-border">
+        <p-card v-if="municipalityLogs.municipalities.selected" class="shadow-none border-1 surface-border">
             <template #title>
                 <div class="flex justify-content-between">
                     <div>Динамика изменений показателей здоровья</div>
@@ -96,26 +55,26 @@
 
                 <p-divider />
 
-                <statistics-health-dynamics :monthly-count="classLogs.monthlyCount" />
+                <statistics-health-dynamics :monthly-count="municipalityLogs.monthlyCount" />
             </template>
         </p-card>
 
         <div ref="PDFTemplate" class="fixed pointer-events-none" :style="{ 'z-index': PDFTemplatePreview ? 'auto' : -1 }">
-            <statistics-pdf-class-template />
+            <statistics-pdf-municipality-template />
         </div>
     </div>
 </template>
 
 <script setup lang="ts">
 import { HealthZone, ConclusionType } from '@prisma/client'
+import { useMunicipalityLogsStore } from '~~/store/logs/municipality'
 import { useConclusionsStore } from '~~/store/health/conclusions'
-import { useClassLogsStore } from '~~/store/logs/class'
 
 const props = defineProps<{
     barColors?: { [key in HealthZone]: string }
 }>()
 
-const classLogs = useClassLogsStore()
+const municipalityLogs = useMunicipalityLogsStore()
 const conclusions = useConclusionsStore()
 
 const activeConclusionTabIndex = ref(0)
@@ -130,11 +89,11 @@ const PDFTemplate = ref<HTMLElement>()
 const PDFLoading = ref(false)
 const PDFFileName = computed(
     () =>
-        `Статистика по классу ${monthName((classLogs.monthlyCount.at(0)?.date ?? new Date()).getMonth() - 1)} ${classLogs.monthlyCount
-            .at(0)
-            ?.date.getFullYear()} - ${monthName(
-            (classLogs.monthlyCount.at(-1)?.date ?? new Date()).getMonth() - 1
-        )} ${classLogs.monthlyCount.at(-1)?.date.getFullYear()}`
+        `Статистика по региону ${monthName(
+            (municipalityLogs.monthlyCount.at(0)?.date ?? new Date()).getMonth() - 1
+        )} ${municipalityLogs.monthlyCount.at(0)?.date.getFullYear()} - ${monthName(
+            (municipalityLogs.monthlyCount.at(-1)?.date ?? new Date()).getMonth() - 1
+        )} ${municipalityLogs.monthlyCount.at(-1)?.date.getFullYear()}`
 )
 
 async function printPDF() {
@@ -156,7 +115,7 @@ async function savePDF() {
 const chartData = computed(() =>
     (Object.keys(ConclusionType) as ConclusionType[]).reduce((acc, type) => {
         acc[type] = {
-            labels: classLogs.monthlyCount.map(
+            labels: municipalityLogs.monthlyCount.map(
                 (month) => `${monthName(month.date.getMonth() - 1)} ${month.date.getFullYear()}`
             ),
             datasets: [
@@ -165,21 +124,21 @@ const chartData = computed(() =>
                     label: 'Зелёная группа здоровья',
                     backgroundColor: props.barColors?.GREEN ?? '#22C55E',
                     borderRadius: 8,
-                    data: classLogs.monthlyCount.map((month) => month.count[type]?.GREEN)
+                    data: municipalityLogs.monthlyCount.map((month) => month.count[type]?.GREEN)
                 },
                 {
                     type: 'bar',
                     label: 'Жёлтая группа здоровья',
                     backgroundColor: props.barColors?.YELLOW ?? '#F59E0B',
                     borderRadius: 8,
-                    data: classLogs.monthlyCount.map((month) => month.count[type]?.YELLOW)
+                    data: municipalityLogs.monthlyCount.map((month) => month.count[type]?.YELLOW)
                 },
                 {
                     type: 'bar',
                     label: 'Красная группа здоровья',
                     backgroundColor: props.barColors?.RED ?? '#EF4444',
                     borderRadius: 8,
-                    data: classLogs.monthlyCount.map((month) => month.count[type]?.RED)
+                    data: municipalityLogs.monthlyCount.map((month) => month.count[type]?.RED)
                 }
             ]
         }
@@ -198,7 +157,11 @@ const chartOptions = computed(() => ({
                 text: 'Количество человек'
             },
             min: 0,
-            max: classLogs.classes.selected?._count.students ?? 0,
+            max: municipalityLogs.municipalities.selected?.organizations.reduce(
+                (acc, organization) =>
+                    (acc += organization.classes.reduce((acc, currentClass) => (acc += currentClass._count.students), 0)),
+                0
+            ),
             ticks: {
                 stepSize: 1
             }
