@@ -58,10 +58,10 @@
                 </div>
                 <div class="flex gap-2">
                     <role-access role="CLASS_TEACHER">
-                        <p-button icon="pi pi-print" class="p-button-rounded p-button-secondary" @click="printStudent" />
+                        <p-button icon="pi pi-print" class="p-button-rounded p-button-secondary" />
                     </role-access>
                     <role-access role="CLASS_TEACHER">
-                        <p-button icon="pi pi-file-pdf" class="p-button-rounded p-button-secondary" @click="saveToPDF" />
+                        <p-button icon="pi pi-file-pdf" class="p-button-rounded p-button-secondary" />
                     </role-access>
                     <role-access role="CLASS_TEACHER">
                         <p-button
@@ -92,14 +92,15 @@
         <role-access role="CLASS_TEACHER">
             <health-class-teacher />
         </role-access>
+        <role-access role="OPERATOR">
+            <health-route />
+        </role-access>
     </div>
 </template>
 
 <script setup lang="ts">
 import { useToast } from 'primevue/usetoast'
 import { useConfirm } from 'primevue/useconfirm'
-import jsPDF from 'jspdf'
-import html2canvas from 'html2canvas'
 import shortUUID from 'short-uuid'
 import { Gender } from '@prisma/client'
 import { useStudentStore } from '~~/store/student'
@@ -163,53 +164,5 @@ async function deleteStudent() {
     }
 
     router.back()
-}
-
-async function getPDF() {
-    const pdf = new jsPDF()
-    const canvas = await html2canvas(studentPage.value!, { windowWidth: 1000 })
-
-    const fullHeight = canvas.height
-    const pageHeight = canvas.width * (pdf.internal.pageSize.height / pdf.internal.pageSize.width)
-    const pages = Math.ceil(fullHeight / pageHeight)
-
-    const pageCanvas = document.createElement('canvas')
-    const pageContext = pageCanvas.getContext('2d')!
-
-    pageCanvas.width = canvas.width
-    pageCanvas.height = pageHeight
-
-    let pdfWidth = pdf.internal.pageSize.width
-    let pdfHeight = (pageCanvas.height * pdfWidth) / pageCanvas.width
-
-    for (let page = 0; page < pages; page++) {
-        if (page === pages - 1 && fullHeight % pageHeight !== 0) {
-            pageCanvas.height = fullHeight % pageHeight
-            pdfHeight = (pageCanvas.height * pdfWidth) / pageCanvas.width
-        }
-
-        if (page) pdf.addPage()
-
-        const width = pageCanvas.width
-        const height = pageCanvas.height
-        pageContext.clearRect(0, 0, width, height)
-        pageContext.drawImage(canvas, 0, page * pageHeight, width, height, 0, 0, width, height)
-
-        pdf.addImage(pageCanvas, 0, 0, pdfWidth, pdfHeight)
-    }
-    return pdf
-}
-
-async function printStudent() {
-    const pdf = await getPDF()
-
-    pdf.autoPrint()
-    pdf.output('dataurlnewwindow')
-}
-
-async function saveToPDF() {
-    const pdf = await getPDF()
-
-    pdf.save(`${student.data?.secondName} ${student.data?.firstName} ${student.data?.middleName}.pdf`)
 }
 </script>
