@@ -21,13 +21,31 @@ const prisma = new PrismaClient()
 export default defineEventHandler(async (event) => {
     if (!checkRole(event, { role: Role.OPERATOR })) return
 
-    const query = getQuery(event) as { classId?: string; endDate?: string }
+    const query = getQuery(event) as {
+        municipalityId?: string
+        organizationId?: string
+        classId?: string
+        studentId?: string
+        endDate?: string
+    }
 
-    if (!query.classId) return sendError(event, createError({ statusCode: 400, statusMessage: 'Class ID is not provided' }))
+    if (!(query.municipalityId || query.organizationId || query.classId || query.studentId))
+        return sendError(
+            event,
+            createError({
+                statusCode: 400,
+                statusMessage: 'municipalityId, organizationId, classId or studentId is not provided'
+            })
+        )
 
     const students = await prisma.student.findMany({
         where: {
-            classId: query.classId
+            AND: [
+                { id: query.studentId },
+                { classId: query.classId },
+                { class: { organizationId: query.organizationId } },
+                { class: { organization: { municipalityId: query.municipalityId } } }
+            ]
         },
         include: {
             medicalHealth: {
