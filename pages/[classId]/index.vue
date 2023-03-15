@@ -7,7 +7,6 @@
             scrollHeight="flex"
             dataKey="id"
             responsiveLayout="scroll"
-            row-style="cursor: pointer"
             @row-click="$router.push(`/${$route.params.classId}/${translator.fromUUID($event.data.id)}`)"
             class="p-datatable-lg"
         >
