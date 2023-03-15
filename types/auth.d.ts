@@ -1,4 +1,4 @@
-import { Role, User } from '@prisma/client'
+import { Role, User, UserOrganization } from '@prisma/client'
 
 declare global {
     interface LoginData {
@@ -15,7 +15,11 @@ declare global {
     interface SignInResult {
         status: number
         error: string | null
-        user: User | null
+        user:
+            | (User & {
+                  organization: UserOrganization | null
+              })
+            | null
     }
 
     interface SignOutOptions {
@@ -43,7 +47,4 @@ declare global {
         error: string | null
         data: SessionData | null
     }
-
-    type Without<T, U> = { [P in Exclude<keyof T, keyof U>]?: never }
-    type XOR<T, U> = T | U extends object ? (Without<T, U> & U) | (Without<U, T> & T) : T | U
 }
