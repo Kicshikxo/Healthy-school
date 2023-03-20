@@ -7,7 +7,7 @@
             scrollHeight="flex"
             dataKey="id"
             responsiveLayout="scroll"
-            @row-click="$router.push(`/${$route.params.classId}/${translator.fromUUID($event.data.id)}`)"
+            @row-click="$router.push(`/${$route.params.classId}/${shortUUID($event.data.id)}`)"
             class="p-datatable-lg"
         >
             <template #header>
@@ -42,7 +42,7 @@
             <p-column field="middleName" header="Отчество"></p-column>
             <p-column field="gender" header="Пол">
                 <template #body="{ data }">
-                    {{ genderLocalization[data.gender as Gender] }}
+                    {{ localizeGender(data.gender as Gender) }}
                 </template>
             </p-column>
             <p-column field="birthdate" header="Дата рождения">
@@ -100,7 +100,6 @@
 <script setup lang="ts">
 import { Gender, Student } from '@prisma/client'
 import { useClassStore } from '~~/store/class'
-import shortUUID from 'short-uuid'
 
 definePageMeta({
     title: 'Список учащихся',
@@ -111,15 +110,9 @@ const route = useRoute()
 
 const newStudent = ref<Student>({} as Student)
 const showDialog = ref(false)
-const translator = shortUUID()
 
 const currentClass = useClassStore()
-currentClass.setId(translator.toUUID(route.params.classId as string))
-
-const genderLocalization: { [key in Gender]: string } = {
-    MALE: 'Мужской',
-    FEMALE: 'Женский'
-}
+currentClass.setId(parseUUID(route.params.classId as string))
 
 async function addStudent() {
     const { error } = await useFetch('/api/students/add', {
