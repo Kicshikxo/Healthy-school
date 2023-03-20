@@ -1,79 +1,17 @@
 <template>
     <div ref="studentPage">
-        <section class="p-5">
-            <div class="flex justify-content-between gap-8">
-                <div class="flex flex-auto gap-5">
-                    <p-skeleton v-if="student.loading" width="96px" height="96px" />
-                    <nuxt-img
-                        v-else
-                        :src="
-                            student.data?.gender === 'FEMALE'
-                                ? 'images/avatars/persona 0-1.png'
-                                : 'images/avatars/persona 0-0.png'
-                        "
-                        alt="student avatar"
-                        width="96"
-                        height="96"
+        <student-info :student="student.data" :loading="student.loading">
+            <template #actions>
+                <role-access role="CLASS_TEACHER">
+                    <p-button
+                        icon="pi pi-trash"
+                        class="p-button-rounded p-button-danger"
+                        @click="confirmDeleteStudent($event)"
                     />
-                    <div class="flex flex-auto flex-column justify-content-between">
-                        <div class="flex align-items-center text-3xl h-2rem">
-                            <p-skeleton v-if="student.loading" class="max-w-30rem" />
-                            <div v-else class="text-800 font-bold">
-                                {{ student.data?.secondName }}
-                                {{ student.data?.firstName }}
-                                {{ student.data?.middleName }}
-                            </div>
-                        </div>
-                        <div class="flex flex-wrap gap-5">
-                            <div class="flex flex-column">
-                                <div class="text-500">Дата рождения</div>
-                                <div class="flex align-items-end h-1rem mt-2 text-700">
-                                    <p-skeleton v-if="student.loading" class="max-w-30rem" />
-                                    <div v-else>{{ new Date(student.data?.birthdate!).toLocaleDateString() }}</div>
-                                </div>
-                            </div>
-                            <div class="flex flex-column w-5rem">
-                                <div class="text-500">Пол</div>
-                                <div class="flex align-items-end h-1rem mt-2 text-700">
-                                    <p-skeleton v-if="student.loading" class="max-w-30rem" />
-                                    <div v-else>{{ genderLocalization[student.data?.gender!] }}</div>
-                                </div>
-                            </div>
-                            <div class="flex flex-column">
-                                <div class="text-500">Класс</div>
-                                <div class="flex align-items-end h-1rem mt-2 text-700">
-                                    <p-skeleton v-if="student.loading" class="max-w-30rem" />
-                                    <div v-else>{{ student.data?.class.number! + student.data?.class.liter! }}</div>
-                                </div>
-                            </div>
-                            <div class="flex flex-column w-9rem">
-                                <div class="text-500">СНИЛС</div>
-                                <div class="flex align-items-end h-1rem mt-2 text-700">
-                                    <p-skeleton v-if="student.loading" class="max-w-30rem" />
-                                    <div v-else>{{ student.data?.snils }}</div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="flex gap-2">
-                    <role-access role="CLASS_TEACHER">
-                        <p-button icon="pi pi-print" class="p-button-rounded p-button-secondary" />
-                    </role-access>
-                    <role-access role="CLASS_TEACHER">
-                        <p-button icon="pi pi-file-pdf" class="p-button-rounded p-button-secondary" />
-                    </role-access>
-                    <role-access role="CLASS_TEACHER">
-                        <p-button
-                            icon="pi pi-trash"
-                            class="p-button-rounded p-button-danger"
-                            @click="confirmDeleteStudent($event)"
-                        />
-                        <p-confirm-popup></p-confirm-popup>
-                    </role-access>
-                </div>
-            </div>
-        </section>
+                    <p-confirm-popup></p-confirm-popup>
+                </role-access>
+            </template>
+        </student-info>
         <role-access role="HEALTH_WORKER">
             <health-medical />
         </role-access>
@@ -101,8 +39,6 @@
 <script setup lang="ts">
 import { useToast } from 'primevue/usetoast'
 import { useConfirm } from 'primevue/useconfirm'
-import shortUUID from 'short-uuid'
-import { Gender } from '@prisma/client'
 import { useStudentStore } from '~~/store/student'
 import { useClassStore } from '~~/store/class'
 
@@ -118,18 +54,12 @@ const route = useRoute()
 const router = useRouter()
 
 const studentPage = ref<HTMLElement>()
-const translator = shortUUID()
 
 const student = useStudentStore()
 const currentClass = useClassStore()
 
-student.setId(translator.toUUID(route.params.studentId as string))
-currentClass.setId(translator.toUUID(route.params.classId as string))
-
-const genderLocalization: { [key in Gender]: string } = {
-    MALE: 'Мужской',
-    FEMALE: 'Женский'
-}
+student.setId(parseUUID(route.params.studentId as string))
+currentClass.setId(parseUUID(route.params.classId as string))
 
 async function confirmDeleteStudent(event: MouseEvent) {
     confirm.require({
