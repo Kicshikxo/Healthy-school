@@ -1,6 +1,6 @@
 <template>
     <p-tab-view v-model="activeTabIndex">
-        <p-tab-panel header="Мероприятия индивидуального здоровьесберегающего маршрута">
+        <p-tab-panel header="Индивидуальный здоровьесберегающий маршрут">
             <health-route />
         </p-tab-panel>
         <p-tab-panel header="Педагогический компонент">
