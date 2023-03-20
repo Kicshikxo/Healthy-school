@@ -8,13 +8,22 @@
             dataKey="id"
             responsiveLayout="scroll"
             :row-class="() => 'cursor-pointer'"
-            @row-click="$router.push(`/${translator.fromUUID($event.data.id)}`)"
+            @row-click="$router.push(`/${shortUUID($event.data.id)}`)"
             class="p-datatable-lg"
         >
             <template #header>
                 <div class="flex justify-content-between align-items-center">
                     Список классов
                     <div class="flex gap-2">
+                        <p-dropdown
+                            v-if="!data?.organizationId"
+                            :loading="loadingOrganizations"
+                            :options="organizations"
+                            v-model="selectedOrganization"
+                            optionLabel="name"
+                            placeholder="Выберите образовательную организацию"
+                            id="select-organization"
+                        />
                         <p-button
                             label="Обновить"
                             icon="pi pi-refresh w-1rem"
@@ -32,25 +41,41 @@
             </template>
             <p-column field="number" header="Номер" />
             <p-column field="liter" header="Литер" />
-            <p-column field="_count.students" header="Список учащихся" />
+            <p-column field="_count.students" header="Количество учащихся" />
         </p-data-table>
     </div>
 </template>
 
 <script setup lang="ts">
-import shortUUID from 'short-uuid'
+import { EducationalOrganization } from '@prisma/client'
 
 definePageMeta({
     title: 'Список классов'
 })
 
-const translator = shortUUID()
+const { data } = useAuthState()
+
+const selectedOrganization = ref<EducationalOrganization>()
+const selectedOrganizationId = computed(
+    () => selectedOrganization.value?.id ?? data.value?.organizationId ?? '00000000-0000-0000-0000-000000000000'
+)
+
+const { data: organizations, pending: loadingOrganizations } = useFetch('/api/organizations/list')
+watchEffect(
+    () =>
+        (selectedOrganization.value = organizations.value?.find(
+            (organization) => organization.id === data.value?.organizationId
+        ))
+)
 
 const {
     data: classes,
     refresh: refreshClasses,
     pending: loadingClasses
 } = useFetch('/api/classes/list', {
+    query: {
+        organizationId: selectedOrganizationId
+    },
     headers: useRequestHeaders() as HeadersInit
 })
 </script>
