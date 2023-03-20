@@ -10,22 +10,15 @@
             <health-component-body :content-padding-top="false">
                 <template #title> Психологические показатели </template>
                 <template #content>
-                    <template v-for="{ title, type } in currentOptions">
-                        <p-divider />
-                        <div class="grid grid-nogutter">
-                            <div class="col-6 flex justify-content-start align-items-center text-lg">{{ title }}</div>
-                            <div class="col-6 border-left-1 surface-border pl-4">
-                                <health-dropdown
-                                    :disabled="!enableEditing || loading"
-                                    :loading="loading"
-                                    :options="student.current.psychological.educationOptions[type]"
-                                    :placeholder="title"
-                                    option-label="title"
-                                    v-model="student.current.psychological.options[type]"
-                                />
-                            </div>
-                        </div>
-                    </template>
+                    <health-option
+                        v-for="{ title, type } in currentOptions"
+                        :disabled="!enableEditing || loading"
+                        :loading="loading"
+                        :options="student.current.psychological.educationOptions[type]"
+                        :title="title"
+                        option-label="title"
+                        v-model="student.current.psychological.options[type]"
+                    />
                 </template>
             </health-component-body>
             <health-component-body>

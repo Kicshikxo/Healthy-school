@@ -10,33 +10,24 @@
             <health-component-body :content-padding-top="false">
                 <template #title> Показатели </template>
                 <template #content>
-                    <template v-for="{ title, type } in singleOptions">
-                        <p-divider />
-                        <div class="grid grid-nogutter">
-                            <div class="col-6 flex justify-content-start align-items-center text-lg">{{ title }}</div>
-                            <div class="col-6 border-left-1 surface-border pl-4">
-                                <health-dropdown
-                                    :disabled="!enableEditing || loading"
-                                    :loading="loading"
-                                    :options="
-                                        (medicalHealth.typedOptions[type] ?? [])
-                                            .filter(
-                                                (option) =>
-                                                    option.medicalType === MedicalType.HEALTH_GROUP ||
-                                                    healthZones.indexOf(option.healthZone) <=
-                                                        healthZones.indexOf(student.current.medical.healthZone)
-                                            )
-                                            .sort(
-                                                (a, b) => healthZones.indexOf(a.healthZone) - healthZones.indexOf(b.healthZone)
-                                            )
-                                    "
-                                    :placeholder="title"
-                                    option-label="title"
-                                    v-model="student.current.medical.options.SINGLE[type]"
-                                />
-                            </div>
-                        </div>
-                    </template>
+                    <health-option
+                        v-for="{ title, type } in singleOptions"
+                        :disabled="!enableEditing || loading"
+                        :loading="loading"
+                        :options="
+                            (medicalHealth.typedOptions[type] ?? [])
+                                .filter(
+                                    (option) =>
+                                        option.medicalType === MedicalType.HEALTH_GROUP ||
+                                        healthZones.indexOf(option.healthZone) <=
+                                            healthZones.indexOf(student.current.medical.healthZone)
+                                )
+                                .sort((a, b) => healthZones.indexOf(a.healthZone) - healthZones.indexOf(b.healthZone))
+                        "
+                        :title="title"
+                        option-label="title"
+                        v-model="student.current.medical.options.SINGLE[type]"
+                    />
                 </template>
             </health-component-body>
             <health-component-body

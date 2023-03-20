@@ -30,26 +30,19 @@
             <health-component-body v-if="currentOptions.length" :content-padding-top="false">
                 <template #title> Показатели </template>
                 <template #content>
-                    <template v-for="{ title, type } in currentOptions">
-                        <p-divider />
-                        <div class="grid grid-nogutter">
-                            <div class="col-6 flex justify-content-start align-items-center text-lg">{{ title }}</div>
-                            <div class="col-6 border-left-1 surface-border pl-4">
-                                <health-dropdown
-                                    :disabled="!enableEditing || loading"
-                                    :loading="loading"
-                                    :options="
-                                        physicalHealth.typedOptions[type].filter(
-                                            (option) => option.healthGroup === student.current.physical.healthGroup
-                                        )
-                                    "
-                                    :placeholder="title"
-                                    option-label="title"
-                                    v-model="student.current.physical.options[type]"
-                                />
-                            </div>
-                        </div>
-                    </template>
+                    <health-option
+                        v-for="{ title, type } in currentOptions"
+                        :disabled="!enableEditing || loading"
+                        :loading="loading"
+                        :options="
+                            physicalHealth.typedOptions[type].filter(
+                                (option) => option.healthGroup === student.current.physical.healthGroup
+                            )
+                        "
+                        :title="title"
+                        option-label="title"
+                        v-model="student.current.physical.options[type]"
+                    />
                 </template>
             </health-component-body>
         </template>
