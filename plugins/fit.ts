@@ -11,8 +11,7 @@ export default defineNuxtPlugin(async (nuxtApp) => {
 
             element.style.transformOrigin = 'center top'
             element.style.transform = `scale(${Math.min(
-                parentWidth / elementWidth,
-                parentHeight / elementHeight,
+                Math.min(parentWidth / elementWidth, parentHeight / elementHeight),
                 1
             ).toPrecision(2)})`
         }
