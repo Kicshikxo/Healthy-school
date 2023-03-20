@@ -1,4 +1,3 @@
-import shortUUID from 'short-uuid'
 import {
     ConclusionType,
     EducationType,
@@ -32,10 +31,9 @@ import { useConclusionsStore } from '~~/store/health/conclusions'
 import { useBreadcrumbsStore } from '~~/store/breadcrumbs'
 
 export const useStudentStore = defineStore('student', () => {
-    const translator = shortUUID()
     const route = useRoute()
 
-    const id = ref<string | undefined>(route.params.studentId ? translator.toUUID(route.params.studentId as string) : undefined)
+    const id = ref<string | undefined>(route.params.studentId ? parseUUID(route.params.studentId as string) : undefined)
     function setId(value: string) {
         id.value = value
     }
