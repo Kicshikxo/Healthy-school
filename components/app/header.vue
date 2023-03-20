@@ -24,7 +24,6 @@
                 class="flex px-3 py-2 align-items-center hover:bg-primary-600 font-medium border-round transition-colors transition-duration-150 cursor-pointer no-underline"
                 @click="menu.toggle($event)"
             >
-                <!-- <nuxt-img :src="avatarSrc" alt="avatar" width="48" height="48" class="border-circle mr-2" /> -->
                 <div class="block">
                     <div class="text-primary-50 font-medium">
                         {{ data?.secondName }}
@@ -32,7 +31,7 @@
                         {{ data?.middleName }}
                     </div>
                     <span class="text-primary-100 font-medium text-sm">
-                        {{ roleLocalization[data?.role!] }}
+                        {{ localizeRole(data?.role!) }}
                     </span>
                 </div>
             </div>
@@ -71,19 +70,6 @@ const menuItems = ref<MenuItem[]>([
         ]
     }
 ])
-
-const roleLocalization: { [key in Role]: string } = {
-    OPERATOR: 'Оператор',
-    SCHOOL_OPERATOR: 'Оператор школы',
-    CLASS_TEACHER: 'Классный руководитель',
-    HEALTH_WORKER: 'Медицинский работник',
-    PEDAGOGUE: 'Педагог',
-    SOCIAL_PEDAGOGUE: 'Социальный педагог',
-    PSYCHOLOGIST: 'Психолог',
-    PHYSICAL_EDUCATION_TEACHER: 'Учитель физической культуры'
-}
-
-// const avatarSrc = `images/avatars/persona ${~~(Math.random() * 4)}-${~~(Math.random() * 3)}.png`
 </script>
 
 <style>

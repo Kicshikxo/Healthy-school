@@ -9,7 +9,8 @@ import {
 } from './data/index.js'
 import { hashSync } from 'bcrypt'
 import { PrismaClient, Role } from '@prisma/client'
-import { proceedWithSpinner, roleLocalization } from './utils.js'
+import { proceedWithSpinner } from './utils.js'
+import { localizeRole } from '../../utils/localizeRole.js'
 
 const prisma = new PrismaClient()
 
@@ -571,7 +572,7 @@ async function createUser() {
             hint: ' ',
             choices: (Object.keys(Role) as Role[])
                 .filter((role) => !(organizationId === 'none' && role !== Role.OPERATOR))
-                .map((role) => ({ title: roleLocalization[role], value: role }))
+                .map((role) => ({ title: localizeRole(role), value: role }))
         },
         {
             type: 'text',
@@ -1134,7 +1135,7 @@ async function deleteUser() {
         message: 'Выберите пользователя для удаления',
         hint: ' ',
         choices: users.map((user) => ({
-            title: `${user.username}: ${user.secondName} ${user.firstName} ${user.middleName} - ${roleLocalization[user.role]}`,
+            title: `${user.username}: ${user.secondName} ${user.firstName} ${user.middleName} - ${localizeRole(user.role)}`,
             value: user.id
         }))
     })
