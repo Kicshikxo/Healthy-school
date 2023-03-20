@@ -1,11 +1,5 @@
 <template>
-    <div
-        :style="{
-            width: `${PDFPageSize.width * PDFDefaultScale}px`,
-            height: `${PDFPageSize.height * PDFDefaultScale}px`
-        }"
-        class="flex flex-column p-5 gap-5"
-    >
+    <div class="flex flex-column gap-5">
         <div class="text-6xl font-bold">
             Проведение оценки сбора сведений о состоянии медицинских, физических и социально-психологических показателей
             здоровья
@@ -32,7 +26,6 @@
                 </span>
             </div>
         </div>
-        <div class="flex-auto"></div>
         <div class="flex flex-column gap-4 text-4xl">
             <div class="text-center font-bold">Динамика изменений показателей здоровья</div>
             <statistics-health-dynamics :monthly-count="municipalityLogs.monthlyCount" />

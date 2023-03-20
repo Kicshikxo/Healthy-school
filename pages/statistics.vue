@@ -1,13 +1,13 @@
 <template>
     <p-tab-view v-model="activeTabIndex">
         <p-tab-panel header="По региону">
-            <statistics-municipality-tab :bar-colors="barColors" />
+            <statistics-tab-municipality :bar-colors="barColors" />
         </p-tab-panel>
         <p-tab-panel header="По школе">
-            <statistics-organization-tab :bar-colors="barColors" />
+            <statistics-tab-organization :bar-colors="barColors" />
         </p-tab-panel>
         <p-tab-panel header="По классу">
-            <statistics-class-tab :bar-colors="barColors" />
+            <statistics-tab-class :bar-colors="barColors" />
         </p-tab-panel>
     </p-tab-view>
 </template>
