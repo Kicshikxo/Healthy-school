@@ -8,6 +8,22 @@
                     </div>
                     <div class="flex gap-2 align-self-end">
                         <p-button
+                            v-if="printable"
+                            :disabled="isLoading"
+                            icon="pi pi-print"
+                            label="Печать"
+                            class="p-button-primary"
+                            @click="onPrint"
+                        />
+                        <p-button
+                            v-if="downloadble"
+                            :disabled="isLoading"
+                            icon="pi pi-file-pdf"
+                            label="Скачать"
+                            class="p-button-primary"
+                            @click="onDownload"
+                        />
+                        <p-button
                             v-if="reloadable"
                             :loading="isLoading"
                             icon="pi pi-refresh"
@@ -59,14 +75,20 @@ const props = withDefaults(
         loading?: boolean
         editable?: boolean
         reloadable?: boolean
+        printable?: boolean
+        downloadble?: boolean
         allowSave?: boolean
         onCancel?: () => Promise<void> | void
         onSave?: () => Promise<void> | void
         onReload?: () => Promise<void> | void
+        onPrint?: () => Promise<void> | void
+        onDownload?: () => Promise<void> | void
     }>(),
     {
         editable: true,
-        reloadable: false
+        reloadable: false,
+        printable: false,
+        downloadble: false
     }
 )
 
