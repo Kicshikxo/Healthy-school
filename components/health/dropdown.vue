@@ -28,7 +28,7 @@
 </template>
 
 <script setup lang="ts">
-withDefaults(
+const props = withDefaults(
     defineProps<{
         disabled?: boolean
         loading?: boolean
