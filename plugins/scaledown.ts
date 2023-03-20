@@ -1,6 +1,6 @@
 export default defineNuxtPlugin(async (nuxtApp) => {
     nuxtApp.vueApp.directive('scaledown', {
-        mounted: (element: HTMLElement) => {
+        updated: (element: HTMLElement) => {
             const { width: elementWidth, height: elementHeight } = element.getBoundingClientRect()
 
             const parent = element.parentNode as HTMLElement
