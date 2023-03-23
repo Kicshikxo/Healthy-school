@@ -140,7 +140,7 @@ model MedicalHealthOptionLog {
     optionId        Int                 @map("option_id")
     createdAt       DateTime            @default(now()) @map("created_at")
 
-    @@map("_student_medical_health_options_logs")
+    @@map("student_medical_health_options_logs")
 }
 
 model PedagogueHealth {
@@ -183,7 +183,7 @@ model PedagogueHealthOptionLog {
     optionId          Int                   @map("option_id")
     createdAt         DateTime              @default(now()) @map("created_at")
 
-    @@map("_student_pedagogue_health_options_logs")
+    @@map("student_pedagogue_health_options_logs")
 }
 
 model PhysicalHealth {
@@ -228,7 +228,7 @@ model PhysicalHealthOptionLog {
     optionId         Int                  @map("option_id")
     createdAt        DateTime             @default(now()) @map("created_at")
 
-    @@map("_student_physical_health_options_logs")
+    @@map("student_physical_health_options_logs")
 }
 
 model PhysicalHealthGroupLog {
@@ -238,7 +238,7 @@ model PhysicalHealthGroupLog {
     healthGroup      HealthGroup    @map("health_group")
     createdAt        DateTime       @default(now()) @map("created_at")
 
-    @@map("_student_physical_health_group_logs")
+    @@map("student_physical_health_group_logs")
 }
 
 model PsychologicalHealth {
@@ -282,7 +282,7 @@ model PsychologicalHealthOptionLog {
     optionId              Int                       @map("option_id")
     createdAt             DateTime                  @default(now()) @map("created_at")
 
-    @@map("_student_psychological_health_options_logs")
+    @@map("student_psychological_health_options_logs")
 }
 
 model SocialHealth {
@@ -324,7 +324,7 @@ model SocialHealthOptionLog {
     optionId       Int                @map("option_id")
     createdAt      DateTime           @default(now()) @map("created_at")
 
-    @@map("_student_social_health_options_logs")
+    @@map("student_social_health_options_logs")
 }
 
 model Conclusion {
