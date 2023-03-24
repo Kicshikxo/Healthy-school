@@ -2,7 +2,7 @@ import { ConclusionType } from '@prisma/client'
 import { defineStore } from 'pinia'
 
 export const useConclusionsStore = defineStore('conclusions', () => {
-    const { data: list } = useFetch('/api/conclusions/with-recommendations')
+    const { data: list } = useFetch('/api/students/health/conclusions/with-recommendations')
 
     const typeTitles: { [key in ConclusionType]: string } = {
         MEDICAL: 'Медицинский компонент',

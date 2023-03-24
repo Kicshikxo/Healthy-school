@@ -16,7 +16,7 @@ const signIn = async (options: SingInOptions): Promise<SignInResult> => {
     return {
         status: error.value?.status ?? 200,
         error: error.value?.statusMessage ?? null,
-        user: data.value
+        data: data.value
     }
 }
 

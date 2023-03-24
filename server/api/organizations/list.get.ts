@@ -2,7 +2,34 @@ import { PrismaClient } from '@prisma/client'
 
 const prisma = new PrismaClient()
 
+/**
+ * @openapi
+ * /api/organizations/list:
+ *   get:
+ *     tags:
+ *       - Educational Organizations
+ *     security:
+ *       - BearerAuth: []
+ *     description: "Список образовательных организаций"
+ *     parameters:
+ *       - in: query
+ *         name: municipalityId
+ *     responses:
+ *       200:
+ *         description: "Educational organizations list"
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 $ref: "#/components/schemas/EducationalOrganizationWithCount"
+ *       401:
+ *         description: "Unable to read token data"
+ */
 export default defineEventHandler(async (event) => {
+    const tokenData = readTokenData(event)
+    if (!tokenData) return
+
     const query = getQuery(event) as { municipalityId?: string }
 
     return prisma.educationalOrganization.findMany({
@@ -19,7 +46,6 @@ export default defineEventHandler(async (event) => {
             },
             classes: {
                 select: {
-                    id: true,
                     _count: {
                         select: {
                             students: true

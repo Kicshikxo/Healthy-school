@@ -1,6 +1,30 @@
 import { PrismaClient } from '@prisma/client'
 const prisma = new PrismaClient()
 
+/**
+ * @openapi
+ * /api/students/list:
+ *   get:
+ *     tags:
+ *       - Students
+ *     security:
+ *       - BearerAuth: []
+ *     description: "Список студентов"
+ *     parameters:
+ *       - in: query
+ *         name: classId
+ *     responses:
+ *       200:
+ *         description: "Students list"
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 $ref: "#/components/schemas/StudentWithClass"
+ *       401:
+ *         description: "Unable to read token data"
+ */
 export default defineEventHandler(async (event) => {
     const tokenData = readTokenData(event)
     if (!tokenData) return

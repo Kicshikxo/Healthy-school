@@ -1,13 +1,14 @@
 import jwt from 'jsonwebtoken'
 
 export default defineEventHandler((event) => {
-    const authToken = getCookie(event, 'auth-token')
+    const headerToken = getHeaders(event).authorization?.substring('Bearer '.length)
+    const cookieToken = getCookie(event, 'auth-token')
 
-    if (!authToken) return
+    if (!headerToken && !cookieToken) return
 
     let tokenData: AuthTokenData
     try {
-        tokenData = jwt.verify(authToken!, process.env.SECRET_KEY!) as AuthTokenData
+        tokenData = jwt.verify(headerToken ?? cookieToken!, process.env.SECRET_KEY!) as AuthTokenData
     } catch (e) {
         return
     }

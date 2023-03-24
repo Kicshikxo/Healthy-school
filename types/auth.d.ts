@@ -15,11 +15,7 @@ declare global {
     interface SignInResult {
         status: number
         error: string | null
-        user:
-            | (User & {
-                  organization: UserOrganization | null
-              })
-            | null
+        data: { token: string } | null
     }
 
     interface SignOutOptions {

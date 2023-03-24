@@ -3,6 +3,27 @@ import { PrismaClient } from '@prisma/client'
 
 const prisma = new PrismaClient()
 
+/**
+ * @openapi
+ * /api/auth/session:
+ *   get:
+ *     tags:
+ *       - Auth
+ *     security:
+ *       - BearerAuth: []
+ *     description: "Информация о сессии"
+ *     responses:
+ *       200:
+ *         description: "Session data"
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: "#/components/schemas/SessionResponse"
+ *       400:
+ *         description: "User not found"
+ *       401:
+ *         description: "Invalid token credentials"
+ */
 export default defineEventHandler(async (event) => {
     const tokenData = readTokenData(event)
     if (!tokenData) return
@@ -16,7 +37,7 @@ export default defineEventHandler(async (event) => {
         return sendError(
             event,
             createError({
-                statusCode: 401,
+                statusCode: 400,
                 statusMessage: 'User not found'
             })
         )
