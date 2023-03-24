@@ -26,12 +26,8 @@
         </health-component>
 
         <template #pages>
-            <pdf-page>
-                <pdf-template-health-route />
-            </pdf-page>
-            <pdf-page v-for="conclusion in Object.values(student.conclusions)">
-                <health-route-card :conclusion="conclusion" />
-            </pdf-page>
+            <pdf-template-health-route />
+            <health-route-card v-for="conclusion in Object.values(student.conclusions)" :conclusion="conclusion" />
         </template>
     </pdf-wrapper>
 </template>
