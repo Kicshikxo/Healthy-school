@@ -19,7 +19,7 @@ definePageMeta({
     title: 'Статистика'
 })
 
-const activeTabIndex = ref(0)
+const activeTabIndex = ref<number>()
 
 const barColors = ref<{ [key in HealthZone]: string }>({
     GREEN: '#22C55E',

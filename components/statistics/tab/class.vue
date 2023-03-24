@@ -132,7 +132,7 @@ const pdfFileName = computed(
         )} ${classLogs.monthlyCount.at(-1)?.date.getFullYear()}`
 )
 
-const activeConclusionTabIndex = ref(0)
+const activeConclusionTabIndex = ref<number>()
 
 const chartData = computed(() =>
     (Object.keys(ConclusionType) as ConclusionType[]).reduce((acc, type) => {

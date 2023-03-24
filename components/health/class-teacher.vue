@@ -10,5 +10,5 @@
 </template>
 
 <script setup lang="ts">
-const activeTabIndex = ref(0)
+const activeTabIndex = ref<number>()
 </script>

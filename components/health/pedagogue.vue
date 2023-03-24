@@ -53,7 +53,7 @@ import { usePedagogueHealthStore } from '~~/store/health/pedagogue'
 const student = useStudentStore()
 const pedagogueHealth = usePedagogueHealthStore()
 
-const activeTabIndex = ref(0)
+const activeTabIndex = ref<number>()
 
 const pedagogueTab = computed<{ title: string; type: PedagogueType }[]>(() =>
     pedagogueHealth.tabTypes.PEDAGOGUE.map((type) => ({ title: pedagogueHealth.typeTitles[type], type }))
