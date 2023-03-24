@@ -6,7 +6,7 @@
         }"
         class="pdf-page"
     >
-        <div v-scaledown>
+        <div v-scaledown-to-fit>
             <slot />
         </div>
     </div>
