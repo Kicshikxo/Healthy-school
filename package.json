@@ -7,7 +7,9 @@
         "generate": "nuxt generate",
         "preview": "nuxt preview",
         "postinstall": "nuxt prepare",
+        "db:generate": "prisma generate",
         "db:push": "prisma db push",
+        "db:deploy": "npm run db:generate && npm run db:push",
         "db:cli": "ts-node --esm prisma/cli/index.ts"
     },
     "dependencies": {
@@ -22,8 +24,10 @@
         "pinia": "^2.0.33",
         "primeflex": "^3.3.0",
         "primeicons": "^6.0.1",
-        "primevue": "^3.25.0",
-        "short-uuid": "^4.2.2"
+        "primevue": "^3.26.0",
+        "short-uuid": "^4.2.2",
+        "swagger-jsdoc": "^6.2.8",
+        "swagger-ui-dist": "^4.18.1"
     },
     "overrides": {
         "vue": "latest"
@@ -36,6 +40,8 @@
         "@types/jsonwebtoken": "^9.0.1",
         "@types/pdfmake": "^0.2.2",
         "@types/prompts": "^2.4.3",
+        "@types/swagger-jsdoc": "^6.0.1",
+        "@types/swagger-ui-dist": "^3.30.1",
         "nitropack": "2.2.3",
         "nuxt": "3.2.3",
         "nuxt-lodash": "^2.4.1",
