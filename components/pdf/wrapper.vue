@@ -7,9 +7,7 @@
             </div>
             <div ref="pagesOutput">
                 <pdf-page v-for="page in pagesList">
-                    <template v-for="element in page">
-                        <div v-html="element.outerHTML" />
-                    </template>
+                    <div v-for="element in page" v-html="element.outerHTML" />
                 </pdf-page>
             </div>
             <pdf-page ref="pdfEmptyPage" />
@@ -20,29 +18,17 @@
 <script setup lang="ts">
 import { PdfPage } from '#components'
 
-const props = withDefaults(
-    defineProps<{
-        autoPagination?: boolean
-    }>(),
-    {
-        autoPagination: true
-    }
-)
-
 const pdf = usePDF()
 
 const loading = ref(false)
 const pagesRoot = ref<HTMLElement>()
 const pagesOutput = ref<HTMLElement>()
-const pagesList = ref<HTMLElement[][]>()
 
+const pagesList = ref<HTMLElement[][]>()
+const pagesObserver = ref<MutationObserver>()
 const pdfEmptyPage = ref<InstanceType<typeof PdfPage>>()
 
-const pagesObserver = ref<MutationObserver>()
-
-function observePages() {
-    if (!props.autoPagination) return
-
+function paginate() {
     const pageElement = pdfEmptyPage.value!.$el
 
     const pageStyle = window.getComputedStyle(pageElement)
@@ -65,7 +51,7 @@ function observePages() {
 }
 
 onMounted(() => {
-    pagesObserver.value = new MutationObserver(observePages)
+    pagesObserver.value = new MutationObserver(paginate)
 
     pagesObserver.value.observe(pagesRoot.value as Node, {
         characterData: true,
@@ -74,10 +60,9 @@ onMounted(() => {
         subtree: true
     })
 
-    observePages()
+    paginate()
 })
-
-watch(() => props.autoPagination, observePages)
+onUnmounted(() => pagesObserver.value?.disconnect())
 
 async function print(options?: { title: string }) {
     loading.value = true
