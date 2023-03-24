@@ -53,53 +53,12 @@
             </p-column>
         </p-data-table>
 
-        <p-dialog :modal="true" v-model:visible="showDialog" header="Добавить учащегося" class="p-fluid">
-            <div class="field">
-                <label for="snils">СНИЛС</label>
-                <p-input-mask id="snils" v-model="newStudent.snils" mask="999-999-999 99" required="true" autofocus />
-            </div>
-            <div class="field">
-                <label for="secondName">Фамилия</label>
-                <p-input-text id="secondName" v-model="newStudent.secondName" required="true" autofocus />
-            </div>
-            <div class="field">
-                <label for="firstName">Имя</label>
-                <p-input-text id="firstName" v-model="newStudent.firstName" required="true" />
-            </div>
-            <div class="field">
-                <label for="middleName">Отчество</label>
-                <p-input-text id="middleName" v-model="newStudent.middleName" required="true" />
-            </div>
-            <div class="formgrid grid">
-                <div class="field col">
-                    <label for="birthdate">Дата рождения</label>
-                    <p-calendar inputId="birthdate" v-model="newStudent.birthdate" />
-                </div>
-                <div class="field col w-15rem">
-                    <label>Пол</label>
-                    <p-dropdown
-                        v-model="newStudent.gender"
-                        :options="[
-                            { label: 'Мужской', value: 'MALE' },
-                            { label: 'Женский', value: 'FEMALE' }
-                        ]"
-                        optionLabel="label"
-                        optionValue="value"
-                        placeholder="Пол"
-                        panelClass="border-1 surface-border"
-                    />
-                </div>
-            </div>
-            <template #footer>
-                <p-button label="Отмена" icon="pi pi-times" class="p-button-text p-button-danger" @click="showDialog = false" />
-                <p-button label="Добавить" icon="pi pi-check" class="p-button-text" @click="addStudent" />
-            </template>
-        </p-dialog>
+        <dialog-add-student v-model:visible="showDialog" @added="refreshStudents" />
     </div>
 </template>
 
 <script setup lang="ts">
-import { Gender, Student } from '@prisma/client'
+import { Gender } from '@prisma/client'
 import { useClassStore } from '~~/store/class'
 
 definePageMeta({
@@ -108,29 +67,10 @@ definePageMeta({
 })
 
 const route = useRoute()
-
-const newStudent = ref<Student>({} as Student)
-const showDialog = ref(false)
-
 const currentClass = useClassStore()
 currentClass.setId(parseUUID(route.params.classId as string))
 
-async function addStudent() {
-    const { error } = await useFetch('/api/students/add', {
-        method: 'POST',
-        body: {
-            studentData: {
-                ...newStudent.value,
-                classId: currentClass.id
-            }
-        }
-    })
-    if (error.value) return
-
-    showDialog.value = false
-    newStudent.value = {} as Student
-    await refreshStudents()
-}
+const showDialog = ref(false)
 
 const {
     data: students,
