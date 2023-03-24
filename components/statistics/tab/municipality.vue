@@ -61,9 +61,7 @@
             </p-card>
         </div>
         <template #pages>
-            <pdf-page>
-                <pdf-template-statistics-municipality />
-            </pdf-page>
+            <pdf-template-statistics-municipality />
         </template>
     </pdf-wrapper>
 </template>

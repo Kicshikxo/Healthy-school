@@ -77,9 +77,7 @@
             </p-card>
         </div>
         <template #pages>
-            <pdf-page>
-                <pdf-template-statistics-organization />
-            </pdf-page>
+            <pdf-template-statistics-organization />
         </template>
     </pdf-wrapper>
 </template>

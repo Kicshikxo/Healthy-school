@@ -102,9 +102,7 @@
             </p-card>
         </div>
         <template #pages>
-            <pdf-page>
-                <pdf-template-statistics-class />
-            </pdf-page>
+            <pdf-template-statistics-class />
         </template>
     </pdf-wrapper>
 </template>
