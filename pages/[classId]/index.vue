@@ -7,6 +7,7 @@
             scrollHeight="flex"
             dataKey="id"
             responsiveLayout="scroll"
+            :row-class="() => 'cursor-pointer'"
             @row-click="$router.push(`/${$route.params.classId}/${shortUUID($event.data.id)}`)"
             class="p-datatable-lg"
         >
