@@ -20,7 +20,7 @@
             </role-access>
             <role-access role="SCHOOL_OPERATOR">
                 <nuxt-link
-                    to="/manage"
+                    to="/manage-school"
                     class="flex p-3 text-primary-100 hover:text-primary-50 hover:bg-primary-600 font-medium border-round transition-colors transition-duration-150 cursor-pointer no-underline"
                 >
                     <i class="pi pi-pencil w-1rem mr-2"></i>
