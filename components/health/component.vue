@@ -78,11 +78,11 @@ const props = withDefaults(
         printable?: boolean
         downloadble?: boolean
         allowSave?: boolean
-        onCancel?: () => Promise<void> | void
-        onSave?: () => Promise<void> | void
-        onReload?: () => Promise<void> | void
-        onPrint?: () => Promise<void> | void
-        onDownload?: () => Promise<void> | void
+        onCancel?: () => Promise<any> | any
+        onSave?: () => Promise<any> | any
+        onReload?: () => Promise<any> | any
+        onPrint?: () => Promise<any> | any
+        onDownload?: () => Promise<any> | any
     }>(),
     {
         editable: true,
