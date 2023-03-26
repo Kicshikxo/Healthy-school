@@ -32,6 +32,15 @@ export default defineEventHandler(async (event) => {
 
     const query = getQuery(event) as { municipalityId?: string }
 
+    if (!query.municipalityId)
+        return sendError(
+            event,
+            createError({
+                statusCode: 400,
+                statusMessage: 'municipalityId is not provided'
+            })
+        )
+
     return prisma.educationalOrganization.findMany({
         where: {
             municipality: {
