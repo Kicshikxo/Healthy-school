@@ -6,7 +6,7 @@
                 to="/"
                 class="flex p-3 text-primary-100 hover:text-primary-50 hover:bg-primary-600 font-medium border-round transition-colors transition-duration-150 cursor-pointer no-underline"
             >
-                <i class="pi pi-users w-1rem mr-2"></i>
+                <i class="pi pi-users mr-2"></i>
                 <span>Классы</span>
             </nuxt-link>
             <role-access role="OPERATOR">
@@ -14,7 +14,7 @@
                     to="/statistics"
                     class="flex p-3 text-primary-100 hover:text-primary-50 hover:bg-primary-600 font-medium border-round transition-colors transition-duration-150 cursor-pointer no-underline"
                 >
-                    <i class="pi pi-chart-line w-1rem mr-2"></i>
+                    <i class="pi pi-chart-line mr-2"></i>
                     <span>Статистика</span>
                 </nuxt-link>
             </role-access>
@@ -23,8 +23,17 @@
                     to="/manage-school"
                     class="flex p-3 text-primary-100 hover:text-primary-50 hover:bg-primary-600 font-medium border-round transition-colors transition-duration-150 cursor-pointer no-underline"
                 >
-                    <i class="pi pi-pencil w-1rem mr-2"></i>
+                    <i class="pi pi-pencil mr-2"></i>
                     <span>Управление школой</span>
+                </nuxt-link>
+            </role-access>
+            <role-access role="OPERATOR">
+                <nuxt-link
+                    to="/manage-system"
+                    class="flex p-3 text-primary-100 hover:text-primary-50 hover:bg-primary-600 font-medium border-round transition-colors transition-duration-150 cursor-pointer no-underline"
+                >
+                    <i class="pi pi-server mr-2"></i>
+                    <span>Управление системой</span>
                 </nuxt-link>
             </role-access>
         </nav>
@@ -50,7 +59,6 @@
 </template>
 
 <script setup lang="ts">
-import { Role } from '@prisma/client'
 import { MenuItem } from 'primevue/menuitem'
 
 const router = useRouter()
