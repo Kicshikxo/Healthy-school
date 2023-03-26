@@ -8,17 +8,7 @@ export const useOrganizationLogsStore = defineStore('organizationLogs', () => {
     const selectedMunicipality = ref<
         Municipality & { _count: { organizations: number }; organizations: { classes: { _count: { students: number } }[] }[] }
     >()
-    const selectedMunicipalityId = computed(() => selectedMunicipality.value?.id)
-
     const selectedOrganization = ref<EducationalOrganization & { classes: { id: string; _count: { students: number } }[] }>()
-    const selectedOrganizationId = computed(() => selectedOrganization.value?.id)
-
-    const { data: municipalities, pending: loadingMunicipalities } = useFetch('/api/municipalities/list')
-    const { data: organizations, pending: loadingOrganizations } = useFetch('/api/organizations/list', {
-        query: {
-            municipalityId: selectedMunicipalityId
-        }
-    })
 
     const monthlyData = computed(() => {
         return [
@@ -33,11 +23,11 @@ export const useOrganizationLogsStore = defineStore('organizationLogs', () => {
                 const endDate = new Date(selectedEndDate.value.getFullYear(), selectedEndDate.value.getMonth() - index + 1, 1)
                 return {
                     date: endDate,
-                    students: selectedOrganizationId.value
+                    students: selectedOrganization.value
                         ? useFetch('/api/students/logs/list', {
                               headers: useRequestHeaders() as HeadersInit,
                               query: {
-                                  organizationId: selectedOrganizationId.value,
+                                  organizationId: computed(() => selectedOrganization.value?.id),
                                   endDate: endDate.toJSON()
                               }
                           }).data
@@ -76,15 +66,7 @@ export const useOrganizationLogsStore = defineStore('organizationLogs', () => {
         selectedStartDate,
         selectedEndDate,
 
-        municipalities: {
-            selected: selectedMunicipality,
-            list: municipalities,
-            loading: loadingMunicipalities
-        },
-        organizations: {
-            selected: selectedOrganization,
-            list: organizations,
-            loading: loadingOrganizations
-        }
+        selectedMunicipality,
+        selectedOrganization
     }
 })

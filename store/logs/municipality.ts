@@ -8,9 +8,6 @@ export const useMunicipalityLogsStore = defineStore('municipalityLogs', () => {
     const selectedMunicipality = ref<
         Municipality & { _count: { organizations: number }; organizations: { classes: { _count: { students: number } }[] }[] }
     >()
-    const selectedMunicipalityId = computed(() => selectedMunicipality.value?.id)
-
-    const { data: municipalities, pending: loadingMunicipalities } = useFetch('/api/municipalities/list')
 
     const monthlyData = computed(() => {
         return [
@@ -25,11 +22,11 @@ export const useMunicipalityLogsStore = defineStore('municipalityLogs', () => {
                 const endDate = new Date(selectedEndDate.value.getFullYear(), selectedEndDate.value.getMonth() - index + 1, 1)
                 return {
                     date: endDate,
-                    students: selectedMunicipalityId.value
+                    students: selectedMunicipality.value
                         ? useFetch('/api/students/logs/list', {
                               headers: useRequestHeaders() as HeadersInit,
                               query: {
-                                  municipalityId: selectedMunicipalityId.value,
+                                  municipalityId: computed(() => selectedMunicipality.value?.id),
                                   endDate: endDate.toJSON()
                               }
                           }).data
@@ -68,10 +65,6 @@ export const useMunicipalityLogsStore = defineStore('municipalityLogs', () => {
         selectedStartDate,
         selectedEndDate,
 
-        municipalities: {
-            selected: selectedMunicipality,
-            list: municipalities,
-            loading: loadingMunicipalities
-        }
+        selectedMunicipality
     }
 })

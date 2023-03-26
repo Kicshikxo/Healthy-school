@@ -1,36 +1,20 @@
 <template>
     <pdf-wrapper>
-        <div class="flex flex-column gap-2 p-5 pt-2">
+        <div class="flex flex-column gap-2 p-5">
             <div class="grid">
                 <div class="col flex flex-column">
-                    <span class="field">
-                        <label for="select-municipaly">Муниципальное образование</label>
-                        <p-dropdown
-                            :loading="organizationLogs.municipalities.loading"
-                            :options="organizationLogs.municipalities.list"
-                            v-model="organizationLogs.municipalities.selected"
-                            optionLabel="name"
-                            placeholder="Выберите муниципальное образование"
-                            id="select-municipaly"
-                            class="w-full"
-                        />
-                    </span>
+                    <select-municipality
+                        label="Муниципальное образование"
+                        placeholder="Выберите муниципальное образование"
+                        v-model="organizationLogs.selectedMunicipality"
+                    />
 
-                    <span class="field">
-                        <label for="select-organization" :class="{ 'opacity-60': !organizationLogs.municipalities.selected }">
-                            Образовательная огранизация
-                        </label>
-                        <p-dropdown
-                            :loading="organizationLogs.organizations.loading"
-                            :disabled="!organizationLogs.municipalities.selected"
-                            :options="organizationLogs.organizations.list"
-                            v-model="organizationLogs.organizations.selected"
-                            optionLabel="name"
-                            placeholder="Выберите образовательную организацию"
-                            id="select-organization"
-                            class="w-full"
-                        />
-                    </span>
+                    <select-organization
+                        label="Образовательная огранизация"
+                        placeholder="Выберите образовательную организацию"
+                        v-model="organizationLogs.selectedOrganization"
+                        :municipality-id="organizationLogs.selectedMunicipality?.id"
+                    />
                 </div>
                 <div class="flex flex-column w-16rem p-2">
                     <statistics-range-selector
@@ -40,7 +24,7 @@
                 </div>
             </div>
 
-            <p-card v-if="organizationLogs.organizations.selected" class="shadow-none border-1 surface-border">
+            <p-card v-if="organizationLogs.selectedOrganization" class="shadow-none border-1 surface-border">
                 <template #title>
                     <div class="flex justify-content-between">
                         <div>Динамика изменений показателей здоровья</div>
@@ -83,14 +67,14 @@
 </template>
 
 <script setup lang="ts">
-import { HealthZone, ConclusionType } from '@prisma/client'
+import { ConclusionType } from '@prisma/client'
 import { useConclusionsStore } from '~~/store/health/conclusions'
 import { useOrganizationLogsStore } from '~~/store/logs/organization'
 import { PdfWrapper } from '#components'
 
-const props = defineProps<{
-    barColors?: { [key in HealthZone]: string }
-}>()
+definePageMeta({
+    title: 'Статистика по школе'
+})
 
 const organizationLogs = useOrganizationLogsStore()
 const conclusions = useConclusionsStore()
@@ -117,21 +101,21 @@ const chartData = computed(() =>
                 {
                     type: 'bar',
                     label: 'Зелёная группа здоровья',
-                    backgroundColor: props.barColors?.GREEN ?? '#22C55E',
+                    backgroundColor: '#4cd07d',
                     borderRadius: 8,
                     data: organizationLogs.monthlyCount.map((month) => month.count[type]?.GREEN)
                 },
                 {
                     type: 'bar',
                     label: 'Жёлтая группа здоровья',
-                    backgroundColor: props.barColors?.YELLOW ?? '#F59E0B',
+                    backgroundColor: '#eec137',
                     borderRadius: 8,
                     data: organizationLogs.monthlyCount.map((month) => month.count[type]?.YELLOW)
                 },
                 {
                     type: 'bar',
                     label: 'Красная группа здоровья',
-                    backgroundColor: props.barColors?.RED ?? '#EF4444',
+                    backgroundColor: '#ff6259',
                     borderRadius: 8,
                     data: organizationLogs.monthlyCount.map((month) => month.count[type]?.RED)
                 }
@@ -152,7 +136,7 @@ const chartOptions = computed(() => ({
                 text: 'Количество человек'
             },
             min: 0,
-            max: organizationLogs.organizations.selected?.classes.reduce(
+            max: organizationLogs.selectedOrganization?.classes.reduce(
                 (acc, currentClass) => (acc += currentClass._count.students),
                 0
             ),

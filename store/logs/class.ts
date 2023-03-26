@@ -8,25 +8,8 @@ export const useClassLogsStore = defineStore('classLogs', () => {
     const selectedMunicipality = ref<
         Municipality & { _count: { organizations: number }; organizations: { classes: { _count: { students: number } }[] }[] }
     >()
-    const selectedMunicipalityId = computed(() => selectedMunicipality.value?.id)
-
     const selectedOrganization = ref<EducationalOrganization & { classes: { id: string; _count: { students: number } }[] }>()
-    const selectedOrganizationId = computed(() => selectedOrganization.value?.id)
-
     const selectedClass = ref<Class & { _count: { students: number } }>()
-    const selectedClassId = computed(() => selectedClass.value?.id)
-
-    const { data: municipalities, pending: loadingMunicipalities } = useFetch('/api/municipalities/list')
-    const { data: organizations, pending: loadingOrganizations } = useFetch('/api/organizations/list', {
-        query: {
-            municipalityId: selectedMunicipalityId
-        }
-    })
-    const { data: classes, pending: loadingClasses } = useFetch('/api/classes/list', {
-        query: {
-            organizationId: selectedOrganizationId
-        }
-    })
 
     const monthlyData = computed(() => {
         return [
@@ -41,11 +24,11 @@ export const useClassLogsStore = defineStore('classLogs', () => {
                 const endDate = new Date(selectedEndDate.value.getFullYear(), selectedEndDate.value.getMonth() - index + 1, 1)
                 return {
                     date: endDate,
-                    students: selectedClassId.value
+                    students: selectedClass.value
                         ? useFetch('/api/students/logs/list', {
                               headers: useRequestHeaders() as HeadersInit,
                               query: {
-                                  classId: selectedClassId.value,
+                                  classId: computed(() => selectedClass.value?.id),
                                   endDate: endDate.toJSON()
                               }
                           }).data
@@ -84,20 +67,8 @@ export const useClassLogsStore = defineStore('classLogs', () => {
         selectedStartDate,
         selectedEndDate,
 
-        municipalities: {
-            selected: selectedMunicipality,
-            list: municipalities,
-            loading: loadingMunicipalities
-        },
-        organizations: {
-            selected: selectedOrganization,
-            list: organizations,
-            loading: loadingOrganizations
-        },
-        classes: {
-            selected: selectedClass,
-            list: classes,
-            loading: loadingClasses
-        }
+        selectedMunicipality,
+        selectedOrganization,
+        selectedClass
     }
 })

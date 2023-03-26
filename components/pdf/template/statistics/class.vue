@@ -7,13 +7,13 @@
         <div class="text-4xl">Регион: <span class="font-bold">Курская область</span></div>
         <div class="flex flex-column gap-2 text-4xl">
             <div>
-                Район: <span class="font-bold">{{ classLogs.municipalities.selected?.name }}</span>
+                Район: <span class="font-bold">{{ classLogs.selectedMunicipality?.name }}</span>
             </div>
             <div>
                 Количество обучающихся:
                 <span class="font-bold">
                     {{
-                        classLogs.municipalities.selected?.organizations.reduce(
+                        classLogs.selectedMunicipality?.organizations.reduce(
                             (acc, organization) =>
                                 (acc += organization.classes.reduce(
                                     (acc, currentClass) => (acc += currentClass._count.students),
@@ -28,13 +28,13 @@
         </div>
         <div class="flex flex-column gap-2 text-4xl">
             <div>
-                Школа: <span class="font-bold">{{ classLogs.organizations.selected?.name }}</span>
+                Школа: <span class="font-bold">{{ classLogs.selectedOrganization?.name }}</span>
             </div>
             <div>
                 Количество обучающихся:
                 <span class="font-bold">
                     {{
-                        classLogs.organizations.selected?.classes.reduce(
+                        classLogs.selectedOrganization?.classes.reduce(
                             (acc, currentClass) => (acc += currentClass._count.students),
                             0
                         ) ?? 0
@@ -46,12 +46,12 @@
         <div class="flex flex-column gap-2 text-4xl">
             <div>
                 Класс:
-                <span class="font-bold">{{ classLogs.classes.selected?.number }}{{ classLogs.classes.selected?.liter }}</span>
+                <span class="font-bold">{{ classLogs.selectedClass?.number }}{{ classLogs.selectedClass?.liter }}</span>
             </div>
             <div>
                 Количество обучающихся:
                 <span class="font-bold">
-                    {{ classLogs.classes.selected?._count.students ?? 0 }}
+                    {{ classLogs.selectedClass?._count.students ?? 0 }}
                     человек
                 </span>
             </div>

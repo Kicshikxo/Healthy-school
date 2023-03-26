@@ -7,13 +7,13 @@
         <div class="text-4xl">Регион: <span class="font-bold">Курская область</span></div>
         <div class="flex flex-column gap-2 text-4xl">
             <div>
-                Район: <span class="font-bold">{{ municipalityLogs.municipalities.selected?.name }}</span>
+                Район: <span class="font-bold">{{ municipalityLogs.selectedMunicipality?.name }}</span>
             </div>
             <div>
                 Количество обучающихся:
                 <span class="font-bold">
                     {{
-                        municipalityLogs.municipalities.selected?.organizations.reduce(
+                        municipalityLogs.selectedMunicipality?.organizations.reduce(
                             (acc, organization) =>
                                 (acc += organization.classes.reduce(
                                     (acc, currentClass) => (acc += currentClass._count.students),
