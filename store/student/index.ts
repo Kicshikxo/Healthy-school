@@ -17,9 +17,7 @@ import {
     PsychologicalHealthOption,
     PsychologicalType,
     SocialHealth,
-    SocialHealthOption,
-    SocialType,
-    Student
+    SocialHealthOption
 } from '@prisma/client'
 import { defineStore } from 'pinia'
 import { usePhysicalHealthStore } from '~~/store/health/physical'
@@ -48,7 +46,7 @@ export const useStudentStore = defineStore('student', () => {
     })
 
     const breadcrumbs = useBreadcrumbsStore()
-    watchEffect(() => breadcrumbs.setStudent(data.value as Student))
+    watchEffect(() => breadcrumbs.setStudent(data.value))
 
     const medicalHealth = useMedicalHealthStore()
     const pedagogueHealth = usePedagogueHealthStore()
