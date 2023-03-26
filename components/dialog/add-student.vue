@@ -4,102 +4,67 @@
         :visible="visible"
         @update:visible="$emit('update:visible', $event)"
         header="Добавить учащегося"
-        class="p-fluid w-30rem"
+        class="w-30rem"
     >
-        <form @submit="onSubmit">
-            <div class="field mb-1">
-                <label for="snils">СНИЛС</label>
-                <p-input-mask
-                    id="snils"
-                    v-model="snils"
-                    mask="999-999-999 99"
-                    required="true"
+        <manage-form
+            success-submit-summary="Успешное добавление"
+            error-submit-summary="Ошибка добавления"
+            submit-label="Добавить"
+            :on-submit="submit"
+            :on-cancel="resetForm"
+        >
+            <template #title> Добавление учащегося </template>
+            <template #form>
+                <manage-form-input-mask
+                    label="СНИЛС"
                     placeholder="Введите СНИЛС"
-                    autofocus
-                    :class="{ 'p-invalid': snilsError }"
+                    v-model="snils"
+                    :error="snilsError"
+                    mask="999-999-999 99"
                 />
-                <small class="p-error" id="text-error">{{ snilsError || '&nbsp;' }}</small>
-            </div>
-            <div class="field mb-1">
-                <label for="secondName">Фамилия</label>
-                <p-input-text
-                    id="secondName"
-                    v-model="secondName"
-                    required="true"
+                <manage-form-input-text
+                    label="Фамилия"
                     placeholder="Введите фамилию"
-                    :class="{ 'p-invalid': secondNameError }"
+                    v-model="secondName"
+                    :error="secondNameError"
                 />
-                <small class="p-error" id="text-error">{{ secondNameError || '&nbsp;' }}</small>
-            </div>
-            <div class="field mb-1">
-                <label for="firstName">Имя</label>
-                <p-input-text
-                    id="firstName"
-                    v-model="firstName"
-                    required="true"
-                    placeholder="Введите имя"
-                    :class="{ 'p-invalid': firstNameError }"
-                />
-                <small class="p-error" id="text-error">{{ firstNameError || '&nbsp;' }}</small>
-            </div>
-            <div class="field mb-1">
-                <label for="middleName">Отчество</label>
-                <p-input-text
-                    id="middleName"
-                    v-model="middleName"
-                    required="true"
+                <manage-form-input-text label="Имя" placeholder="Введите имя" v-model="firstName" :error="firstNameError" />
+                <manage-form-input-text
+                    label="Отчество"
                     placeholder="Введите отчество"
-                    :class="{ 'p-invalid': middleNameError }"
+                    v-model="middleName"
+                    :error="middleNameError"
                 />
-                <small class="p-error" id="text-error">{{ middleNameError || '&nbsp;' }}</small>
-            </div>
-            <div class="formgrid grid">
-                <div class="field col mb-1">
-                    <label for="birthdate">Дата рождения</label>
-                    <p-calendar
-                        inputId="birthdate"
-                        v-model="birthdate"
+                <div class="formgrid grid">
+                    <manage-form-input-calendar
+                        label="Дата рождения"
                         placeholder="Введите дату рождения"
-                        :class="{ 'p-invalid': birthdateError }"
+                        v-model="birthdate"
+                        :error="birthdateError"
+                        class="col"
                     />
-                    <small class="p-error" id="text-error">{{ birthdateError || '&nbsp;' }}</small>
-                </div>
-                <div class="field col w-15rem mb-1">
-                    <label>Пол</label>
-                    <p-dropdown
+                    <manage-form-input-dropdown
+                        label="Пол"
+                        placeholder="Выберите пол"
                         v-model="gender"
+                        :error="genderError"
                         :options="[
                             { label: 'Мужской', value: 'MALE' },
                             { label: 'Женский', value: 'FEMALE' }
                         ]"
                         optionLabel="label"
                         optionValue="value"
-                        placeholder="Выберите пол"
-                        panelClass="border-1 surface-border"
-                        :class="{ 'p-invalid': genderError }"
+                        class="col"
                     />
-                    <small class="p-error" id="text-error">{{ genderError || '&nbsp;' }}</small>
                 </div>
-            </div>
-        </form>
-        <template #footer>
-            <p-button
-                label="Отмена"
-                icon="pi pi-times"
-                class="p-button-text p-button-danger"
-                @click="cancel"
-                :disabled="loading"
-            />
-            <p-button label="Добавить" icon="pi pi-check" class="p-button-text" @click="onSubmit" :loading="loading" />
-        </template>
+            </template>
+        </manage-form>
     </p-dialog>
 </template>
 
 <script setup lang="ts">
-import { useToast } from 'primevue/usetoast'
-
+import { Gender, Student } from '@prisma/client'
 import { useField, useForm } from 'vee-validate'
-import { Gender } from '@prisma/client'
 import { useClassStore } from '~~/store/class'
 
 const props = withDefaults(
@@ -118,72 +83,71 @@ const emit = defineEmits<{
 }>()
 
 const currentClass = useClassStore()
+const { resetForm, validate, setFieldError } = useForm()
 
-const toast = useToast()
-const { handleSubmit, resetForm } = useForm()
+const { value: snils, errorMessage: snilsError } = useField('snils', (value: string) => {
+    if (!validateSnils(value)) return 'Неверный формат снилса'
+    return true
+})
+const { value: secondName, errorMessage: secondNameError } = useField('secondName', (value?: string) => {
+    if (!value?.trim()) return 'Введите фамилию'
+    if (!/^[А-ЯЁ][а-яё]+$/.test(value)) return 'Неверный формат фамилии'
+    return true
+})
+const { value: firstName, errorMessage: firstNameError } = useField('firstName', (value?: string) => {
+    if (!value?.trim()) return 'Введите имя'
+    if (!/^[А-ЯЁ][а-яё]+$/.test(value)) return 'Неверный формат имени'
+    return true
+})
+const { value: middleName, errorMessage: middleNameError } = useField('middleName', (value?: string) => {
+    if (!value?.trim()) return 'Введите отчество'
+    if (!/^[А-ЯЁ][а-яё]+$/.test(value)) return 'Неверный формат отчества'
+    return true
+})
+const { value: gender, errorMessage: genderError } = useField('gender', (value: Gender) => {
+    if (!value) return 'Выберите пол'
+    if (![Gender.MALE, Gender.FEMALE].includes(value)) return 'Неверный пол'
+    return true
+})
+const { value: birthdate, errorMessage: birthdateError } = useField('birthdate', (value: Date) => {
+    if (!value) return 'Выберите дату рождения'
+    if (value > new Date()) return 'Дата рождения не может быть в будущем'
+    return true
+})
+async function submit() {
+    const { valid } = await validate()
+    if (!valid) {
+        throw new Error('Форма имеет ошибки заполнения')
+    }
 
-const { value: snils, errorMessage: snilsError } = useField('snils', (value: string) =>
-    /^\d{3}-\d{3}-\d{3} \d{2}$/.test(value) ? true : 'Неверный формат снилса'
-)
-const { value: secondName, errorMessage: secondNameError } = useField('secondName', (value: string) =>
-    /^[А-ЯЁ][а-яё]+$/.test(value) ? true : 'Невалидная фамилия'
-)
-const { value: firstName, errorMessage: firstNameError } = useField('firstName', (value: string) =>
-    /^[А-ЯЁ][а-яё]+$/.test(value) ? true : 'Невалидное имя'
-)
-const { value: middleName, errorMessage: middleNameError } = useField('middleName', (value: string) =>
-    /^[А-ЯЁ][а-яё]+$/.test(value) ? true : 'Невалидное отчество'
-)
-const { value: gender, errorMessage: genderError } = useField('gender', (value: Gender) =>
-    [Gender.MALE, Gender.FEMALE].includes(value) ? true : 'Невалидный пол'
-)
-const currentDate = new Date()
-const possibleStudentBirthdate = new Date()
-possibleStudentBirthdate.setFullYear(currentDate.getFullYear() - (currentClass.data?.number ?? 0) - 7)
-const { value: birthdate, errorMessage: birthdateError } = useField(
-    'birthdate',
-    (value: Date) => (value < new Date() ? true : 'Невалидная дата рождения'),
-    { initialValue: possibleStudentBirthdate }
-)
+    const { data: check } = await useFetch('/api/students/check-available', {
+        query: {
+            snils: snils.value
+        }
+    })
+    if (!check.value?.available) {
+        setFieldError('snils', 'Учащийся с таким СНИЛСом уже существует')
+        throw new Error('Учащийся с таким СНИЛСом уже существует')
+    }
 
-const loading = ref(false)
-
-async function cancel() {
-    emit('update:visible', false)
-    emit('cancel')
-    resetForm()
-}
-
-const onSubmit = handleSubmit(async (values) => {
-    loading.value = true
     const { error } = await useFetch('/api/students/add', {
         method: 'POST',
         body: {
             studentData: {
-                ...values,
+                snils: snils.value,
+                secondName: secondName.value,
+                firstName: firstName.value,
+                middleName: middleName.value,
+                gender: gender.value,
+                birthdate: birthdate.value,
                 classId: currentClass.id
-            }
+            } as Student
         }
     })
     if (error.value) {
-        return toast.add({
-            severity: 'error',
-            summary: 'Ошибка добавления',
-            detail: 'Учащийся не был добавлен',
-            life: 3000
-        })
+        throw new Error(error.value.message)
     }
 
-    toast.add({
-        severity: 'success',
-        summary: 'Успешное добавление',
-        detail: 'Учащийся успешно добавлен',
-        life: 3000
-    })
-
-    loading.value = false
-    emit('update:visible', false)
-    emit('added')
-    resetForm()
-})
+    return 'Учащийся успешно добавлен'
+}
 </script>
