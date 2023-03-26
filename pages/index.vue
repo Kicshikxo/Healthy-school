@@ -15,21 +15,20 @@
                 <div class="flex justify-content-between align-items-center">
                     Список классов
                     <div class="flex gap-2">
-                        <p-dropdown
+                        <select-municipality
                             v-if="!data?.organizationId"
-                            :loading="loadingOrganizations"
-                            :options="organizations"
+                            placeholder="Выберите муниципалитет"
+                            v-model="selectedMunicipality"
+                            class="mb-0 w-20rem white-space-nowrap"
+                        />
+                        <select-organization
+                            v-if="!data?.organizationId"
+                            placeholder="Выберите организацию"
                             v-model="selectedOrganization"
-                            optionLabel="name"
-                            placeholder="Выберите образовательную организацию"
-                            id="select-organization"
+                            :municipality-id="selectedMunicipality?.id"
+                            class="mb-0 w-30rem white-space-nowrap"
                         />
-                        <p-button
-                            label="Обновить"
-                            icon="pi pi-refresh w-1rem"
-                            :loading="loadingClasses"
-                            @click="refreshClasses"
-                        />
+                        <p-button label="Обновить" icon="pi pi-refresh " :loading="loadingClasses" @click="refreshClasses" />
                     </div>
                 </div>
             </template>
@@ -47,7 +46,7 @@
 </template>
 
 <script setup lang="ts">
-import { EducationalOrganization } from '@prisma/client'
+import { EducationalOrganization, Municipality } from '@prisma/client'
 
 definePageMeta({
     title: 'Список классов'
@@ -55,18 +54,11 @@ definePageMeta({
 
 const { data } = useAuthState()
 
+const selectedMunicipality = ref<Municipality>()
 const selectedOrganization = ref<EducationalOrganization>()
-const selectedOrganizationId = computed(
-    () => selectedOrganization.value?.id ?? data.value?.organizationId ?? '00000000-0000-0000-0000-000000000000'
-)
+const organizationId = ref<string>()
 
-const { data: organizations, pending: loadingOrganizations } = useFetch('/api/organizations/list')
-watchEffect(
-    () =>
-        (selectedOrganization.value = organizations.value?.find(
-            (organization) => organization.id === data.value?.organizationId
-        ))
-)
+watchEffect(() => (organizationId.value = selectedOrganization.value?.id ?? data.value?.organizationId))
 
 const {
     data: classes,
@@ -74,8 +66,9 @@ const {
     pending: loadingClasses
 } = useFetch('/api/classes/list', {
     query: {
-        organizationId: selectedOrganizationId
+        organizationId: organizationId
     },
-    headers: useRequestHeaders() as HeadersInit
+    headers: useRequestHeaders() as HeadersInit,
+    immediate: !!organizationId.value
 })
 </script>
