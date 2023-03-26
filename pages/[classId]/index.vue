@@ -38,12 +38,12 @@
                     <div v-else>Учащихся нет...</div>
                 </div>
             </template>
-            <p-column field="secondName" header="Фамилия"></p-column>
-            <p-column field="firstName" header="Имя"></p-column>
-            <p-column field="middleName" header="Отчество"></p-column>
+            <p-column field="secondName" header="Фамилия" />
+            <p-column field="firstName" header="Имя" />
+            <p-column field="middleName" header="Отчество" />
             <p-column field="gender" header="Пол">
                 <template #body="{ data }">
-                    {{ localizeGender(data.gender as Gender) }}
+                    {{ localizeGender(data.gender) }}
                 </template>
             </p-column>
             <p-column field="birthdate" header="Дата рождения">
