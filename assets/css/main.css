@@ -3,6 +3,10 @@
     margin: 0;
 }
 
+.pi {
+    width: 1rem !important;
+}
+
 /* Page transition */
 .page-enter-active,
 .page-leave-active {
@@ -78,6 +82,12 @@
 .p-multiselect-label,
 .p-dropdown-label {
     white-space: normal !important;
+}
+.white-space-nowrap .p-multiselect-item,
+.white-space-nowrap .p-dropdown-item,
+.white-space-nowrap .p-multiselect-label,
+.white-space-nowrap .p-dropdown-label {
+    white-space: nowrap !important;
 }
 .p-multiselect-token {
     margin: 0.2rem;

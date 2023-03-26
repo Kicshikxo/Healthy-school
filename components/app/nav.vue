@@ -5,11 +5,11 @@
             :class="$route.path == '/' ? 'text-primary-50' : 'text-primary-200 hover:text-primary-100'"
             class="no-underline"
         >
-            <i class="pi pi-users w-1rem text-xl"></i>
+            <i class="pi pi-users text-xl"></i>
         </nuxt-link>
 
         <div v-for="path in breadcrumbs" :key="path" class="flex align-items-center gap-3">
-            <i class="pi pi-angle-right w-1rem text-primary-200"></i>
+            <i class="pi pi-angle-right text-primary-200"></i>
             <nuxt-link
                 :to="$router.resolve({ path }).meta.to ?? path"
                 :class="$route.path == path ? 'text-primary-50' : 'text-primary-200 hover:text-primary-100'"
