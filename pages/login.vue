@@ -3,7 +3,7 @@
         <div class="surface-card p-4 m-4 border-1 surface-border border-round shadow-2 w-full sm:w-24rem">
             <div class="flex flex-column justify-content-center align-items-center mb-3">
                 <nuxt-img src="images/logo.png" alt="logo" width="64" height="64" class="mb-3" />
-                <div class="text-900 text-3xl font-bold">Добро пожаловать</div>
+                <div class="text-900 text-4xl font-bold">Добро пожаловать</div>
             </div>
 
             <div class="p-fluid flex flex-column">
