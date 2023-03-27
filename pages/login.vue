@@ -63,7 +63,7 @@ const { value: username, errorMessage: usernameError } = useField('username', (v
 })
 const { value: password, errorMessage: passwordError } = useField('password', (value?: string) => {
     if (!value?.trim()) return 'Введите пароль'
-    if (!/^[0-9a-zA-Z!@#$%^&*]{8,}$/.test(value)) return 'Неверный формат пароля'
+    if (!/^[0-9a-zA-Z!@#$%^&*]+$/.test(value)) return 'Неверный формат пароля'
     if (value.length > 50) return 'Слишком длинный пароль'
     return true
 })
