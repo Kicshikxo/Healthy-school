@@ -1,9 +1,11 @@
 <template>
     <div>
-        <p-tab-menu :model="tabs" />
-        <nuxt-layout :name="false">
-            <nuxt-page />
-        </nuxt-layout>
+        <role-access role="SCHOOL_OPERATOR">
+            <p-tab-menu :model="tabs" />
+            <nuxt-layout :name="false">
+                <nuxt-page />
+            </nuxt-layout>
+        </role-access>
     </div>
 </template>
 
