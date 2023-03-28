@@ -13,6 +13,7 @@
                 <div v-else>Пользователей нет...</div>
             </div>
         </template>
+        <p-column field="username" header="Имя пользователя" />
         <p-column field="secondName" header="Фамилия" />
         <p-column field="firstName" header="Имя" />
         <p-column field="middleName" header="Отчество" />
