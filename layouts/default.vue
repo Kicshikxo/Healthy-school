@@ -12,6 +12,7 @@
             >
                 <div class="absolute w-full min-h-full">
                     <p-toast position="top-center" />
+                    <p-confirm-dialog />
                     <slot />
                 </div>
             </div>

@@ -2,6 +2,7 @@ import PrimeVue from 'primevue/config'
 import ToastService from 'primevue/toastservice'
 import ConfirmationService from 'primevue/confirmationservice'
 import ConfirmPopup from 'primevue/confirmpopup/ConfirmPopup.vue'
+import ConfirmDialog from 'primevue/confirmdialog/ConfirmDialog.vue'
 import Button from 'primevue/button/Button.vue'
 import ToggleButton from 'primevue/togglebutton/ToggleButton.vue'
 import Checkbox from 'primevue/checkbox/Checkbox.vue'
@@ -34,6 +35,7 @@ export default defineNuxtPlugin((nuxtApp) => {
     nuxtApp.vueApp.use(ToastService)
     nuxtApp.vueApp.use(ConfirmationService)
     nuxtApp.vueApp.component('p-confirm-popup', ConfirmPopup)
+    nuxtApp.vueApp.component('p-confirm-dialog', ConfirmDialog)
     nuxtApp.vueApp.component('p-button', Button)
     nuxtApp.vueApp.component('p-toggle-button', ToggleButton)
     nuxtApp.vueApp.component('p-checkbox', Checkbox)
