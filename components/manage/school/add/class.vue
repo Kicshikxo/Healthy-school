@@ -21,13 +21,13 @@
                 <form-input-text
                     label="Литер класса"
                     placeholder="Введите литер класса"
-                    v-model="liter"
+                    v-model.trim="liter"
                     :errorMessage="literError"
                     class="col"
                 />
             </div>
             <div class="formgrid grid">
-                <form-input-wrapper
+                <form-wrapper
                     label="Год начала учёбы"
                     inputId="add-class-start-year"
                     :errorMessage="startYearError"
@@ -42,8 +42,8 @@
                         :class="{ 'p-invalid': startYearError }"
                         @hide="validateField('end-year')"
                     />
-                </form-input-wrapper>
-                <form-input-wrapper
+                </form-wrapper>
+                <form-wrapper
                     label="Год окончания учёбы"
                     inputId="add-class-end-year"
                     :errorMessage="startYearError"
@@ -58,7 +58,7 @@
                         :class="{ 'p-invalid': endYearError }"
                         @hide="validateField('start-year')"
                     />
-                </form-input-wrapper>
+                </form-wrapper>
             </div>
         </template>
     </manage-form>
@@ -68,6 +68,7 @@
 import { Class } from '@prisma/client'
 import { useField, useForm } from 'vee-validate'
 
+const { data } = useAuthState()
 const { resetForm, validate, validateField } = useForm()
 
 const { value: number, errorMessage: numberError } = useField('number', validateClassNumber)
@@ -82,8 +83,6 @@ const { value: endYear, errorMessage: endYearError } = useField<Date>('end-year'
     if (value < startYear.value) return 'Год конца обучения не может быть раньше года начала обучения'
     return true
 })
-
-const { data } = useAuthState()
 
 async function submit() {
     const { valid } = await validate()
@@ -118,7 +117,7 @@ async function submit() {
         throw new Error(error.value.message)
     }
 
-    return 'Класс успешно добавлен'
     resetForm()
+    return 'Класс успешно добавлен'
 }
 </script>
