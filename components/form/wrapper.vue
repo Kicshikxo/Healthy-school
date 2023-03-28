@@ -1,8 +1,8 @@
 <template>
-    <div class="field mb-1">
+    <div class="field" :class="{ 'mb-1': !hideErrorMessage }">
         <label v-if="label" :for="inputId"> {{ label }} </label>
         <slot />
-        <small class="p-error">{{ error || '&nbsp;' }}</small>
+        <small v-if="!hideErrorMessage" class="p-error">{{ errorMessage || '&nbsp;' }}</small>
     </div>
 </template>
 
@@ -10,6 +10,7 @@
 const props = defineProps<{
     label?: string
     inputId?: string
-    error?: string
+    errorMessage?: string
+    hideErrorMessage?: boolean
 }>()
 </script>

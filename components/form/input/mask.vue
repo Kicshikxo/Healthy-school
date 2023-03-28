@@ -1,7 +1,12 @@
 <template>
-    <manage-form-input-wrapper :label="label" :inputId="`form-text-${$.uid}`" :error="error">
-        <p-input-text
-            :id="`form-text-${$.uid}`"
+    <form-wrapper
+        :label="label"
+        :inputId="`form-mask-${$.uid}`"
+        :errorMessage="errorMessage"
+        :hideErrorMessage="hideErrorMessage"
+    >
+        <p-input-mask
+            :id="`form-mask-${$.uid}`"
             type="text"
             :loading="loading"
             :disabled="disabled"
@@ -9,19 +14,22 @@
             @update:modelValue="$emit('update:modelValue', $event)"
             :required="true"
             :placeholder="placeholder"
-            :class="{ 'p-invalid': error }"
+            :class="{ 'p-invalid': errorMessage }"
+            :mask="mask"
         />
-    </manage-form-input-wrapper>
+    </form-wrapper>
 </template>
 
 <script setup lang="ts">
 const props = defineProps<{
     label?: string
     placeholder?: string
-    error?: string
+    errorMessage?: string
+    hideErrorMessage?: boolean
     modelValue?: string
     disabled?: boolean
     loading?: boolean
+    mask?: string
 }>()
 
 const emits = defineEmits<{

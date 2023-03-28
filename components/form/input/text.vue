@@ -1,29 +1,36 @@
 <template>
-    <manage-form-input-wrapper :label="label" :inputId="`form-calendar-${$.uid}`" :error="error">
-        <p-calendar
-            :inputId="`form-calendar-${$.uid}`"
+    <form-wrapper
+        :label="label"
+        :inputId="`form-text-${$.uid}`"
+        :errorMessage="errorMessage"
+        :hideErrorMessage="hideErrorMessage"
+    >
+        <p-input-text
+            :id="`form-text-${$.uid}`"
+            type="text"
             :loading="loading"
             :disabled="disabled"
             :modelValue="modelValue"
             @update:modelValue="$emit('update:modelValue', $event)"
             :required="true"
             :placeholder="placeholder"
-            :class="{ 'p-invalid': error }"
+            :class="{ 'p-invalid': errorMessage }"
         />
-    </manage-form-input-wrapper>
+    </form-wrapper>
 </template>
 
 <script setup lang="ts">
 const props = defineProps<{
     label?: string
     placeholder?: string
-    error?: string
-    modelValue?: Date
+    errorMessage?: string
+    hideErrorMessage?: boolean
+    modelValue?: string
     disabled?: boolean
     loading?: boolean
 }>()
 
 const emits = defineEmits<{
-    (event: 'update:modelValue', value: Date): void
+    (event: 'update:modelValue', value: string): void
 }>()
 </script>

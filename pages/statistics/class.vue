@@ -3,20 +3,20 @@
         <div class="flex flex-column gap-2 p-5">
             <div class="grid">
                 <div class="col flex flex-column">
-                    <select-municipality
+                    <form-select-municipality
                         label="Муниципальное образование"
                         placeholder="Выберите муниципальное образование"
                         v-model="classLogs.selectedMunicipality"
                     />
 
-                    <select-organization
+                    <form-select-organization
                         label="Образовательная огранизация"
                         placeholder="Выберите образовательную организацию"
                         v-model="classLogs.selectedOrganization"
                         :municipality-id="classLogs.selectedMunicipality?.id"
                     />
 
-                    <select-class
+                    <form-select-class
                         label="Класс"
                         placeholder="Выберите класс"
                         v-model="classLogs.selectedClass"

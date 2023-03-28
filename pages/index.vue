@@ -15,18 +15,20 @@
                 <div class="flex justify-content-between align-items-center">
                     Список классов
                     <div class="flex gap-2">
-                        <select-municipality
-                            v-if="!data?.organizationId"
+                        <form-select-municipality
+                            v-if="data?.role === Role.OPERATOR"
                             placeholder="Выберите муниципалитет"
                             v-model="selectedMunicipality"
-                            class="mb-0 w-20rem white-space-nowrap"
+                            hideErrorMessage
+                            class="mb-0 max-w-20rem white-space-nowrap"
                         />
-                        <select-organization
-                            v-if="!data?.organizationId"
+                        <form-select-organization
+                            v-if="data?.role === Role.OPERATOR"
                             placeholder="Выберите организацию"
                             v-model="selectedOrganization"
-                            :municipality-id="selectedMunicipality?.id"
-                            class="mb-0 w-30rem white-space-nowrap"
+                            hideErrorMessage
+                            :municipalityId="selectedMunicipality?.id"
+                            class="mb-0 max-w-30rem white-space-nowrap"
                         />
                         <p-button label="Обновить" icon="pi pi-refresh " :loading="loadingClasses" @click="refreshClasses" />
                     </div>
@@ -46,7 +48,7 @@
 </template>
 
 <script setup lang="ts">
-import { EducationalOrganization, Municipality } from '@prisma/client'
+import { Role, EducationalOrganization, Municipality } from '@prisma/client'
 
 definePageMeta({
     title: 'Список классов'

@@ -12,10 +12,11 @@
     >
         <template #header>
             <div class="flex justify-content-betweeb">
-                <select-class
+                <form-select-class
                     placeholder="Выберите класс"
                     v-model="selectedClass"
-                    :organization-id="data?.organizationId"
+                    hideErrorMessage
+                    :organizationId="data?.organizationId"
                     class="mb-0"
                 />
             </div>

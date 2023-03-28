@@ -7,20 +7,20 @@
             </div>
 
             <div class="p-fluid flex flex-column">
-                <manage-form-input-text
+                <form-input-text
                     ref="usernameInput"
                     placeholder="Введите логин"
                     v-model="username"
-                    :error="usernameError"
+                    :errorMessage="usernameError"
                     @keyup.down="focusPassword"
                     @keyup.enter="focusPassword"
                 />
 
-                <manage-form-input-password
+                <form-input-password
                     ref="passwordInput"
                     placeholder="Введите пароль"
                     v-model="password"
-                    :error="passwordError"
+                    :errorMessage="passwordError"
                     @keyup.up="focusUsername"
                     @keyup.enter="tryLogin"
                 />

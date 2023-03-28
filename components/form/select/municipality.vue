@@ -1,8 +1,10 @@
 <template>
-    <div class="field">
-        <label v-if="label" :for="`select-municipality-${$.uid}`" :class="{ 'opacity-60': isDisabled }">
-            {{ label }}
-        </label>
+    <form-wrapper
+        :label="label"
+        :inputId="`form-select-municipality-${$.uid}`"
+        :errorMessage="errorMessage"
+        :hideErrorMessage="hideErrorMessage"
+    >
         <div class="p-inputgroup">
             <p-dropdown
                 :id="`select-municipality-${$.uid}`"
@@ -13,11 +15,12 @@
                 @update:modelValue="$emit('update:modelValue', $event)"
                 :required="true"
                 :placeholder="placeholder"
+                :class="{ 'p-invalid': errorMessage }"
                 optionLabel="name"
             />
-            <p-button icon="pi pi-refresh" :loading="isLoading" @click="refresh" :class="{ 'p-button-danger': error }" />
+            <p-button icon="pi pi-refresh" :loading="isLoading" @click="refresh" :class="{ 'p-button-danger': errorData }" />
         </div>
-    </div>
+    </form-wrapper>
 </template>
 
 <script setup lang="ts">
@@ -26,6 +29,8 @@ import { Municipality } from '@prisma/client'
 const props = defineProps<{
     label?: string
     placeholder?: string
+    errorMessage?: string
+    hideErrorMessage?: boolean
     modelValue?: Municipality
     disabled?: boolean
     loading?: boolean
@@ -35,12 +40,12 @@ const emits = defineEmits<{
     (event: 'update:modelValue', value: Municipality): void
 }>()
 
-const isDisabled = computed(() => props.disabled || !!error.value)
+const isDisabled = computed(() => props.disabled || !!errorData.value)
 const isLoading = computed(() => !isDisabled.value && (props.loading || loadingData.value))
 
 const {
     data: municipalities,
-    error: error,
+    error: errorData,
     pending: loadingData,
     refresh: refresh
 } = useFetch('/api/municipalities/list', {

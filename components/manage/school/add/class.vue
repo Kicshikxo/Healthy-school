@@ -9,28 +9,28 @@
         <template #title> Добавление класса </template>
         <template #form>
             <div class="formgrid grid">
-                <manage-form-input-number
+                <form-input-number
                     label="Номер класса"
                     placeholder="Введите номер класса"
                     v-model="number"
-                    :error="numberError"
+                    :errorMessage="numberError"
                     :min="1"
                     :max="11"
                     class="col"
                 />
-                <manage-form-input-text
+                <form-input-text
                     label="Литер класса"
                     placeholder="Введите литер класса"
                     v-model="liter"
-                    :error="literError"
+                    :errorMessage="literError"
                     class="col"
                 />
             </div>
             <div class="formgrid grid">
-                <manage-form-input-wrapper
+                <form-input-wrapper
                     label="Год начала учёбы"
                     inputId="add-class-start-year"
-                    :error="startYearError"
+                    :errorMessage="startYearError"
                     class="col"
                 >
                     <p-calendar
@@ -42,11 +42,11 @@
                         :class="{ 'p-invalid': startYearError }"
                         @hide="validateField('end-year')"
                     />
-                </manage-form-input-wrapper>
-                <manage-form-input-wrapper
+                </form-input-wrapper>
+                <form-input-wrapper
                     label="Год окончания учёбы"
                     inputId="add-class-end-year"
-                    :error="startYearError"
+                    :errorMessage="startYearError"
                     class="col"
                 >
                     <p-calendar
@@ -58,7 +58,7 @@
                         :class="{ 'p-invalid': endYearError }"
                         @hide="validateField('start-year')"
                     />
-                </manage-form-input-wrapper>
+                </form-input-wrapper>
             </div>
         </template>
     </manage-form>
@@ -70,17 +70,8 @@ import { useField, useForm } from 'vee-validate'
 
 const { resetForm, validate, validateField } = useForm()
 
-const { value: number, errorMessage: numberError } = useField('number', (value?: number) => {
-    if (!value) return 'Введите номер класса'
-    if (value < 1 || value > 11) return 'Номер класса должен находится в диапазоне от 1 до 11'
-    return true
-})
-const { value: liter, errorMessage: literError } = useField('liter', (value?: string) => {
-    if (!value?.trim()) return true
-    if (value.length > 1) return 'Длина литера не может быть больше одного символа'
-    if (!/^[А-ЯЁ]$/.test(value)) return 'Неверный формат литера'
-    return true
-})
+const { value: number, errorMessage: numberError } = useField('number', validateClassNumber)
+const { value: liter, errorMessage: literError } = useField('liter', validateClassLiter)
 const { value: startYear, errorMessage: startYearError } = useField<Date>('start-year', (value?: Date) => {
     if (!value) return 'Введите год начала обучения'
     if (value > endYear.value) return 'Год начала обучения не может быть позже года конца обучения'
@@ -128,5 +119,6 @@ async function submit() {
     }
 
     return 'Класс успешно добавлен'
+    resetForm()
 }
 </script>

@@ -1,25 +1,31 @@
 <template>
-    <manage-form-input-wrapper :label="label" :inputId="`form-dropdown-${$.uid}`" :error="error">
+    <form-wrapper
+        :label="label"
+        :inputId="`form-dropdown-${$.uid}`"
+        :errorMessage="errorMessage"
+        :hideErrorMessage="hideErrorMessage"
+    >
         <p-dropdown
             :inputId="`form-dropdown-${$.uid}`"
             :modelValue="modelValue"
             @update:modelValue="$emit('update:modelValue', $event)"
             :required="true"
             :placeholder="placeholder"
-            :class="{ 'p-invalid': error }"
+            :class="{ 'p-invalid': errorMessage }"
             :options="options"
             :optionLabel="optionLabel"
             :optionValue="optionValue"
             panelClass="border-1 surface-border"
         />
-    </manage-form-input-wrapper>
+    </form-wrapper>
 </template>
 
 <script setup lang="ts">
 const props = defineProps<{
     label?: string
     placeholder?: string
-    error?: string
+    errorMessage?: string
+    hideErrorMessage?: boolean
     modelValue?: string
     disabled?: boolean
     loading?: boolean

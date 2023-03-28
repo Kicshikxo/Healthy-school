@@ -1,5 +1,10 @@
 <template>
-    <manage-form-input-wrapper :label="label" :inputId="`form-number-${$.uid}`" :error="error">
+    <form-wrapper
+        :label="label"
+        :inputId="`form-number-${$.uid}`"
+        :errorMessage="errorMessage"
+        :hideErrorMessage="hideErrorMessage"
+    >
         <p-input-number
             :inputId="`form-number-${$.uid}`"
             type="number"
@@ -9,19 +14,20 @@
             @update:modelValue="$emit('update:modelValue', $event)"
             :required="true"
             :placeholder="placeholder"
-            :class="{ 'p-invalid': error }"
+            :class="{ 'p-invalid': errorMessage }"
             :min="min"
             :max="max"
             :show-buttons="true"
         />
-    </manage-form-input-wrapper>
+    </form-wrapper>
 </template>
 
 <script setup lang="ts">
 const props = defineProps<{
     label?: string
     placeholder?: string
-    error?: string
+    errorMessage?: string
+    hideErrorMessage?: boolean
     modelValue?: number
     disabled?: boolean
     loading?: boolean

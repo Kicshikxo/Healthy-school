@@ -1,11 +1,13 @@
 <template>
-    <div class="field">
-        <label v-if="label" :for="`select-organization-${$.uid}`" :class="{ 'opacity-60': isDisabled }">
-            {{ label }}
-        </label>
+    <form-wrapper
+        :label="label"
+        :inputId="`form-select-organization-${$.uid}`"
+        :errorMessage="errorMessage"
+        :hideErrorMessage="hideErrorMessage"
+    >
         <div class="p-inputgroup">
             <p-dropdown
-                :id="`select-organization-${$.uid}`"
+                :id="`form-select-organization-${$.uid}`"
                 :options="organizations"
                 :loading="isLoading"
                 :disabled="isDisabled"
@@ -13,6 +15,7 @@
                 @update:modelValue="$emit('update:modelValue', $event)"
                 :required="true"
                 :placeholder="placeholder"
+                :class="{ 'p-invalid': errorMessage }"
                 optionLabel="name"
             />
             <p-button
@@ -23,7 +26,7 @@
                 :class="{ 'p-button-danger': error }"
             />
         </div>
-    </div>
+    </form-wrapper>
 </template>
 
 <script setup lang="ts">
@@ -32,6 +35,8 @@ import { EducationalOrganization } from '@prisma/client'
 const props = defineProps<{
     label?: string
     placeholder?: string
+    errorMessage?: string
+    hideErrorMessage?: boolean
     modelValue?: EducationalOrganization
     disabled?: boolean
     loading?: boolean

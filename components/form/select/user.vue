@@ -1,24 +1,31 @@
 <template>
-    <div class="field">
-        <label v-if="label" :for="`select-class-${$.uid}`" :class="{ 'opacity-60': isDisabled }">
-            {{ label }}
-        </label>
+    <form-wrapper
+        :label="label"
+        :inputId="`form-select-user-${$.uid}`"
+        :errorMessage="errorMessage"
+        :hideErrorMessage="hideErrorMessage"
+    >
         <div class="p-inputgroup">
             <p-dropdown
-                :id="`select-class-${$.uid}`"
-                :options="classes"
+                :id="`form-select-user-${$.uid}`"
+                :options="users"
                 :loading="isLoading"
                 :disabled="isDisabled"
                 :modelValue="modelValue"
                 @update:modelValue="$emit('update:modelValue', $event)"
                 :required="true"
                 :placeholder="placeholder"
+                :class="{ 'p-invalid': errorMessage }"
             >
-                <template v-if="classes?.length" #value="{ value }">
-                    <span v-if="value"> {{ value.number }}{{ value.liter }} ( {{ value._count.students }} человек ) </span>
+                <template v-if="users?.length" #value="{ value }">
+                    <span v-if="value">
+                        {{ value.secondName }} {{ value.firstName }} {{ value.middleName }} — {{ localizeRole(value.role) }}
+                    </span>
                 </template>
-                <template v-if="classes?.length" #option="{ option }">
-                    <span v-if="option"> {{ option.number }}{{ option.liter }} ( {{ option._count.students }} человек ) </span>
+                <template v-if="users?.length" #option="{ option }">
+                    <span v-if="option">
+                        {{ option.secondName }} {{ option.firstName }} {{ option.middleName }} — {{ localizeRole(option.role) }}
+                    </span>
                 </template>
             </p-dropdown>
             <p-button
@@ -29,16 +36,18 @@
                 :class="{ 'p-button-danger': error }"
             />
         </div>
-    </div>
+    </form-wrapper>
 </template>
 
 <script setup lang="ts">
-import { Class } from '@prisma/client'
+import { User } from '@prisma/client'
 
 const props = defineProps<{
     label?: string
     placeholder?: string
-    modelValue?: Class
+    errorMessage?: string
+    hideErrorMessage?: boolean
+    modelValue?: User
     disabled?: boolean
     loading?: boolean
 
@@ -46,18 +55,18 @@ const props = defineProps<{
 }>()
 
 const emits = defineEmits<{
-    (event: 'update:modelValue', value: Class): void
+    (event: 'update:modelValue', value: User): void
 }>()
 
 const isDisabled = computed(() => props.disabled || !props.organizationId || !!error.value)
 const isLoading = computed(() => !isDisabled.value && (props.loading || loadingData.value))
 
 const {
-    data: classes,
+    data: users,
     error: error,
     pending: loadingData,
     refresh: refreshData
-} = useFetch('/api/classes/list', {
+} = useFetch('/api/users/list', {
     query: { organizationId: computed(() => props.organizationId) },
     headers: useRequestHeaders() as HeadersInit,
     immediate: !!props.organizationId

@@ -8,46 +8,46 @@
     >
         <template #title> Добавление учащегося </template>
         <template #form>
-            <manage-form-select-class
+            <form-select-class
                 label="Класс"
                 placeholder="Выберите класс"
                 v-model="selectedClass"
-                :error="selectedClassError"
+                :errorMessage="selectedClassError"
                 :organization-id="data?.organizationId"
             />
-            <manage-form-input-mask
+            <form-input-mask
                 label="СНИЛС"
                 placeholder="Введите СНИЛС"
                 v-model="snils"
-                :error="snilsError"
+                :errorMessage="snilsError"
                 mask="999-999-999 99"
             />
-            <manage-form-input-text
+            <form-input-text
                 label="Фамилия"
                 placeholder="Введите фамилию"
                 v-model="secondName"
-                :error="secondNameError"
+                :errorMessage="secondNameError"
             />
-            <manage-form-input-text label="Имя" placeholder="Введите имя" v-model="firstName" :error="firstNameError" />
-            <manage-form-input-text
+            <form-input-text label="Имя" placeholder="Введите имя" v-model="firstName" :errorMessage="firstNameError" />
+            <form-input-text
                 label="Отчество"
                 placeholder="Введите отчество"
                 v-model="middleName"
-                :error="middleNameError"
+                :errorMessage="middleNameError"
             />
             <div class="formgrid grid">
-                <manage-form-input-calendar
+                <form-input-calendar
                     label="Дата рождения"
                     placeholder="Введите дату рождения"
                     v-model="birthdate"
-                    :error="birthdateError"
+                    :errorMessage="birthdateError"
                     class="col"
                 />
-                <manage-form-input-dropdown
+                <form-input-dropdown
                     label="Пол"
                     placeholder="Выберите пол"
                     v-model="gender"
-                    :error="genderError"
+                    :errorMessage="genderError"
                     :options="[
                         { label: 'Мужской', value: 'MALE' },
                         { label: 'Женский', value: 'FEMALE' }
@@ -62,7 +62,7 @@
 </template>
 
 <script setup lang="ts">
-import { Class, Gender, Student } from '@prisma/client'
+import { Class, Student } from '@prisma/client'
 import { useField, useForm } from 'vee-validate'
 
 const { resetForm, validate, setFieldError } = useForm()
@@ -71,35 +71,12 @@ const { value: selectedClass, errorMessage: selectedClassError } = useField<Clas
     if (!value) return 'Выберите класс'
     return true
 })
-const { value: snils, errorMessage: snilsError } = useField('snils', (value: string) => {
-    if (!validateSnils(value)) return 'Неверный формат снилса'
-    return true
-})
-const { value: secondName, errorMessage: secondNameError } = useField('secondName', (value?: string) => {
-    if (!value?.trim()) return 'Введите фамилию'
-    if (!/^[А-ЯЁ][а-яё]+$/.test(value)) return 'Неверный формат фамилии'
-    return true
-})
-const { value: firstName, errorMessage: firstNameError } = useField('firstName', (value?: string) => {
-    if (!value?.trim()) return 'Введите имя'
-    if (!/^[А-ЯЁ][а-яё]+$/.test(value)) return 'Неверный формат имени'
-    return true
-})
-const { value: middleName, errorMessage: middleNameError } = useField('middleName', (value?: string) => {
-    if (!value?.trim()) return 'Введите отчество'
-    if (!/^[А-ЯЁ][а-яё]+$/.test(value)) return 'Неверный формат отчества'
-    return true
-})
-const { value: gender, errorMessage: genderError } = useField('gender', (value: Gender) => {
-    if (!value) return 'Выберите пол'
-    if (![Gender.MALE, Gender.FEMALE].includes(value)) return 'Неверный пол'
-    return true
-})
-const { value: birthdate, errorMessage: birthdateError } = useField('birthdate', (value: Date) => {
-    if (!value) return 'Выберите дату рождения'
-    if (value > new Date()) return 'Дата рождения не может быть в будущем'
-    return true
-})
+const { value: snils, errorMessage: snilsError } = useField('snils', validateSnils)
+const { value: secondName, errorMessage: secondNameError } = useField('secondName', validateSecondName)
+const { value: firstName, errorMessage: firstNameError } = useField('firstName', validateFirstName)
+const { value: middleName, errorMessage: middleNameError } = useField('middleName', validateMiddleName)
+const { value: gender, errorMessage: genderError } = useField('gender', validateGender)
+const { value: birthdate, errorMessage: birthdateError } = useField('birthdate', validateBirthdate)
 
 const { data } = useAuthState()
 
@@ -138,5 +115,6 @@ async function submit() {
     }
 
     return 'Учащийся успешно добавлен'
+    resetForm()
 }
 </script>

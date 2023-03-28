@@ -15,39 +15,39 @@
         >
             <template #title> Добавление учащегося </template>
             <template #form>
-                <manage-form-input-mask
+                <form-input-mask
                     label="СНИЛС"
                     placeholder="Введите СНИЛС"
                     v-model="snils"
-                    :error="snilsError"
+                    :errorMessage="snilsError"
                     mask="999-999-999 99"
                 />
-                <manage-form-input-text
+                <form-input-text
                     label="Фамилия"
                     placeholder="Введите фамилию"
                     v-model="secondName"
-                    :error="secondNameError"
+                    :errorMessage="secondNameError"
                 />
-                <manage-form-input-text label="Имя" placeholder="Введите имя" v-model="firstName" :error="firstNameError" />
-                <manage-form-input-text
+                <form-input-text label="Имя" placeholder="Введите имя" v-model="firstName" :errorMessage="firstNameError" />
+                <form-input-text
                     label="Отчество"
                     placeholder="Введите отчество"
                     v-model="middleName"
-                    :error="middleNameError"
+                    :errorMessage="middleNameError"
                 />
                 <div class="formgrid grid">
-                    <manage-form-input-calendar
+                    <form-input-calendar
                         label="Дата рождения"
                         placeholder="Введите дату рождения"
                         v-model="birthdate"
-                        :error="birthdateError"
+                        :errorMessage="birthdateError"
                         class="col"
                     />
-                    <manage-form-input-dropdown
+                    <form-input-dropdown
                         label="Пол"
                         placeholder="Выберите пол"
                         v-model="gender"
-                        :error="genderError"
+                        :errorMessage="genderError"
                         :options="[
                             { label: 'Мужской', value: 'MALE' },
                             { label: 'Женский', value: 'FEMALE' }

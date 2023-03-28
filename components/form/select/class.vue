@@ -1,17 +1,21 @@
 <template>
-    <div class="field mb-1">
-        <label v-if="label" :for="`form-text-${$.uid}`"> {{ label }} </label>
+    <form-wrapper
+        :label="label"
+        :inputId="`form-select-class-${$.uid}`"
+        :errorMessage="errorMessage"
+        :hideErrorMessage="hideErrorMessage"
+    >
         <div class="p-inputgroup">
             <p-dropdown
-                :id="`form-text-${$.uid}`"
+                :id="`form-select-class-${$.uid}`"
                 :options="classes"
-                :loading="loading || loadingClasses"
-                :disabled="disabled || !!errorClasses"
+                :loading="isLoading"
+                :disabled="isDisabled"
                 :modelValue="modelValue"
                 @update:modelValue="$emit('update:modelValue', $event)"
                 :required="true"
                 :placeholder="placeholder"
-                :class="{ 'p-invalid': error }"
+                :class="{ 'p-invalid': errorMessage }"
             >
                 <template v-if="classes?.length" #value="{ value }">
                     <span v-if="value"> {{ value.number }}{{ value.liter }} ( {{ value._count.students }} человек ) </span>
@@ -20,10 +24,15 @@
                     <span v-if="option"> {{ option.number }}{{ option.liter }} ( {{ option._count.students }} человек ) </span>
                 </template>
             </p-dropdown>
-            <p-button icon="pi pi-refresh" @click="refreshClasses" :loading="loadingClasses" />
+            <p-button
+                icon="pi pi-refresh"
+                :disabled="!props.organizationId"
+                :loading="isLoading"
+                @click="refreshData"
+                :class="{ 'p-button-danger': errorData }"
+            />
         </div>
-        <small class="p-error">{{ error || '&nbsp;' }}</small>
-    </div>
+    </form-wrapper>
 </template>
 
 <script setup lang="ts">
@@ -32,7 +41,8 @@ import { Class } from '@prisma/client'
 const props = defineProps<{
     label?: string
     placeholder?: string
-    error?: string
+    errorMessage?: string
+    hideErrorMessage?: boolean
     modelValue?: Class
     disabled?: boolean
     loading?: boolean
@@ -44,13 +54,17 @@ const emits = defineEmits<{
     (event: 'update:modelValue', value: Class): void
 }>()
 
+const isDisabled = computed(() => props.disabled || !props.organizationId || !!errorData.value)
+const isLoading = computed(() => !isDisabled.value && (props.loading || loadingData.value))
+
 const {
     data: classes,
-    error: errorClasses,
-    pending: loadingClasses,
-    refresh: refreshClasses
+    error: errorData,
+    pending: loadingData,
+    refresh: refreshData
 } = useFetch('/api/classes/list', {
-    query: { organizationId: props.organizationId },
-    headers: useRequestHeaders() as HeadersInit
+    query: { organizationId: computed(() => props.organizationId) },
+    headers: useRequestHeaders() as HeadersInit,
+    immediate: !!props.organizationId
 })
 </script>

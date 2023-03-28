@@ -1,11 +1,13 @@
 <template>
-    <div class="field">
-        <label v-if="label" :for="`select-student-${$.uid}`" :class="{ 'opacity-60': isDisabled }">
-            {{ label }}
-        </label>
+    <form-wrapper
+        :label="label"
+        :inputId="`form-select-student-${$.uid}`"
+        :errorMessage="errorMessage"
+        :hideErrorMessage="hideErrorMessage"
+    >
         <div class="p-inputgroup">
             <p-dropdown
-                :id="`select-student-${$.uid}`"
+                :id="`form-select-student-${$.uid}`"
                 :options="students"
                 :loading="isLoading"
                 :disabled="isDisabled"
@@ -13,6 +15,7 @@
                 @update:modelValue="$emit('update:modelValue', $event)"
                 :required="true"
                 :placeholder="placeholder"
+                :class="{ 'p-invalid': errorMessage }"
             >
                 <template v-if="students?.length" #value="{ value }">
                     <span v-if="value"> {{ value.secondName }} {{ value.firstName }} {{ value.middleName }} </span>
@@ -29,7 +32,7 @@
                 :class="{ 'p-button-danger': error }"
             />
         </div>
-    </div>
+    </form-wrapper>
 </template>
 
 <script setup lang="ts">
@@ -38,13 +41,14 @@ import { Student } from '@prisma/client'
 const props = defineProps<{
     label?: string
     placeholder?: string
+    errorMessage?: string
+    hideErrorMessage?: boolean
     modelValue?: Student
     disabled?: boolean
     loading?: boolean
 
     classId?: string
 }>()
-
 const emits = defineEmits<{
     (event: 'update:modelValue', value: Student): void
 }>()
