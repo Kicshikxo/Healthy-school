@@ -21,15 +21,15 @@ const tabs = ref([
     },
     {
         label: 'Добавление данных',
-        to: '/manage-school/add-data'
+        to: '/manage-school/add'
     },
     {
         label: 'Редактирование данных',
-        to: '/manage-school/edit-data'
+        to: '/manage-school/edit'
     },
     {
         label: 'Удаление данных',
-        to: '/manage-school/remove-data'
+        to: '/manage-school/remove'
     }
 ])
 </script>

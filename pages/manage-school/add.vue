@@ -15,15 +15,15 @@ definePageMeta({
 const tabs = ref([
     {
         label: 'Добавить пользователя',
-        to: '/manage-school/add-data/user'
+        to: '/manage-school/add/user'
     },
     {
         label: 'Добавить класс',
-        to: '/manage-school/add-data/class'
+        to: '/manage-school/add/class'
     },
     {
         label: 'Добавить учащегося',
-        to: '/manage-school/add-data/student'
+        to: '/manage-school/add/student'
     }
 ])
 </script>
