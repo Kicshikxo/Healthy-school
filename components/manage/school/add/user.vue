@@ -61,9 +61,10 @@
 </template>
 
 <script setup lang="ts">
-import { Role } from '@prisma/client'
+import { Role, User } from '@prisma/client'
 import { useField, useForm } from 'vee-validate'
 
+const { data } = useAuthState()
 const { resetForm, validate, setFieldError } = useForm()
 
 const { value: role, errorMessage: roleError } = useField('role', validateRole)
@@ -78,8 +79,6 @@ const { value: repeatPassword, errorMessage: repeatPasswordError } = useField('r
 const { value: secondName, errorMessage: secondNameError } = useField('secondName', validateSecondName)
 const { value: firstName, errorMessage: firstNameError } = useField('firstName', validateFirstName)
 const { value: middleName, errorMessage: middleNameError } = useField('middleName', validateMiddleName)
-
-const { data } = useAuthState()
 
 async function submit() {
     const { valid } = await validate()
@@ -106,14 +105,14 @@ async function submit() {
                 firstName: firstName.value,
                 middleName: middleName.value,
                 organizationId: data.value?.organizationId
-            }
+            } as User & { organizationId: string }
         }
     })
     if (error.value) {
         throw new Error(error.value.message)
     }
 
-    return 'Пользователь успешно добавлен'
     resetForm()
+    return 'Пользователь успешно добавлен'
 }
 </script>
