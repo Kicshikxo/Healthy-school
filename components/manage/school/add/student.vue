@@ -65,6 +65,7 @@
 import { Class, Student } from '@prisma/client'
 import { useField, useForm } from 'vee-validate'
 
+const { data } = useAuthState()
 const { resetForm, validate, setFieldError } = useForm()
 
 const { value: selectedClass, errorMessage: selectedClassError } = useField<Class>('class', (value: Class) => {
@@ -77,8 +78,6 @@ const { value: firstName, errorMessage: firstNameError } = useField('firstName',
 const { value: middleName, errorMessage: middleNameError } = useField('middleName', validateMiddleName)
 const { value: gender, errorMessage: genderError } = useField('gender', validateGender)
 const { value: birthdate, errorMessage: birthdateError } = useField('birthdate', validateBirthdate)
-
-const { data } = useAuthState()
 
 async function submit() {
     const { valid } = await validate()
@@ -114,7 +113,7 @@ async function submit() {
         throw new Error(error.value.message)
     }
 
-    return 'Учащийся успешно добавлен'
     resetForm()
+    return 'Учащийся успешно добавлен'
 }
 </script>
