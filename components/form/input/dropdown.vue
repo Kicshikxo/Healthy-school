@@ -7,6 +7,8 @@
     >
         <p-dropdown
             :inputId="`form-dropdown-${$.uid}`"
+            :loading="loading"
+            :disabled="disabled"
             :modelValue="modelValue"
             @update:modelValue="$emit('update:modelValue', $event)"
             :required="true"
