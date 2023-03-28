@@ -21,20 +21,22 @@ const prisma = new PrismaClient()
  *         description: "Role access is forbidden"
  */
 export default defineEventHandler(async (event) => {
-    if (!checkRole(event, { role: Role.CLASS_TEACHER })) return
+    if (!checkRole(event, { roles: [Role.OPERATOR, Role.SCHOOL_OPERATOR, Role.CLASS_TEACHER] })) return
 
     const body: { studentId: string } = await readBody(event)
+
+    if (!body.studentId) return
+    sendError(
+        event,
+        createError({
+            statusCode: 400,
+            statusMessage: 'studentId is not provided'
+        })
+    )
 
     return await prisma.student.delete({
         where: {
             id: body.studentId
-        },
-        include: {
-            medicalHealth: true,
-            pedagogueHealth: true,
-            physicalHealth: true,
-            psychologicalHealth: true,
-            socialHealth: true
         }
     })
 })
