@@ -8,7 +8,7 @@
                         class="p-button-rounded p-button-danger"
                         @click="confirmDeleteStudent($event)"
                     />
-                    <p-confirm-popup></p-confirm-popup>
+                    <p-confirm-popup />
                 </role-access>
             </template>
         </student-info>
