@@ -1,0 +1,102 @@
+<template>
+    <manage-form
+        success-submit-summary="Успешное изменение"
+        error-submit-summary="Ошибка изменения"
+        submit-label="Изменить"
+        :on-submit="submit"
+        :on-cancel="resetForm"
+    >
+        <template #title> Редактирование пользователя </template>
+        <template #form>
+            <form-select-user
+                label="Пользователь"
+                placeholder="Выберите пользователя для редактирования"
+                v-model="selectedUser"
+                :errorMessage="selectedUserError"
+                :organization-id="data?.organizationId"
+            />
+            <form-input-dropdown
+                label="Роль"
+                placeholder="Выберите роль"
+                v-model="role"
+                :disabled="!selectedUser"
+                :errorMessage="roleError"
+                :options="Object.keys(Role).filter(role => role !== Role.OPERATOR).map((role) => ({ label: localizeRole(role as Role), value: role }))"
+                optionLabel="label"
+                optionValue="value"
+            />
+            <form-input-text
+                label="Фамилия"
+                placeholder="Введите фамилию"
+                v-model="secondName"
+                :disabled="!selectedUser"
+                :errorMessage="secondNameError"
+            />
+            <form-input-text
+                label="Имя"
+                placeholder="Введите имя"
+                v-model="firstName"
+                :disabled="!selectedUser"
+                :errorMessage="firstNameError"
+            />
+            <form-input-text
+                label="Отчество"
+                placeholder="Введите отчество"
+                v-model="middleName"
+                :disabled="!selectedUser"
+                :errorMessage="middleNameError"
+            />
+        </template>
+    </manage-form>
+</template>
+
+<script setup lang="ts">
+import { Role, User } from '@prisma/client'
+import { useField, useForm } from 'vee-validate'
+
+const { data } = useAuthState()
+const { resetForm, validate } = useForm()
+
+const { value: selectedUser, errorMessage: selectedUserError } = useField<User>('user', (value: User) => {
+    if (!value) return 'Выберите пользователя'
+    return true
+})
+const { value: role, errorMessage: roleError } = useField('role', validateRole)
+const { value: secondName, errorMessage: secondNameError } = useField('secondName', validateSecondName)
+const { value: firstName, errorMessage: firstNameError } = useField('firstName', validateFirstName)
+const { value: middleName, errorMessage: middleNameError } = useField('middleName', validateMiddleName)
+
+watch(selectedUser, (value) => {
+    if (!value) return
+    role.value = value.role
+    secondName.value = value.secondName
+    firstName.value = value.firstName
+    middleName.value = value.middleName
+})
+
+async function submit() {
+    const { valid } = await validate()
+    if (!valid) {
+        throw new Error('Форма имеет ошибки заполнения')
+    }
+
+    const { error } = await useFetch('/api/users/edit', {
+        method: 'POST',
+        body: {
+            userData: {
+                id: selectedUser.value.id,
+                role: role.value,
+                secondName: secondName.value,
+                firstName: firstName.value,
+                middleName: middleName.value
+            } as User
+        }
+    })
+    if (error.value) {
+        throw new Error(error.value.message)
+    }
+
+    resetForm()
+    return 'Пользователь успешно изменён'
+}
+</script>
