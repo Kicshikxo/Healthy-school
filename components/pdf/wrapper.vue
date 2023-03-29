@@ -50,7 +50,7 @@ function paginate() {
     }
 }
 
-onMounted(() => {
+onMounted(async () => {
     pagesObserver.value = new MutationObserver(paginate)
 
     pagesObserver.value.observe(pagesRoot.value as Node, {
@@ -60,6 +60,7 @@ onMounted(() => {
         subtree: true
     })
 
+    await nextTick()
     paginate()
 })
 onUnmounted(() => pagesObserver.value?.disconnect())
