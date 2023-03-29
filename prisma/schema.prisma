@@ -75,7 +75,7 @@ model ClassTeacher {
 
     createdAt DateTime @default(now()) @map("created_at")
 
-    @@unique([userId, classId])
+    @@id([userId, classId])
     @@map("class_teachers")
 }
 
