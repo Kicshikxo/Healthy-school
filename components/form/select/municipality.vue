@@ -18,7 +18,13 @@
                 :class="{ 'p-invalid': errorMessage }"
                 optionLabel="name"
             />
-            <p-button icon="pi pi-refresh" :loading="isLoading" @click="refresh" :class="{ 'p-button-danger': errorData }" />
+            <p-button
+                icon="pi pi-refresh"
+                :disabled="isButtonDisabled"
+                :loading="isLoading"
+                @click="refresh"
+                :class="{ 'p-button-danger': errorData }"
+            />
         </div>
     </form-wrapper>
 </template>
@@ -41,6 +47,7 @@ const emits = defineEmits<{
 }>()
 
 const isDisabled = computed(() => props.disabled || !!errorData.value)
+const isButtonDisabled = computed(() => props.disabled)
 const isLoading = computed(() => !isDisabled.value && (props.loading || loadingData.value))
 
 const {

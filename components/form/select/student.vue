@@ -26,7 +26,7 @@
             </p-dropdown>
             <p-button
                 icon="pi pi-refresh"
-                :disabled="!props.classId"
+                :disabled="isButtonDisabled"
                 :loading="isLoading"
                 @click="refresh"
                 :class="{ 'p-button-danger': error }"
@@ -54,6 +54,7 @@ const emits = defineEmits<{
 }>()
 
 const isDisabled = computed(() => props.disabled || !props.classId || !!error.value)
+const isButtonDisabled = computed(() => props.disabled || !props.classId)
 const isLoading = computed(() => !isDisabled.value && (props.loading || loadingData.value))
 
 const {
