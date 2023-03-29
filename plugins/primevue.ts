@@ -133,7 +133,7 @@ const locale = {
     today: 'Сегодня',
     weekHeader: 'Нед.',
     firstDayOfWeek: 1,
-    dateFormat: 'dd.mm.yyyy',
+    dateFormat: 'dd.mm.yy',
     weak: 'Простой',
     medium: 'Нормальный',
     strong: 'Хороший',
