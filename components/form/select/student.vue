@@ -16,6 +16,7 @@
                 :required="true"
                 :placeholder="placeholder"
                 :class="{ 'p-invalid': errorMessage }"
+                dataKey="id"
             >
                 <template v-if="students?.length" #value="{ value }">
                     <span v-if="value"> {{ value.secondName }} {{ value.firstName }} {{ value.middleName }} </span>

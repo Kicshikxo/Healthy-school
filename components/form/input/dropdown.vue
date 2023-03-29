@@ -18,6 +18,7 @@
             :optionLabel="optionLabel"
             :optionValue="optionValue"
             panelClass="border-1 surface-border"
+            dataKey="id"
         />
     </form-wrapper>
 </template>

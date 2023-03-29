@@ -16,6 +16,7 @@
                 :required="true"
                 :placeholder="placeholder"
                 :class="{ 'p-invalid': errorMessage }"
+                dataKey="id"
             >
                 <template v-if="users?.length" #value="{ value }">
                     <span v-if="value">
@@ -40,14 +41,18 @@
 </template>
 
 <script setup lang="ts">
-import { User } from '@prisma/client'
+import { User, Class, ClassTeacher } from '@prisma/client'
 
 const props = defineProps<{
     label?: string
     placeholder?: string
     errorMessage?: string
     hideErrorMessage?: boolean
-    modelValue?: User
+    modelValue?: User & {
+        classes?: (ClassTeacher & {
+            class: Class
+        })[]
+    }
     disabled?: boolean
     loading?: boolean
 
@@ -55,7 +60,14 @@ const props = defineProps<{
 }>()
 
 const emits = defineEmits<{
-    (event: 'update:modelValue', value: User): void
+    (
+        event: 'update:modelValue',
+        value: User & {
+            classes?: (ClassTeacher & {
+                class: Class
+            })[]
+        }
+    ): void
 }>()
 
 const isDisabled = computed(() => props.disabled || !props.organizationId || !!error.value)

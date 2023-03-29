@@ -17,6 +17,7 @@
                 :placeholder="placeholder"
                 :class="{ 'p-invalid': errorMessage }"
                 optionLabel="name"
+                dataKey="id"
             />
             <p-button
                 icon="pi pi-refresh"
