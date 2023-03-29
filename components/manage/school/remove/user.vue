@@ -28,7 +28,7 @@ const confirm = useConfirm()
 const { data } = useAuthState()
 const { resetForm, validate } = useForm()
 
-const { value: selectedUser, errorMessage: selectedUserError } = useField<User>('user', (value: User) => {
+const { value: selectedUser, errorMessage: selectedUserError } = useField<User>('user', (value) => {
     if (!value) return 'Выберите пользователя'
     return true
 })
