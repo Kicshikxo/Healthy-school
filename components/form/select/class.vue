@@ -18,10 +18,12 @@
                 :class="{ 'p-invalid': errorMessage }"
             >
                 <template v-if="classes?.length" #value="{ value }">
-                    <span v-if="value"> {{ value.number }}{{ value.liter }} ( {{ value._count.students }} человек ) </span>
+                    <span v-if="value"> {{ value?.number }}{{ value?.liter }} </span>
+                    <span v-if="!isNil(value?._count?.students)"> ( {{ value?._count?.students }} человек )</span>
                 </template>
                 <template v-if="classes?.length" #option="{ option }">
-                    <span v-if="option"> {{ option.number }}{{ option.liter }} ( {{ option._count.students }} человек ) </span>
+                    <span v-if="option"> {{ option?.number }}{{ option?.liter }}</span>
+                    <span v-if="!isNil(option?._count?.students)"> ( {{ option?._count?.students }} человек )</span>
                 </template>
             </p-dropdown>
             <p-button
