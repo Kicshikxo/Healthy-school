@@ -46,7 +46,15 @@ export const useStudentStore = defineStore('student', () => {
     })
 
     const breadcrumbs = useBreadcrumbsStore()
-    watchEffect(() => breadcrumbs.setStudent(data.value))
+    watchEffect(() =>
+        breadcrumbs.setStudent(
+            Object.assign({}, data.value, {
+                birthdate: new Date(data.value?.birthdate!),
+                createdAt: new Date(data.value?.createdAt!),
+                updatedAt: new Date(data.value?.updatedAt!)
+            })
+        )
+    )
 
     const medicalHealth = useMedicalHealthStore()
     const pedagogueHealth = usePedagogueHealthStore()
