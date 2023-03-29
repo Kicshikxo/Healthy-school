@@ -47,8 +47,8 @@
 
 <script setup lang="ts">
 import { PedagogueType } from '@prisma/client'
-import { useStudentStore } from '~~/store/student'
 import { usePedagogueHealthStore } from '~~/store/health/pedagogue'
+import { useStudentStore } from '~~/store/student'
 
 const student = useStudentStore()
 const pedagogueHealth = usePedagogueHealthStore()

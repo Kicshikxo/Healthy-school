@@ -1,5 +1,5 @@
-import { H3Event, sendError } from 'h3'
 import { Role } from '@prisma/client'
+import { H3Event, sendError } from 'h3'
 
 export default function (event: H3Event, roleData: XOR<{ role: Role }, { roles: Role[] }>): boolean {
     const tokenData = readTokenData(event)

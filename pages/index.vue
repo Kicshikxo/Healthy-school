@@ -48,7 +48,7 @@
 </template>
 
 <script setup lang="ts">
-import { Role, EducationalOrganization, Municipality } from '@prisma/client'
+import { EducationalOrganization, Municipality, Role } from '@prisma/client'
 
 definePageMeta({
     title: 'Список классов'

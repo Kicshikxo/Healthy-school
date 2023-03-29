@@ -1,5 +1,5 @@
-import crc32 from 'crc/crc32'
 import { PrismaClient } from '@prisma/client'
+import crc32 from 'crc/crc32'
 
 const prisma = new PrismaClient()
 

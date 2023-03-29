@@ -21,8 +21,8 @@
 
 <script setup lang="ts">
 import { Class } from '@prisma/client'
-import { useField, useForm } from 'vee-validate'
 import { useConfirm } from 'primevue/useconfirm'
+import { useField, useForm } from 'vee-validate'
 
 const confirm = useConfirm()
 const { data } = useAuthState()

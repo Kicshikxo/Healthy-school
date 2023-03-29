@@ -50,9 +50,9 @@
 </template>
 
 <script setup lang="ts">
-import { PhysicalType, HealthGroup } from '@prisma/client'
-import { useStudentStore } from '~~/store/student'
+import { HealthGroup, PhysicalType } from '@prisma/client'
 import { usePhysicalHealthStore } from '~~/store/health/physical'
+import { useStudentStore } from '~~/store/student'
 
 const student = useStudentStore()
 const physicalHealth = usePhysicalHealthStore()

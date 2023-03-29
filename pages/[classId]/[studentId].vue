@@ -37,10 +37,10 @@
 </template>
 
 <script setup lang="ts">
-import { useToast } from 'primevue/usetoast'
 import { useConfirm } from 'primevue/useconfirm'
-import { useStudentStore } from '~~/store/student'
+import { useToast } from 'primevue/usetoast'
 import { useClassStore } from '~~/store/class'
+import { useStudentStore } from '~~/store/student'
 
 definePageMeta({
     title: 'Информация по учащемуся',

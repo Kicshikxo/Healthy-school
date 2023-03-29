@@ -40,8 +40,8 @@
 
 <script setup lang="ts">
 import { PsychologicalType } from '@prisma/client'
-import { useStudentStore } from '~~/store/student'
 import { usePsychologicalHealthStore } from '~~/store/health/psychological'
+import { useStudentStore } from '~~/store/student'
 
 const student = useStudentStore()
 const psychologicalHealth = usePsychologicalHealthStore()

@@ -51,7 +51,7 @@
 </template>
 
 <script setup lang="ts">
-import { Student, Class } from '@prisma/client'
+import { Class, Student } from '@prisma/client'
 
 const props = withDefaults(
     defineProps<{

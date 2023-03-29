@@ -33,8 +33,8 @@
 </template>
 
 <script setup lang="ts">
-import { useStudentStore } from '~~/store/student'
 import { PdfWrapper } from '#components'
+import { useStudentStore } from '~~/store/student'
 
 const student = useStudentStore()
 

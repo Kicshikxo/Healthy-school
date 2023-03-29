@@ -43,8 +43,8 @@
 
 <script setup lang="ts">
 import { HealthZone } from '@prisma/client'
-import { useStudentStore } from '~~/store/student'
 import { useSocialHealthStore } from '~~/store/health/social'
+import { useStudentStore } from '~~/store/student'
 
 const student = useStudentStore()
 const socialHealth = useSocialHealthStore()

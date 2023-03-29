@@ -41,7 +41,7 @@
 </template>
 
 <script setup lang="ts">
-import { User, Class, ClassTeacher } from '@prisma/client'
+import { Class, ClassTeacher, User } from '@prisma/client'
 
 const props = defineProps<{
     label?: string

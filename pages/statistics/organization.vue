@@ -67,10 +67,10 @@
 </template>
 
 <script setup lang="ts">
+import { PdfWrapper } from '#components'
 import { ConclusionType } from '@prisma/client'
 import { useConclusionsStore } from '~~/store/health/conclusions'
 import { useOrganizationLogsStore } from '~~/store/logs/organization'
-import { PdfWrapper } from '#components'
 
 definePageMeta({
     title: 'Статистика по школе'

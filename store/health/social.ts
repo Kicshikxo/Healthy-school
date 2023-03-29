@@ -1,5 +1,5 @@
-import { defineStore } from 'pinia'
 import { SocialHealthOption, SocialType } from '@prisma/client'
+import { defineStore } from 'pinia'
 
 export const useSocialHealthStore = defineStore('social', () => {
     const { data: optionsWithRecommendations } = useFetch('/api/students/health/social/options/with-recommendations')

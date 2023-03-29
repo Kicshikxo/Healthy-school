@@ -58,7 +58,6 @@
 </template>
 
 <script setup lang="ts">
-import { Gender } from '@prisma/client'
 import { useClassStore } from '~~/store/class'
 
 definePageMeta({

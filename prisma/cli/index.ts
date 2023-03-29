@@ -1,4 +1,7 @@
+import { PrismaClient, Role } from '@prisma/client'
+import { hashSync } from 'bcrypt'
 import prompts from 'prompts'
+import { localizeRole } from '../../utils/localizeRole.js'
 import {
     conclusions,
     medicalHealthOptions,
@@ -7,10 +10,7 @@ import {
     psychologicalHealthOptions,
     socialHealthOptions
 } from './data/index.js'
-import { hashSync } from 'bcrypt'
-import { PrismaClient, Role } from '@prisma/client'
 import { proceedWithSpinner } from './utils.js'
-import { localizeRole } from '../../utils/localizeRole.js'
 
 const prisma = new PrismaClient()
 

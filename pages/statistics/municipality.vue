@@ -60,10 +60,10 @@
 </template>
 
 <script setup lang="ts">
-import { ConclusionType } from '@prisma/client'
-import { useMunicipalityLogsStore } from '~~/store/logs/municipality'
-import { useConclusionsStore } from '~~/store/health/conclusions'
 import { PdfWrapper } from '#components'
+import { ConclusionType } from '@prisma/client'
+import { useConclusionsStore } from '~~/store/health/conclusions'
+import { useMunicipalityLogsStore } from '~~/store/logs/municipality'
 
 definePageMeta({
     title: 'Статистика по региону'

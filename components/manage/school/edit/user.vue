@@ -59,7 +59,7 @@
 </template>
 
 <script setup lang="ts">
-import { Role, User, Class, ClassTeacher } from '@prisma/client'
+import { Class, ClassTeacher, Role, User } from '@prisma/client'
 import { useField, useForm } from 'vee-validate'
 
 const { data } = useAuthState()

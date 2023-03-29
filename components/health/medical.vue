@@ -77,8 +77,8 @@
 
 <script setup lang="ts">
 import { HealthZone, MedicalType } from '@prisma/client'
-import { useStudentStore } from '~~/store/student'
 import { useMedicalHealthStore } from '~~/store/health/medical'
+import { useStudentStore } from '~~/store/student'
 
 const student = useStudentStore()
 const medicalHealth = useMedicalHealthStore()

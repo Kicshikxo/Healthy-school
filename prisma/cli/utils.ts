@@ -1,4 +1,3 @@
-import { Role } from '@prisma/client'
 import ora from 'ora'
 
 export async function proceedWithSpinner<T>(

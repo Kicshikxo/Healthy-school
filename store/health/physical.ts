@@ -1,4 +1,4 @@
-import { PhysicalType, PhysicalHealthOption, HealthGroup } from '@prisma/client'
+import { HealthGroup, PhysicalHealthOption, PhysicalType } from '@prisma/client'
 import { defineStore } from 'pinia'
 
 export const usePhysicalHealthStore = defineStore('physical', () => {

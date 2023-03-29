@@ -1,5 +1,4 @@
 import {
-    Class,
     ConclusionType,
     EducationType,
     HealthGroup,
@@ -18,17 +17,16 @@ import {
     PsychologicalHealthOption,
     PsychologicalType,
     SocialHealth,
-    SocialHealthOption,
-    Student
+    SocialHealthOption
 } from '@prisma/client'
 import { defineStore } from 'pinia'
-import { usePhysicalHealthStore } from '~~/store/health/physical'
+import { useBreadcrumbsStore } from '~~/store/breadcrumbs'
+import { useConclusionsStore } from '~~/store/health/conclusions'
+import { useMedicalHealthStore } from '~~/store/health/medical'
 import { usePedagogueHealthStore } from '~~/store/health/pedagogue'
+import { usePhysicalHealthStore } from '~~/store/health/physical'
 import { usePsychologicalHealthStore } from '~~/store/health/psychological'
 import { useSocialHealthStore } from '~~/store/health/social'
-import { useMedicalHealthStore } from '~~/store/health/medical'
-import { useConclusionsStore } from '~~/store/health/conclusions'
-import { useBreadcrumbsStore } from '~~/store/breadcrumbs'
 
 export const useStudentStore = defineStore('student', () => {
     const route = useRoute()

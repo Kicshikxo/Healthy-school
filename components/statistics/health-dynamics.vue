@@ -95,7 +95,7 @@
 </template>
 
 <script setup lang="ts">
-import { HealthZone, ConclusionType } from '@prisma/client'
+import { ConclusionType, HealthZone } from '@prisma/client'
 import { useConclusionsStore } from '~~/store/health/conclusions'
 
 const props = defineProps<{

@@ -1,4 +1,4 @@
-import { Role, User, UserOrganization } from '@prisma/client'
+import { Role } from '@prisma/client'
 
 declare global {
     interface LoginData {
