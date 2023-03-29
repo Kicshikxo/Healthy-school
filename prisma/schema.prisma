@@ -29,7 +29,7 @@ model EducationalOrganization {
 model User {
     id           String            @id() @default(dbgenerated("gen_random_uuid()")) @map("user_id") @db.Uuid
     organization UserOrganization?
-    class        ClassTeacher?
+    classes      ClassTeacher[]
     role         Role              @map("role")
     username     String            @unique @map("username") @db.VarChar(64)
     password     String            @map("password") @db.Char(60)
@@ -69,12 +69,13 @@ model Class {
 
 model ClassTeacher {
     user    User   @relation(fields: [userId], references: [id], onUpdate: Cascade, onDelete: Cascade)
-    userId  String @id() @map("user_id") @db.Uuid
+    userId  String @map("user_id") @db.Uuid
     class   Class  @relation(fields: [classId], references: [id], onUpdate: Cascade, onDelete: Cascade)
     classId String @map("class_id") @db.Uuid
 
     createdAt DateTime @default(now()) @map("created_at")
 
+    @@unique([userId, classId])
     @@map("class_teachers")
 }
 
