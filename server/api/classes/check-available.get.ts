@@ -5,7 +5,13 @@ const prisma = new PrismaClient()
 export default defineEventHandler(async (event) => {
     if (!checkRole(event, { roles: [Role.OPERATOR, Role.SCHOOL_OPERATOR] })) return
 
-    const query = getQuery(event) as { number: string; liter: string; academicYear: string; organizationId: string }
+    const query = getQuery(event) as {
+        number: string
+        liter: string
+        academicYear: string
+        organizationId: string
+        skipId: string
+    }
 
     if (!query.number || !query.liter || !query.academicYear || !query.organizationId)
         return sendError(
@@ -17,14 +23,13 @@ export default defineEventHandler(async (event) => {
         )
 
     return {
-        available: !(await prisma.class.findUnique({
+        available: !(await prisma.class.findFirst({
             where: {
-                organizationId_number_liter_academicYear: {
-                    number: parseInt(query.number),
-                    liter: query.liter,
-                    academicYear: query.academicYear,
-                    organizationId: query.organizationId
-                }
+                id: { not: query.skipId },
+                number: parseInt(query.number),
+                liter: query.liter,
+                academicYear: query.academicYear,
+                organizationId: query.organizationId
             }
         }))
     }

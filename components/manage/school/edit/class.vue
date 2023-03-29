@@ -114,8 +114,21 @@ async function submit() {
         throw new Error('Форма имеет ошибки заполнения')
     }
 
+    const { data: check } = await useFetch('/api/classes/check-available', {
+        query: {
+            number: number.value,
+            liter: liter.value,
+            academicYear: `${startYear.value.getFullYear()}-${endYear.value.getFullYear()}`,
+            organizationId: data.value?.organizationId,
+            skipId: selectedClass.value.id
+        }
+    })
+    if (!check.value?.available) {
+        throw new Error('Класс уже существует')
+    }
+
     const { error } = await useFetch('/api/classes/edit', {
-        method: 'POST',
+        method: 'PATCH',
         body: {
             classData: {
                 id: selectedClass.value.id,
