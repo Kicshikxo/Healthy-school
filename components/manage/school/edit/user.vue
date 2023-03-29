@@ -81,7 +81,7 @@ async function submit() {
     }
 
     const { error } = await useFetch('/api/users/edit', {
-        method: 'POST',
+        method: 'PATCH',
         body: {
             userData: {
                 id: selectedUser.value.id,
