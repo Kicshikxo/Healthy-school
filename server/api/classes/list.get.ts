@@ -1,4 +1,4 @@
-import { PrismaClient } from '@prisma/client'
+import { PrismaClient, Role } from '@prisma/client'
 
 const prisma = new PrismaClient()
 
@@ -43,7 +43,10 @@ export default defineEventHandler(async (event) => {
 
     return await prisma.class.findMany({
         where: {
-            organizationId: query.organizationId
+            AND: [
+                { organizationId: query.organizationId },
+                { teachers: tokenData.role === Role.CLASS_TEACHER ? { some: { userId: tokenData.id } } : undefined }
+            ]
         },
         include: {
             _count: {
