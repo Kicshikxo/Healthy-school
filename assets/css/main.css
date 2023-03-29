@@ -3,7 +3,7 @@
     margin: 0;
 }
 
-.pi {
+.pi:not(.p-toast-message-icon) {
     width: 1rem !important;
 }
 
