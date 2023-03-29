@@ -37,7 +37,7 @@ export default defineNuxtConfig({
         'assets/css/main.css'
     ],
 
-    modules: ['@nuxt/image-edge', '@nuxt/devtools', '@pinia/nuxt', 'nuxt-lodash'],
+    modules: ['@nuxt/image-edge', '@nuxt/devtools', '@pinia/nuxt', 'nuxt-lodash', '@nuxtjs/robots'],
 
     vite: {
         resolve: {
