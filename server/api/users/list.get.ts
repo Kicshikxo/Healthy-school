@@ -22,6 +22,13 @@ export default defineEventHandler(async (event) => {
                 organizationId: query.organizationId
             }
         },
+        include: {
+            classes: {
+                include: {
+                    class: true
+                }
+            }
+        },
         orderBy: [{ secondName: 'asc' }, { firstName: 'asc' }, { middleName: 'asc' }]
     })
 })

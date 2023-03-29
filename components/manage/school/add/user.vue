@@ -43,6 +43,14 @@
                     class="col"
                 />
             </div>
+            <form-multiselect-class
+                v-if="role === Role.CLASS_TEACHER"
+                label="Закреплённые классы"
+                placeholder="Выберите закреплённые классы"
+                v-model="assignedClasses"
+                :errorMessage="assignedClassesError"
+                :organizationId="data?.organizationId"
+            />
             <form-input-text
                 label="Фамилия"
                 placeholder="Введите фамилию"
@@ -61,7 +69,7 @@
 </template>
 
 <script setup lang="ts">
-import { Role, User } from '@prisma/client'
+import { Class, Role, User } from '@prisma/client'
 import { useField, useForm } from 'vee-validate'
 
 const { data } = useAuthState()
@@ -74,6 +82,10 @@ const { value: repeatPassword, errorMessage: repeatPasswordError } = useField('r
     if (!value?.trim()) return 'Повторите пароль'
     if (value !== password.value) return 'Пароли не совпадают'
     if (value.length > 50) return 'Слишком длинный пароль'
+    return true
+})
+const { value: assignedClasses, errorMessage: assignedClassesError } = useField<Class[]>('assigned-classes', (value) => {
+    if (!value?.length) return 'Выберите закреплённые классы'
     return true
 })
 const { value: secondName, errorMessage: secondNameError } = useField('secondName', validateSecondName)
@@ -104,8 +116,9 @@ async function submit() {
                 secondName: secondName.value,
                 firstName: firstName.value,
                 middleName: middleName.value,
-                organizationId: data.value?.organizationId
-            } as User & { organizationId: string }
+                organizationId: data.value?.organizationId,
+                assignedClasses: assignedClasses.value
+            } as User & { organizationId: string; assignedClasses?: Class[] }
         }
     })
     if (error.value) {

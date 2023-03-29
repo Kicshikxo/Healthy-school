@@ -25,6 +25,14 @@
                 optionLabel="label"
                 optionValue="value"
             />
+            <form-multiselect-class
+                v-if="role === Role.CLASS_TEACHER"
+                label="Закреплённые классы"
+                placeholder="Выберите закреплённые классы"
+                v-model="assignedClasses"
+                :errorMessage="assignedClassesError"
+                :organizationId="data?.organizationId"
+            />
             <form-input-text
                 label="Фамилия"
                 placeholder="Введите фамилию"
@@ -51,14 +59,24 @@
 </template>
 
 <script setup lang="ts">
-import { Role, User } from '@prisma/client'
+import { Role, User, Class, ClassTeacher } from '@prisma/client'
 import { useField, useForm } from 'vee-validate'
 
 const { data } = useAuthState()
 const { resetForm, validate } = useForm()
 
-const { value: selectedUser, errorMessage: selectedUserError } = useField<User>('user', (value: User) => {
+const { value: selectedUser, errorMessage: selectedUserError } = useField<
+    User & {
+        classes?: (ClassTeacher & {
+            class: Class
+        })[]
+    }
+>('user', (value) => {
     if (!value) return 'Выберите пользователя'
+    return true
+})
+const { value: assignedClasses, errorMessage: assignedClassesError } = useField<Class[]>('assigned-classes', (value) => {
+    if (!value?.length) return 'Выберите закреплённые классы'
     return true
 })
 const { value: role, errorMessage: roleError } = useField('role', validateRole)
@@ -69,6 +87,7 @@ const { value: middleName, errorMessage: middleNameError } = useField('middleNam
 watch(selectedUser, (value) => {
     if (!value) return
     role.value = value.role
+    assignedClasses.value = value.classes?.map((classes) => classes.class) ?? []
     secondName.value = value.secondName
     firstName.value = value.firstName
     middleName.value = value.middleName
@@ -88,8 +107,9 @@ async function submit() {
                 role: role.value,
                 secondName: secondName.value,
                 firstName: firstName.value,
-                middleName: middleName.value
-            } as User
+                middleName: middleName.value,
+                assignedClasses: assignedClasses.value
+            } as User & { assignedClasses?: Class[] }
         }
     })
     if (error.value) {
