@@ -68,7 +68,7 @@ import { useField, useForm } from 'vee-validate'
 const { data } = useAuthState()
 const { resetForm, validate, setFieldError } = useForm()
 
-const { value: selectedClass, errorMessage: selectedClassError } = useField<Class>('class', (value: Class) => {
+const { value: selectedClass, errorMessage: selectedClassError } = useField<Class>('class', (value) => {
     if (!value) return 'Выберите класс'
     return true
 })

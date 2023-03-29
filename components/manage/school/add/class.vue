@@ -73,12 +73,12 @@ const { resetForm, validate, validateField } = useForm()
 
 const { value: number, errorMessage: numberError } = useField('number', validateClassNumber)
 const { value: liter, errorMessage: literError } = useField('liter', validateClassLiter)
-const { value: startYear, errorMessage: startYearError } = useField<Date>('start-year', (value?: Date) => {
+const { value: startYear, errorMessage: startYearError } = useField<Date>('start-year', (value) => {
     if (!value) return 'Введите год начала обучения'
     if (value > endYear.value) return 'Год начала обучения не может быть позже года конца обучения'
     return true
 })
-const { value: endYear, errorMessage: endYearError } = useField<Date>('end-year', (value?: Date) => {
+const { value: endYear, errorMessage: endYearError } = useField<Date>('end-year', (value) => {
     if (!value) return 'Введите год конца обучения'
     if (value < startYear.value) return 'Год конца обучения не может быть раньше года начала обучения'
     return true

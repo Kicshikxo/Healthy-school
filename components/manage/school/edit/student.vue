@@ -94,24 +94,21 @@ import { useField, useForm } from 'vee-validate'
 const { data } = useAuthState()
 const { resetForm, validate, setFieldError } = useForm()
 
-const { value: selectedClass, errorMessage: selectedClassError } = useField<Class>('class', (value: Class) => {
+const { value: selectedClass, errorMessage: selectedClassError } = useField<Class>('class', (value) => {
     if (!value) return 'Выберите класс'
     return true
 })
 const { value: selectedStudent, errorMessage: selectedStudentError } = useField<Student & { class: Class }>(
     'student',
-    (value: Student) => {
+    (value) => {
         if (!value) return 'Выберите учащегося'
         return true
     }
 )
-const { value: selectedStudentClass, errorMessage: selectedStudentClassError } = useField<Class>(
-    'student-class',
-    (value: Class) => {
-        if (!value) return 'Выберите класс'
-        return true
-    }
-)
+const { value: selectedStudentClass, errorMessage: selectedStudentClassError } = useField<Class>('student-class', (value) => {
+    if (!value) return 'Выберите класс'
+    return true
+})
 const { value: snils, errorMessage: snilsError } = useField('snils', validateSnils)
 const { value: secondName, errorMessage: secondNameError } = useField('secondName', validateSecondName)
 const { value: firstName, errorMessage: firstNameError } = useField('firstName', validateFirstName)

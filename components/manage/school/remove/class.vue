@@ -28,7 +28,7 @@ const confirm = useConfirm()
 const { data } = useAuthState()
 const { resetForm, validate } = useForm()
 
-const { value: selectedClass, errorMessage: selectedClassError } = useField<Class>('user', (value: Class) => {
+const { value: selectedClass, errorMessage: selectedClassError } = useField<Class>('user', (value) => {
     if (!value) return 'Выберите класс'
     return true
 })
