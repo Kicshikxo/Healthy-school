@@ -76,6 +76,7 @@ const { value: selectedUser, errorMessage: selectedUserError } = useField<
     return true
 })
 const { value: assignedClasses, errorMessage: assignedClassesError } = useField<Class[]>('assigned-classes', (value) => {
+    if (role.value !== Role.CLASS_TEACHER) return true
     if (!value?.length) return 'Выберите закреплённые классы'
     return true
 })

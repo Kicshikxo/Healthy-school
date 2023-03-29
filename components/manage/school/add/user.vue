@@ -85,6 +85,7 @@ const { value: repeatPassword, errorMessage: repeatPasswordError } = useField('r
     return true
 })
 const { value: assignedClasses, errorMessage: assignedClassesError } = useField<Class[]>('assigned-classes', (value) => {
+    if (role.value !== Role.CLASS_TEACHER) return true
     if (!value?.length) return 'Выберите закреплённые классы'
     return true
 })
