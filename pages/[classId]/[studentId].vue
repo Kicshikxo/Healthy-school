@@ -1,13 +1,6 @@
 <template>
     <div ref="studentPage">
-        <student-info
-            :student="Object.assign({}, student.data, {
-                birthdate: new Date(student.data?.birthdate!),
-                createdAt: new Date(student.data?.createdAt!),
-                updatedAt: new Date(student.data?.updatedAt!)
-            }) "
-            :loading="student.loading"
-        >
+        <student-info :student="student.data" :loading="student.loading">
             <template #actions>
                 <role-access role="CLASS_TEACHER">
                     <p-button

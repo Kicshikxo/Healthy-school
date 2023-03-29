@@ -2,8 +2,8 @@ import { Class, Student } from '@prisma/client'
 import { defineStore } from 'pinia'
 
 export const useBreadcrumbsStore = defineStore('breadcrumbs', () => {
-    const student = ref<Student>()
-    const currentClass = ref<Class>()
+    const student = ref<Student | null>()
+    const currentClass = ref<Class | null>()
 
     const titles = computed<{ [key: string]: string | undefined | 'loading' }>(() => {
         return {
@@ -14,11 +14,11 @@ export const useBreadcrumbsStore = defineStore('breadcrumbs', () => {
         }
     })
 
-    function setStudent(value: Student) {
+    function setStudent(value: Student | null) {
         student.value = value
     }
 
-    function setClass(value: Class) {
+    function setClass(value: Class | null) {
         currentClass.value = value
     }
 

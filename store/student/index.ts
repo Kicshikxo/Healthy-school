@@ -1,4 +1,5 @@
 import {
+    Class,
     ConclusionType,
     EducationType,
     HealthGroup,
@@ -17,7 +18,8 @@ import {
     PsychologicalHealthOption,
     PsychologicalType,
     SocialHealth,
-    SocialHealthOption
+    SocialHealthOption,
+    Student
 } from '@prisma/client'
 import { defineStore } from 'pinia'
 import { usePhysicalHealthStore } from '~~/store/health/physical'
@@ -42,19 +44,17 @@ export const useStudentStore = defineStore('student', () => {
         refresh
     } = useFetch('/api/students/info', {
         headers: useRequestHeaders() as HeadersInit,
-        query: { studentId: id }
+        query: { studentId: id },
+        transform: (data) =>
+            Object.assign({}, data, {
+                birthdate: new Date(data?.birthdate!),
+                createdAt: new Date(data?.createdAt!),
+                updatedAt: new Date(data?.updatedAt!)
+            })
     })
 
     const breadcrumbs = useBreadcrumbsStore()
-    watchEffect(() =>
-        breadcrumbs.setStudent(
-            Object.assign({}, data.value, {
-                birthdate: new Date(data.value?.birthdate!),
-                createdAt: new Date(data.value?.createdAt!),
-                updatedAt: new Date(data.value?.updatedAt!)
-            })
-        )
-    )
+    watchEffect(() => breadcrumbs.setStudent(data.value))
 
     const medicalHealth = useMedicalHealthStore()
     const pedagogueHealth = usePedagogueHealthStore()
