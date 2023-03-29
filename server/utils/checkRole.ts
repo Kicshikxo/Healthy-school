@@ -14,5 +14,5 @@ export default function (event: H3Event, roleData: XOR<{ role: Role }, { roles: 
         )
         return false
     }
-    return Boolean(tokenData)
+    return true
 }

@@ -7,6 +7,15 @@ export default defineEventHandler(async (event) => {
 
     const classData: Class & { organizationId: string } = (await readBody(event)).classData
 
+    if (!classData)
+        return sendError(
+            event,
+            createError({
+                statusCode: 400,
+                statusMessage: 'classData is not provided'
+            })
+        )
+
     return await prisma.class.create({
         data: {
             number: classData.number,

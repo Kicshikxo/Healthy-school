@@ -7,6 +7,15 @@ export default defineEventHandler(async (event) => {
 
     const userData: User = (await readBody(event)).userData
 
+    if (!userData)
+        return sendError(
+            event,
+            createError({
+                statusCode: 400,
+                statusMessage: 'userData is not provided'
+            })
+        )
+
     return await prisma.user.update({
         where: {
             id: userData.id

@@ -43,7 +43,7 @@ export default defineEventHandler(async (event) => {
 
     return await prisma.class.findMany({
         where: {
-            organizationId: query.organizationId ?? tokenData.organizationId
+            organizationId: query.organizationId
         },
         include: {
             _count: {

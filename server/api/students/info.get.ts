@@ -8,6 +8,15 @@ export default defineEventHandler(async (event) => {
 
     const query = getQuery(event) as { studentId: string }
 
+    if (!query.studentId)
+        return sendError(
+            event,
+            createError({
+                statusCode: 400,
+                statusMessage: 'studentId is not provided'
+            })
+        )
+
     return await prisma.student.findFirst({
         where: {
             AND: [{ id: query.studentId }, { class: { organizationId: tokenData.organizationId } }]
