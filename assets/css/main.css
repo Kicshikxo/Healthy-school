@@ -3,6 +3,19 @@
     margin: 0;
 }
 
+:-webkit-autofill,
+:-webkit-autofill:hover,
+:-webkit-autofill:focus,
+:-webkit-autofill:active,
+:-webkit-autofill::first-line,
+:-webkit-autofill:hover::first-line,
+:-webkit-autofill:focus::first-line,
+:-webkit-autofill:active::first-line {
+    font-size: 1rem;
+    font-family: Rubik;
+}
+
+/* Prime icons width */
 .pi:not(.p-toast-message-icon) {
     width: 1rem !important;
 }
