@@ -109,7 +109,7 @@ async function submit() {
             newPassword: newPassword.value
         }
     })
-    if (error.value?.statusCode === 406) {
+    if (error.value?.statusCode === 403) {
         setFieldError('currentPassword', 'Неверный текущий пароль')
         throw new Error('Неверный текущий пароль')
     }

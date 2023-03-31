@@ -34,7 +34,7 @@ export default defineEventHandler(async (event) => {
         return sendError(
             event,
             createError({
-                statusCode: 406,
+                statusCode: 403,
                 statusMessage: 'currentPassword does not match'
             })
         )
