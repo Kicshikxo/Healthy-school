@@ -11,7 +11,7 @@
                             {{ student?.middleName }}
                         </div>
                     </div>
-                    <div class="flex flex-wrap gap-5">
+                    <div class="flex gap-5">
                         <div class="flex flex-column">
                             <div class="text-500">Дата рождения</div>
                             <div class="flex align-items-end h-1rem mt-2 text-700">
