@@ -78,7 +78,7 @@ const { resetForm, validate, setFieldError } = useForm()
 const { value: role, errorMessage: roleError } = useField('role', validateRole)
 const { value: username, errorMessage: usernameError } = useField('username', validateUsername)
 const { value: password, errorMessage: passwordError } = useField('password', validatePassword)
-const { value: repeatPassword, errorMessage: repeatPasswordError } = useField('repeat-password', (value?: string) => {
+const { value: repeatPassword, errorMessage: repeatPasswordError } = useField('repeatPassword', (value?: string) => {
     if (!value?.trim()) return 'Повторите пароль'
     if (value !== password.value) return 'Пароли не совпадают'
     if (value.length > 50) return 'Слишком длинный пароль'
