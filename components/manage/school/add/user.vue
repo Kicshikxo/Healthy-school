@@ -110,17 +110,15 @@ async function submit() {
     const { error } = await useFetch('/api/users/add', {
         method: 'POST',
         body: {
-            userData: {
-                role: role.value,
-                username: username.value,
-                password: password.value,
-                secondName: secondName.value,
-                firstName: firstName.value,
-                middleName: middleName.value,
-                organizationId: data.value?.organizationId,
-                assignedClasses: assignedClasses.value
-            } as User & { organizationId: string; assignedClasses?: Class[] }
-        }
+            role: role.value,
+            username: username.value,
+            password: password.value,
+            secondName: secondName.value,
+            firstName: firstName.value,
+            middleName: middleName.value,
+            organizationId: data.value?.organizationId,
+            assignedClasses: assignedClasses.value
+        } as User & { organizationId: string; assignedClasses?: Class[] }
     })
     if (error.value) {
         throw new Error(error.value.message)

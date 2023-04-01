@@ -105,13 +105,11 @@ async function submit() {
     const { error } = await useFetch('/api/classes/add', {
         method: 'POST',
         body: {
-            classData: {
-                number: number.value,
-                liter: liter.value,
-                academicYear: `${startYear.value.getFullYear()}-${endYear.value.getFullYear()}`,
-                organizationId: data.value?.organizationId
-            } as Class & { organizationId: string }
-        }
+            number: number.value,
+            liter: liter.value,
+            academicYear: `${startYear.value.getFullYear()}-${endYear.value.getFullYear()}`,
+            organizationId: data.value?.organizationId
+        } as Class & { organizationId: string }
     })
     if (error.value) {
         throw new Error(error.value.message)

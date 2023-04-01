@@ -6,34 +6,50 @@ const prisma = new PrismaClient()
 export default defineEventHandler(async (event) => {
     if (!checkRole(event, { roles: [Role.OPERATOR, Role.SCHOOL_OPERATOR] })) return
 
-    const userData: User & { organizationId: string; assignedClasses?: Class[] } = (await readBody(event)).userData
+    const body: User & { organizationId: string; assignedClasses?: Class[] } = await readBody(event)
 
-    if (!userData)
+    if (
+        !body.role ||
+        !body.username ||
+        !body.password ||
+        !body.secondName ||
+        !body.firstName ||
+        !body.middleName ||
+        !body.organizationId
+    )
         return sendError(
             event,
             createError({
                 statusCode: 400,
-                statusMessage: 'userData is not provided'
+                statusMessage: 'role, username, password, secondName, firstName, middleName or organizationId is not provided'
+            })
+        )
+    if (body.role === Role.CLASS_TEACHER && (!body.assignedClasses || isEmpty(body.assignedClasses)))
+        return sendError(
+            event,
+            createError({
+                statusCode: 400,
+                statusMessage: 'assignedClasses is not provided'
             })
         )
 
     return await prisma.user.create({
         data: {
-            role: userData.role,
-            username: userData.username,
-            password: hashSync(userData.password, 8),
+            role: body.role,
+            username: body.username,
+            password: hashSync(body.password, 8),
 
-            secondName: userData.secondName,
-            firstName: userData.firstName,
-            middleName: userData.middleName,
+            secondName: body.secondName,
+            firstName: body.firstName,
+            middleName: body.middleName,
             organization: {
                 create: {
-                    organizationId: userData.organizationId
+                    organizationId: body.organizationId
                 }
             },
             classes: {
                 createMany: {
-                    data: userData.assignedClasses?.map((currentClass) => ({ classId: currentClass.id })) ?? []
+                    data: body.assignedClasses?.map((currentClass) => ({ classId: currentClass.id })) ?? []
                 }
             }
         }

@@ -130,13 +130,11 @@ async function submit() {
     const { error } = await useFetch('/api/classes/edit', {
         method: 'PATCH',
         body: {
-            classData: {
-                id: selectedClass.value.id,
-                number: number.value,
-                liter: liter.value,
-                academicYear: `${startYear.value.getFullYear()}-${endYear.value.getFullYear()}`
-            } as Class
-        }
+            id: selectedClass.value.id,
+            number: number.value,
+            liter: liter.value,
+            academicYear: `${startYear.value.getFullYear()}-${endYear.value.getFullYear()}`
+        } as Class
     })
     if (error.value) {
         throw new Error(error.value.message)

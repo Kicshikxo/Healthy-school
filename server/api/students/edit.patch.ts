@@ -5,31 +5,40 @@ const prisma = new PrismaClient()
 export default defineEventHandler(async (event) => {
     if (!checkRole(event, { roles: [Role.OPERATOR, Role.SCHOOL_OPERATOR] })) return
 
-    const studentData: Student = (await readBody(event)).studentData
+    const body: Student = await readBody(event)
 
-    if (!studentData)
+    if (
+        !body.id ||
+        !body.snils ||
+        !body.secondName ||
+        !body.firstName ||
+        !body.middleName ||
+        !body.gender ||
+        !body.birthdate ||
+        !body.classId
+    )
         return sendError(
             event,
             createError({
                 statusCode: 400,
-                statusMessage: 'studentData is not provided'
+                statusMessage: 'id, snils, secondName, firstName, middleName, gender, birthdate or classId is not provided'
             })
         )
 
     return await prisma.student.update({
         where: {
-            id: studentData.id
+            id: body.id
         },
         data: {
-            snils: studentData.snils,
+            snils: body.snils,
 
-            secondName: studentData.secondName,
-            firstName: studentData.firstName,
-            middleName: studentData.middleName,
+            secondName: body.secondName,
+            firstName: body.firstName,
+            middleName: body.middleName,
 
-            gender: studentData.gender,
-            birthdate: studentData.birthdate,
-            classId: studentData.classId
+            gender: body.gender,
+            birthdate: body.birthdate,
+            classId: body.classId
         }
     })
 })

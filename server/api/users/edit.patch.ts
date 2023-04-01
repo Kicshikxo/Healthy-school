@@ -5,31 +5,39 @@ const prisma = new PrismaClient()
 export default defineEventHandler(async (event) => {
     if (!checkRole(event, { roles: [Role.OPERATOR, Role.SCHOOL_OPERATOR] })) return
 
-    const userData: User & { assignedClasses?: Class[] } = (await readBody(event)).userData
+    const body: User & { assignedClasses?: Class[] } = await readBody(event)
 
-    if (!userData)
+    if (!body.id || !body.role || !body.secondName || !body.firstName || !body.middleName)
         return sendError(
             event,
             createError({
                 statusCode: 400,
-                statusMessage: 'userData is not provided'
+                statusMessage: 'id, role, secondName, firstName or middleName is not provided'
+            })
+        )
+    if (body.role === Role.CLASS_TEACHER && (!body.assignedClasses || isEmpty(body.assignedClasses)))
+        return sendError(
+            event,
+            createError({
+                statusCode: 400,
+                statusMessage: 'assignedClasses is not provided'
             })
         )
 
     return await prisma.user.update({
         where: {
-            id: userData.id
+            id: body.id
         },
         data: {
-            role: userData.role,
-            secondName: userData.secondName,
-            firstName: userData.firstName,
-            middleName: userData.middleName,
+            role: body.role,
+            secondName: body.secondName,
+            firstName: body.firstName,
+            middleName: body.middleName,
             classes: {
-                connectOrCreate: userData.assignedClasses?.map((currentClass) => ({
+                connectOrCreate: body.assignedClasses?.map((currentClass) => ({
                     where: {
                         userId_classId: {
-                            userId: userData.id,
+                            userId: body.id,
                             classId: currentClass.id
                         }
                     },

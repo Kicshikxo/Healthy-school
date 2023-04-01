@@ -98,16 +98,14 @@ async function submit() {
     const { error } = await useFetch('/api/students/add', {
         method: 'POST',
         body: {
-            studentData: {
-                snils: snils.value,
-                secondName: secondName.value,
-                firstName: firstName.value,
-                middleName: middleName.value,
-                gender: gender.value,
-                birthdate: birthdate.value,
-                classId: selectedClass.value.id
-            } as Student
-        }
+            snils: snils.value,
+            secondName: secondName.value,
+            firstName: firstName.value,
+            middleName: middleName.value,
+            gender: gender.value,
+            birthdate: birthdate.value,
+            classId: selectedClass.value.id
+        } as Student
     })
     if (error.value) {
         throw new Error(error.value.message)

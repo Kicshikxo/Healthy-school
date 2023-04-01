@@ -103,15 +103,13 @@ async function submit() {
     const { error } = await useFetch('/api/users/edit', {
         method: 'PATCH',
         body: {
-            userData: {
-                id: selectedUser.value.id,
-                role: role.value,
-                secondName: secondName.value,
-                firstName: firstName.value,
-                middleName: middleName.value,
-                assignedClasses: assignedClasses.value
-            } as User & { assignedClasses?: Class[] }
-        }
+            id: selectedUser.value.id,
+            role: role.value,
+            secondName: secondName.value,
+            firstName: firstName.value,
+            middleName: middleName.value,
+            assignedClasses: assignedClasses.value
+        } as User & { assignedClasses?: Class[] }
     })
     if (error.value) {
         throw new Error(error.value.message)

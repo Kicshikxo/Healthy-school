@@ -5,23 +5,23 @@ const prisma = new PrismaClient()
 export default defineEventHandler(async (event) => {
     if (!checkRole(event, { roles: [Role.OPERATOR, Role.SCHOOL_OPERATOR] })) return
 
-    const classData: Class & { organizationId: string } = (await readBody(event)).classData
+    const body: Class & { organizationId: string } = await readBody(event)
 
-    if (!classData)
+    if (!body.number || !body.liter || !body.academicYear || !body.organizationId)
         return sendError(
             event,
             createError({
                 statusCode: 400,
-                statusMessage: 'classData is not provided'
+                statusMessage: 'number, liter, academicYear or organizationId is not provided'
             })
         )
 
     return await prisma.class.create({
         data: {
-            number: classData.number,
-            liter: classData.liter,
-            academicYear: classData.academicYear,
-            organizationId: classData.organizationId
+            number: body.number,
+            liter: body.liter,
+            academicYear: body.academicYear,
+            organizationId: body.organizationId
         }
     })
 })

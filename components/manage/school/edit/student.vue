@@ -147,17 +147,15 @@ async function submit() {
     const { error } = await useFetch('/api/students/edit', {
         method: 'PATCH',
         body: {
-            studentData: {
-                id: selectedStudent.value.id,
-                snils: snils.value,
-                secondName: secondName.value,
-                firstName: firstName.value,
-                middleName: middleName.value,
-                gender: gender.value,
-                birthdate: birthdate.value,
-                classId: selectedStudentClass.value.id
-            } as Student
-        }
+            id: selectedStudent.value.id,
+            snils: snils.value,
+            secondName: secondName.value,
+            firstName: firstName.value,
+            middleName: middleName.value,
+            gender: gender.value,
+            birthdate: birthdate.value,
+            classId: selectedStudentClass.value.id
+        } as Student
     })
     if (error.value) {
         throw new Error(error.value.message)
