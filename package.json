@@ -13,7 +13,6 @@
         "db:cli": "ts-node --esm prisma/cli/index.ts"
     },
     "dependencies": {
-        "@nuxtjs/robots": "^3.0.0",
         "@pinia/nuxt": "^0.4.7",
         "@prisma/client": "^4.12.0",
         "bcrypt": "^5.1.0",
