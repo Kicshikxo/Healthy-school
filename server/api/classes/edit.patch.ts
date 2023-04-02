@@ -1,4 +1,4 @@
-import { Class, PrismaClient, Role } from '@prisma/client'
+import { ActionType, Class, PrismaClient, Role } from '@prisma/client'
 
 const prisma = new PrismaClient()
 
@@ -16,14 +16,32 @@ export default defineEventHandler(async (event) => {
             })
         )
 
-    return await prisma.class.update({
-        where: {
-            id: body.id
-        },
-        data: {
-            number: body.number,
-            liter: body.liter,
-            academicYear: body.academicYear
-        }
-    })
+    return await prisma.class
+        .update({
+            where: {
+                id: body.id
+            },
+            data: {
+                number: body.number,
+                liter: body.liter,
+                academicYear: body.academicYear
+            }
+        })
+        .then(() =>
+            prisma.actionLog.create({
+                data: {
+                    createdById: readTokenData(event)!.id,
+                    actionType: ActionType.EDIT,
+                    details: {
+                        action: 'editClass',
+                        data: {
+                            id: body.id,
+                            number: body.number,
+                            liter: body.liter,
+                            academicYear: body.academicYear
+                        }
+                    }
+                }
+            })
+        )
 })
