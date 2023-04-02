@@ -1,4 +1,4 @@
-import { PrismaClient, Role } from '@prisma/client'
+import { ActionType, PrismaClient, Role } from '@prisma/client'
 
 const prisma = new PrismaClient()
 
@@ -34,9 +34,24 @@ export default defineEventHandler(async (event) => {
         })
     )
 
-    return await prisma.student.delete({
-        where: {
-            id: body.studentId
-        }
-    })
+    return await prisma.student
+        .delete({
+            where: {
+                id: body.studentId
+            }
+        })
+        .then(() =>
+            prisma.actionLog.create({
+                data: {
+                    createdById: readTokenData(event)!.id,
+                    actionType: ActionType.REMOVE,
+                    details: {
+                        action: 'removeStudent',
+                        data: {
+                            id: body.studentId
+                        }
+                    }
+                }
+            })
+        )
 })
