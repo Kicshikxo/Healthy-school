@@ -38,8 +38,20 @@ model User {
     middleName   String            @map("middle_name") @db.VarChar(64)
     createdAt    DateTime          @default(now()) @map("created_at")
     updatedAt    DateTime          @default(now()) @updatedAt @map("updated_at")
+    actions      ActionLog[]
 
     @@map("users")
+}
+
+model ActionLog {
+    id          Int        @id() @default(autoincrement()) @map("log_id")
+    actionType  ActionType @map("action_type")
+    details     Json?      @map("details")
+    createdBy   User       @relation(fields: [createdById], references: [id])
+    createdById String     @map("created_by") @db.Uuid
+    createdAt   DateTime   @default(now()) @map("created_at")
+
+    @@map("actions_logs")
 }
 
 model UserOrganization {
@@ -356,6 +368,13 @@ enum Role {
     PHYSICAL_EDUCATION_TEACHER
     PSYCHOLOGIST
     SOCIAL_PEDAGOGUE
+}
+
+enum ActionType {
+    ADD
+    EDIT
+    REMOVE
+    CHANGE_PASSWORD
 }
 
 enum ConclusionType {
