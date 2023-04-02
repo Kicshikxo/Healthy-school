@@ -1,4 +1,4 @@
-import { Class, PrismaClient, Role } from '@prisma/client'
+import { ActionType, Class, PrismaClient, Role } from '@prisma/client'
 
 const prisma = new PrismaClient()
 
@@ -16,12 +16,30 @@ export default defineEventHandler(async (event) => {
             })
         )
 
-    return await prisma.class.create({
-        data: {
-            number: body.number,
-            liter: body.liter,
-            academicYear: body.academicYear,
-            organizationId: body.organizationId
-        }
-    })
+    return await prisma.class
+        .create({
+            data: {
+                number: body.number,
+                liter: body.liter,
+                academicYear: body.academicYear,
+                organizationId: body.organizationId
+            }
+        })
+        .then(() =>
+            prisma.actionLog.create({
+                data: {
+                    createdById: readTokenData(event)!.id,
+                    actionType: ActionType.ADD,
+                    details: {
+                        action: 'createClass',
+                        data: {
+                            number: body.number,
+                            liter: body.liter,
+                            academicYear: body.academicYear,
+                            organizationId: body.organizationId
+                        }
+                    }
+                }
+            })
+        )
 })
