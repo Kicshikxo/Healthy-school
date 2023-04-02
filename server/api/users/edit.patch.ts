@@ -1,4 +1,4 @@
-import { Class, PrismaClient, Role, User } from '@prisma/client'
+import { ActionType, Class, PrismaClient, Role, User } from '@prisma/client'
 
 const prisma = new PrismaClient()
 
@@ -24,28 +24,48 @@ export default defineEventHandler(async (event) => {
             })
         )
 
-    return await prisma.user.update({
-        where: {
-            id: body.id
-        },
-        data: {
-            role: body.role,
-            secondName: body.secondName,
-            firstName: body.firstName,
-            middleName: body.middleName,
-            classes: {
-                connectOrCreate: body.assignedClasses?.map((currentClass) => ({
-                    where: {
-                        userId_classId: {
-                            userId: body.id,
+    return await prisma.user
+        .update({
+            where: {
+                id: body.id
+            },
+            data: {
+                role: body.role,
+                secondName: body.secondName,
+                firstName: body.firstName,
+                middleName: body.middleName,
+                classes: {
+                    connectOrCreate: body.assignedClasses?.map((currentClass) => ({
+                        where: {
+                            userId_classId: {
+                                userId: body.id,
+                                classId: currentClass.id
+                            }
+                        },
+                        create: {
                             classId: currentClass.id
                         }
-                    },
-                    create: {
-                        classId: currentClass.id
-                    }
-                }))
+                    }))
+                }
             }
-        }
-    })
+        })
+        .then(() =>
+            prisma.actionLog.create({
+                data: {
+                    createdById: readTokenData(event)!.id,
+                    actionType: ActionType.EDIT,
+                    details: {
+                        action: 'editUser',
+                        data: {
+                            id: body.id,
+                            role: body.role,
+                            secondName: body.secondName,
+                            firstName: body.firstName,
+                            middleName: body.middleName,
+                            assignedClasses: body.assignedClasses?.map((currentClass) => ({ id: currentClass.id }))
+                        }
+                    }
+                }
+            })
+        )
 })
