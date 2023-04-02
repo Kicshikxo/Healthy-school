@@ -1,4 +1,4 @@
-import { PrismaClient, Role, Student } from '@prisma/client'
+import { ActionType, PrismaClient, Role, Student } from '@prisma/client'
 
 const prisma = new PrismaClient()
 
@@ -25,20 +25,42 @@ export default defineEventHandler(async (event) => {
             })
         )
 
-    return await prisma.student.update({
-        where: {
-            id: body.id
-        },
-        data: {
-            snils: body.snils,
+    return await prisma.student
+        .update({
+            where: {
+                id: body.id
+            },
+            data: {
+                snils: body.snils,
 
-            secondName: body.secondName,
-            firstName: body.firstName,
-            middleName: body.middleName,
+                secondName: body.secondName,
+                firstName: body.firstName,
+                middleName: body.middleName,
 
-            gender: body.gender,
-            birthdate: body.birthdate,
-            classId: body.classId
-        }
-    })
+                gender: body.gender,
+                birthdate: body.birthdate,
+                classId: body.classId
+            }
+        })
+        .then(() =>
+            prisma.actionLog.create({
+                data: {
+                    createdById: readTokenData(event)!.id,
+                    actionType: ActionType.EDIT,
+                    details: {
+                        action: 'editStudent',
+                        data: {
+                            id: body.id,
+                            snils: body.snils,
+                            secondName: body.secondName,
+                            firstName: body.firstName,
+                            middleName: body.middleName,
+                            gender: body.gender,
+                            birthdate: body.birthdate.toJSON(),
+                            classId: body.classId
+                        }
+                    }
+                }
+            })
+        )
 })
