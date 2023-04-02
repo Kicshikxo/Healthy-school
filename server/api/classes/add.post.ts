@@ -25,20 +25,17 @@ export default defineEventHandler(async (event) => {
                 organizationId: body.organizationId
             }
         })
-        .then(() =>
+        .then((data) =>
             prisma.actionLog.create({
                 data: {
                     createdById: readTokenData(event)!.id,
                     actionType: ActionType.ADD,
-                    details: {
-                        action: 'createClass',
-                        data: {
-                            number: body.number,
-                            liter: body.liter,
-                            academicYear: body.academicYear,
-                            organizationId: body.organizationId
-                        }
-                    }
+                    details: JSON.parse(
+                        JSON.stringify({
+                            action: 'createClass',
+                            data
+                        })
+                    )
                 }
             })
         )

@@ -22,17 +22,17 @@ export default defineEventHandler(async (event) => {
                 id: body.classId
             }
         })
-        .then(() =>
+        .then((data) =>
             prisma.actionLog.create({
                 data: {
                     createdById: readTokenData(event)!.id,
                     actionType: ActionType.REMOVE,
-                    details: {
-                        action: 'removeClass',
-                        data: {
-                            id: body.classId
-                        }
-                    }
+                    details: JSON.parse(
+                        JSON.stringify({
+                            action: 'removeClass',
+                            data
+                        })
+                    )
                 }
             })
         )

@@ -15,7 +15,7 @@ export default defineEventHandler(async (event) => {
                 statusMessage: 'id, role, secondName, firstName or middleName is not provided'
             })
         )
-    if (body.role === Role.CLASS_TEACHER && (!body.assignedClasses || isEmpty(body.assignedClasses)))
+    if (body.role === Role.CLASS_TEACHER && (!body.assignedClasses || !body.assignedClasses.length))
         return sendError(
             event,
             createError({
@@ -49,22 +49,19 @@ export default defineEventHandler(async (event) => {
                 }
             }
         })
-        .then(() =>
+        .then((data) =>
             prisma.actionLog.create({
                 data: {
                     createdById: readTokenData(event)!.id,
                     actionType: ActionType.EDIT,
-                    details: {
-                        action: 'editUser',
-                        data: {
-                            id: body.id,
-                            role: body.role,
-                            secondName: body.secondName,
-                            firstName: body.firstName,
-                            middleName: body.middleName,
-                            assignedClasses: body.assignedClasses?.map((currentClass) => ({ id: currentClass.id }))
-                        }
-                    }
+                    details: JSON.parse(
+                        JSON.stringify({
+                            action: 'editUser',
+                            data: Object.assign(data, {
+                                assignedClasses: body.assignedClasses?.map((currentClass) => ({ id: currentClass.id }))
+                            })
+                        })
+                    )
                 }
             })
         )

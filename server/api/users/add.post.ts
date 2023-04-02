@@ -24,7 +24,7 @@ export default defineEventHandler(async (event) => {
                 statusMessage: 'role, username, password, secondName, firstName, middleName or organizationId is not provided'
             })
         )
-    if (body.role === Role.CLASS_TEACHER && (!body.assignedClasses || isEmpty(body.assignedClasses)))
+    if (body.role === Role.CLASS_TEACHER && (!body.assignedClasses || !body.assignedClasses.length))
         return sendError(
             event,
             createError({
@@ -55,23 +55,19 @@ export default defineEventHandler(async (event) => {
                 }
             }
         })
-        .then(() =>
+        .then((data) =>
             prisma.actionLog.create({
                 data: {
                     createdById: readTokenData(event)!.id,
                     actionType: ActionType.ADD,
-                    details: {
-                        action: 'addUser',
-                        data: {
-                            role: body.role,
-                            username: body.username,
-                            secondName: body.secondName,
-                            firstName: body.firstName,
-                            middleName: body.middleName,
-                            organizationId: body.organizationId,
-                            assignedClasses: body.assignedClasses?.map((currentClass) => ({ id: currentClass.id }))
-                        }
-                    }
+                    details: JSON.parse(
+                        JSON.stringify({
+                            action: 'addUser',
+                            data: Object.assign(data, {
+                                assignedClasses: body.assignedClasses?.map((currentClass) => ({ id: currentClass.id }))
+                            })
+                        })
+                    )
                 }
             })
         )

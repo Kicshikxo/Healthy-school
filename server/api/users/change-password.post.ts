@@ -46,17 +46,17 @@ export default defineEventHandler(async (event) => {
                 password: hashSync(body.newPassword, 8)
             }
         })
-        .then(() =>
+        .then((data) =>
             prisma.actionLog.create({
                 data: {
                     createdById: readTokenData(event)!.id,
                     actionType: ActionType.CHANGE_PASSWORD,
-                    details: {
-                        action: 'changePassword',
-                        data: {
-                            id: userId
-                        }
-                    }
+                    details: JSON.parse(
+                        JSON.stringify({
+                            action: 'changePassword',
+                            data
+                        })
+                    )
                 }
             })
         )

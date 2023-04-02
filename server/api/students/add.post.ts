@@ -44,23 +44,17 @@ export default defineEventHandler(async (event) => {
                 psychologicalHealth: { create: {} }
             }
         })
-        .then(() =>
+        .then((data) =>
             prisma.actionLog.create({
                 data: {
                     createdById: readTokenData(event)!.id,
                     actionType: ActionType.ADD,
-                    details: {
-                        action: 'addStudent',
-                        data: {
-                            snils: body.snils,
-                            secondName: body.secondName,
-                            firstName: body.firstName,
-                            middleName: body.middleName,
-                            gender: body.gender,
-                            birthdate: body.birthdate.toJSON(),
-                            classId: body.classId
-                        }
-                    }
+                    details: JSON.parse(
+                        JSON.stringify({
+                            action: 'addStudent',
+                            data
+                        })
+                    )
                 }
             })
         )
