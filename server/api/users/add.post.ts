@@ -1,4 +1,4 @@
-import { Class, PrismaClient, Role, User } from '@prisma/client'
+import { ActionType, Class, PrismaClient, Role, User } from '@prisma/client'
 import { hashSync } from 'bcrypt'
 
 const prisma = new PrismaClient()
@@ -33,25 +33,46 @@ export default defineEventHandler(async (event) => {
             })
         )
 
-    return await prisma.user.create({
-        data: {
-            role: body.role,
-            username: body.username,
-            password: hashSync(body.password, 8),
+    return await prisma.user
+        .create({
+            data: {
+                role: body.role,
+                username: body.username,
+                password: hashSync(body.password, 8),
 
-            secondName: body.secondName,
-            firstName: body.firstName,
-            middleName: body.middleName,
-            organization: {
-                create: {
-                    organizationId: body.organizationId
-                }
-            },
-            classes: {
-                createMany: {
-                    data: body.assignedClasses?.map((currentClass) => ({ classId: currentClass.id })) ?? []
+                secondName: body.secondName,
+                firstName: body.firstName,
+                middleName: body.middleName,
+                organization: {
+                    create: {
+                        organizationId: body.organizationId
+                    }
+                },
+                classes: {
+                    createMany: {
+                        data: body.assignedClasses?.map((currentClass) => ({ classId: currentClass.id })) ?? []
+                    }
                 }
             }
-        }
-    })
+        })
+        .then(() =>
+            prisma.actionLog.create({
+                data: {
+                    createdById: readTokenData(event)!.id,
+                    actionType: ActionType.ADD,
+                    details: {
+                        action: 'addUser',
+                        data: {
+                            role: body.role,
+                            username: body.username,
+                            secondName: body.secondName,
+                            firstName: body.firstName,
+                            middleName: body.middleName,
+                            organizationId: body.organizationId,
+                            assignedClasses: body.assignedClasses?.map((currentClass) => ({ id: currentClass.id }))
+                        }
+                    }
+                }
+            })
+        )
 })
