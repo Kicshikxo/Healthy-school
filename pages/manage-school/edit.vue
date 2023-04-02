@@ -18,6 +18,10 @@ const tabs = ref([
         to: '/manage-school/edit/user'
     },
     {
+        label: 'Изменить пароль пользователя',
+        to: '/manage-school/edit/user-password'
+    },
+    {
         label: 'Редактировать класс',
         to: '/manage-school/edit/class'
     },
