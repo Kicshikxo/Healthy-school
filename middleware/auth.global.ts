@@ -4,5 +4,5 @@ export default defineNuxtRouteMiddleware(async (to) => {
     const { state } = useAuth()
     if (state.status.value === 'authenticated') return
 
-    return navigateTo('/login')
+    return navigateTo(`/login?redirectTo=${to.fullPath}`)
 })

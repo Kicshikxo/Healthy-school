@@ -47,6 +47,7 @@ definePageMeta({
     middleware: 'unauth'
 })
 
+const route = useRoute()
 const toast = useToast()
 const { signIn } = useAuth()
 
@@ -94,7 +95,7 @@ async function tryLogin() {
     const { error } = await signIn({
         username: username.value,
         password: password.value,
-        redirectTo: '/'
+        redirectTo: (route.query.redirectTo as string) ?? '/'
     })
 
     if (error) {
