@@ -7,12 +7,12 @@ export default defineEventHandler(async (event) => {
 
     const body: Class & { organizationId: string } = await readBody(event)
 
-    if (!body.number || !body.liter || !body.academicYear || !body.organizationId)
+    if (!body.number || !body.academicYear || !body.organizationId)
         return sendError(
             event,
             createError({
                 statusCode: 400,
-                statusMessage: 'number, liter, academicYear or organizationId is not provided'
+                statusMessage: 'number, academicYear or organizationId is not provided'
             })
         )
 
