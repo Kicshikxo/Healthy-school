@@ -1,4 +1,4 @@
-import { PrismaClient, Role } from '@prisma/client'
+import { ActionType, PrismaClient, Role } from '@prisma/client'
 import { compareSync, hashSync } from 'bcrypt'
 
 const prisma = new PrismaClient()
@@ -39,10 +39,25 @@ export default defineEventHandler(async (event) => {
             })
         )
 
-    return await prisma.user.update({
-        where: { id: userId },
-        data: {
-            password: hashSync(body.newPassword, 8)
-        }
-    })
+    return await prisma.user
+        .update({
+            where: { id: userId },
+            data: {
+                password: hashSync(body.newPassword, 8)
+            }
+        })
+        .then(() =>
+            prisma.actionLog.create({
+                data: {
+                    createdById: readTokenData(event)!.id,
+                    actionType: ActionType.CHANGE_PASSWORD,
+                    details: {
+                        action: 'changePassword',
+                        data: {
+                            id: userId
+                        }
+                    }
+                }
+            })
+        )
 })
