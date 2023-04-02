@@ -13,12 +13,12 @@ export default defineEventHandler(async (event) => {
         skipId: string
     }
 
-    if (!query.number || !query.liter || !query.academicYear || !query.organizationId)
+    if (!query.number || !query.academicYear || !query.organizationId)
         return sendError(
             event,
             createError({
                 statusCode: 400,
-                statusMessage: 'number, liter, academicYear or organizationId is not provided'
+                statusMessage: 'number, academicYear or organizationId is not provided'
             })
         )
 
