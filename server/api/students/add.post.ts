@@ -1,4 +1,4 @@
-import { PrismaClient, Role, Student } from '@prisma/client'
+import { ActionType, PrismaClient, Role, Student } from '@prisma/client'
 
 const prisma = new PrismaClient()
 
@@ -24,23 +24,44 @@ export default defineEventHandler(async (event) => {
             })
         )
 
-    return await prisma.student.create({
-        data: {
-            snils: body.snils,
+    return await prisma.student
+        .create({
+            data: {
+                snils: body.snils,
 
-            secondName: body.secondName,
-            firstName: body.firstName,
-            middleName: body.middleName,
+                secondName: body.secondName,
+                firstName: body.firstName,
+                middleName: body.middleName,
 
-            gender: body.gender,
-            birthdate: body.birthdate,
-            classId: body.classId,
+                gender: body.gender,
+                birthdate: body.birthdate,
+                classId: body.classId,
 
-            physicalHealth: { create: {} },
-            medicalHealth: { create: {} },
-            socialHealth: { create: {} },
-            pedagogueHealth: { create: {} },
-            psychologicalHealth: { create: {} }
-        }
-    })
+                physicalHealth: { create: {} },
+                medicalHealth: { create: {} },
+                socialHealth: { create: {} },
+                pedagogueHealth: { create: {} },
+                psychologicalHealth: { create: {} }
+            }
+        })
+        .then(() =>
+            prisma.actionLog.create({
+                data: {
+                    createdById: readTokenData(event)!.id,
+                    actionType: ActionType.ADD,
+                    details: {
+                        action: 'addStudent',
+                        data: {
+                            snils: body.snils,
+                            secondName: body.secondName,
+                            firstName: body.firstName,
+                            middleName: body.middleName,
+                            gender: body.gender,
+                            birthdate: body.birthdate.toJSON(),
+                            classId: body.classId
+                        }
+                    }
+                }
+            })
+        )
 })
