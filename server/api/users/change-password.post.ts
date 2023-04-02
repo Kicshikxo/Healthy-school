@@ -28,7 +28,7 @@ export default defineEventHandler(async (event) => {
     const user = await prisma.user.findUnique({ where: { id: userId } })
 
     if (
-        (body.userId && checkRole(event, { roles: [Role.OPERATOR, Role.SCHOOL_OPERATOR] })) ||
+        !(body.userId && checkRole(event, { roles: [Role.OPERATOR, Role.SCHOOL_OPERATOR] })) &&
         !compareSync(body.currentPassword, user?.password ?? '')
     )
         return sendError(
