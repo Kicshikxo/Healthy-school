@@ -1,7 +1,7 @@
 <template>
     <div>
         <role-access role="OPERATOR">
-            <p-tab-menu :model="items" />
+            <p-tab-menu :model="items" :exact="false" />
             <nuxt-layout :name="false">
                 <nuxt-page />
             </nuxt-layout>
