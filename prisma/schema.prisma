@@ -70,7 +70,7 @@ model Class {
     organization   EducationalOrganization @relation(fields: [organizationId], references: [id], onUpdate: Cascade, onDelete: Cascade)
     organizationId String                  @map("organization_id") @db.Uuid
     number         Int                     @map("number")
-    liter          String                  @map("liter") @db.Char(1)
+    liter          String?                 @map("liter") @db.Char(1)
     academicYear   String                  @map("academic_year") @db.Char(9)
     students       Student[]
     teachers       ClassTeacher[]
