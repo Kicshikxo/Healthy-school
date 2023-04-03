@@ -5,7 +5,7 @@ export default defineNuxtPlugin(async (nuxtApp) => {
                 const { width: elementWidth, height: elementHeight } = element.getBoundingClientRect()
 
                 const parent = element.parentNode as HTMLElement
-                const parentStyle = window.getComputedStyle(element.parentNode as HTMLElement)
+                const parentStyle = window.getComputedStyle(parent)
                 const parentWidth =
                     parent.clientWidth - parseFloat(parentStyle.paddingLeft) - parseFloat(parentStyle.paddingRight)
                 const parentHeight =
