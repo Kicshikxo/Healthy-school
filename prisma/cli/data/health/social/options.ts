@@ -335,26 +335,6 @@ export const socialHealthOptions: {
         ]
     },
     {
-        title: 'Ребенок из семьи участника СВО',
-        healthZone: HealthZone.YELLOW,
-        socialType: SocialType.SWO_FAMILY,
-        selectionType: SelectionType.CHECKBOX,
-        recommendations: [
-            {
-                title: 'Обеспечение реализации и защита прав обучающегося в процессе обучения'
-            },
-            {
-                title: 'Проведение совместных индивидуальных занятий социальным педагогом и педагогом-психологом с обучающимся'
-            },
-            {
-                title: 'Применение социально-педагогических методов изучения ситуации жизнедеятельности обучающегося для выявления потребностей его и семьи'
-            },
-            {
-                title: 'Разработка мероприятий по социальной адаптации обучающегося к трудной жизненной ситуации'
-            }
-        ]
-    },
-    {
         title: 'Ребенок из семьи с низким уровнем дохода',
         healthZone: HealthZone.YELLOW,
         socialType: SocialType.LOW_INCOME,
