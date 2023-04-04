@@ -23,7 +23,6 @@ export const useSocialHealthStore = defineStore('social', () => {
         ADDICTED_FAMILY: 'Наркотическая, алкогольная зависимость у членов семьи',
         DOMESTIC_ABUSE: 'Физические наказания, факты насилия, жестокого обращения в семье',
         REFUGEE: 'Ребенок из семьи переселенцев, беженцев',
-        SWO_FAMILY: 'Ребенок из семьи участника СВО',
         LOW_INCOME: 'Ребенок из семьи с низким уровнем дохода',
         CONFLICTUAL_FAMILY_RELATIONS: 'Конфликтные отношения в семье'
     }
