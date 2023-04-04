@@ -25,14 +25,14 @@ export default defineEventHandler(async (event) => {
 
     const body: { studentId: string } = await readBody(event)
 
-    if (!body.studentId) return
-    sendError(
-        event,
-        createError({
-            statusCode: 400,
-            statusMessage: 'studentId is not provided'
-        })
-    )
+    if (!body.studentId)
+        return sendError(
+            event,
+            createError({
+                statusCode: 400,
+                statusMessage: 'studentId is not provided'
+            })
+        )
 
     return await prisma.student
         .delete({
