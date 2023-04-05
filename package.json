@@ -1,4 +1,5 @@
 {
+    "name": "school-health",
     "private": true,
     "type": "module",
     "scripts": {
