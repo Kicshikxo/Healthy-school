@@ -2,6 +2,7 @@
     <form-wrapper
         :label="label"
         :inputId="`form-multiselect-class-${$.uid}`"
+        :disabled="isDisabled"
         :errorMessage="errorMessage"
         :hideErrorMessage="hideErrorMessage"
     >
@@ -33,7 +34,7 @@
                 :disabled="isButtonDisabled"
                 :loading="isLoading"
                 @click="refreshData"
-                :class="{ 'p-button-danger': errorData }"
+                :class="{ 'p-button-danger': errorData && !isButtonDisabled }"
             />
         </div>
     </form-wrapper>

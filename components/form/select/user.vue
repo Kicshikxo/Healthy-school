@@ -2,6 +2,7 @@
     <form-wrapper
         :label="label"
         :inputId="`form-select-user-${$.uid}`"
+        :disabled="isDisabled"
         :errorMessage="errorMessage"
         :hideErrorMessage="hideErrorMessage"
     >
@@ -34,7 +35,7 @@
                 :disabled="isButtonDisabled"
                 :loading="isLoading"
                 @click="refreshData"
-                :class="{ 'p-button-danger': error }"
+                :class="{ 'p-button-danger': errorData && !isButtonDisabled }"
             />
         </div>
     </form-wrapper>
@@ -70,13 +71,13 @@ const emits = defineEmits<{
     ): void
 }>()
 
-const isDisabled = computed(() => props.disabled || !props.organizationId || !!error.value)
+const isDisabled = computed(() => props.disabled || !props.organizationId || !!errorData.value)
 const isButtonDisabled = computed(() => props.disabled || !props.organizationId)
 const isLoading = computed(() => !isDisabled.value && (props.loading || loadingData.value))
 
 const {
     data: users,
-    error: error,
+    error: errorData,
     pending: loadingData,
     refresh: refreshData
 } = useFetch('/api/users/list', {

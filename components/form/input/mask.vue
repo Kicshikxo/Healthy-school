@@ -2,6 +2,7 @@
     <form-wrapper
         :label="label"
         :inputId="`form-mask-${$.uid}`"
+        :disabled="disabled"
         :errorMessage="errorMessage"
         :hideErrorMessage="hideErrorMessage"
     >

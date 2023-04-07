@@ -2,6 +2,7 @@
     <form-wrapper
         :label="label"
         :inputId="`form-dropdown-${$.uid}`"
+        :disabled="disabled"
         :errorMessage="errorMessage"
         :hideErrorMessage="hideErrorMessage"
     >

@@ -2,6 +2,7 @@
     <form-wrapper
         :label="label"
         :inputId="`form-select-student-${$.uid}`"
+        :disabled="isDisabled"
         :errorMessage="errorMessage"
         :hideErrorMessage="hideErrorMessage"
     >
@@ -29,8 +30,8 @@
                 icon="pi pi-refresh"
                 :disabled="isButtonDisabled"
                 :loading="isLoading"
-                @click="refresh"
-                :class="{ 'p-button-danger': error }"
+                @click="refreshData"
+                :class="{ 'p-button-danger': errorData && !isButtonDisabled }"
             />
         </div>
     </form-wrapper>
@@ -54,15 +55,15 @@ const emits = defineEmits<{
     (event: 'update:modelValue', value: Student): void
 }>()
 
-const isDisabled = computed(() => props.disabled || !props.classId || !!error.value)
+const isDisabled = computed(() => props.disabled || !props.classId || !!errorData.value)
 const isButtonDisabled = computed(() => props.disabled || !props.classId)
 const isLoading = computed(() => !isDisabled.value && (props.loading || loadingData.value))
 
 const {
     data: students,
-    error: error,
+    error: errorData,
     pending: loadingData,
-    refresh: refresh
+    refresh: refreshData
 } = useFetch('/api/students/list', {
     query: { classId: computed(() => props.classId) },
     headers: useRequestHeaders() as HeadersInit,

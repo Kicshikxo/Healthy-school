@@ -2,6 +2,7 @@
     <form-wrapper
         :label="label"
         :inputId="`form-password-${$.uid}`"
+        :disabled="disabled"
         :errorMessage="errorMessage"
         :hideErrorMessage="hideErrorMessage"
     >
@@ -11,7 +12,7 @@
             :loading="loading"
             :disabled="disabled"
             :modelValue="modelValue"
-            @update:modelValue="$emit('update:modelValue', $event)"
+            @update:modelValue="$emit('update:modelValue', $event?.trim())"
             :required="true"
             :toggle-mask="true"
             :feedback="false"

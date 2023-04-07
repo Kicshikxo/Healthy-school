@@ -2,6 +2,7 @@
     <form-wrapper
         :label="label"
         :inputId="`form-select-municipality-${$.uid}`"
+        :disabled="isDisabled"
         :errorMessage="errorMessage"
         :hideErrorMessage="hideErrorMessage"
     >
@@ -23,7 +24,7 @@
                 icon="pi pi-refresh"
                 :disabled="isButtonDisabled"
                 :loading="isLoading"
-                @click="refresh"
+                @click="refreshData"
                 :class="{ 'p-button-danger': errorData }"
             />
         </div>
@@ -55,7 +56,7 @@ const {
     data: municipalities,
     error: errorData,
     pending: loadingData,
-    refresh: refresh
+    refresh: refreshData
 } = useFetch('/api/municipalities/list', {
     headers: useRequestHeaders() as HeadersInit
 })

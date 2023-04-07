@@ -2,6 +2,7 @@
     <form-wrapper
         :label="label"
         :inputId="`form-text-${$.uid}`"
+        :disabled="disabled"
         :errorMessage="errorMessage"
         :hideErrorMessage="hideErrorMessage"
     >
@@ -10,8 +11,8 @@
             type="text"
             :loading="loading"
             :disabled="disabled"
-            :modelValue="modelValue"
-            @update:modelValue="$emit('update:modelValue', $event)"
+            :modelValue.trim="modelValue"
+            @update:modelValue="$emit('update:modelValue', $event?.trim())"
             :required="true"
             :placeholder="placeholder"
             :class="{ 'p-invalid': errorMessage }"

@@ -2,6 +2,7 @@
     <form-wrapper
         :label="label"
         :inputId="`form-select-organization-${$.uid}`"
+        :disabled="isDisabled"
         :errorMessage="errorMessage"
         :hideErrorMessage="hideErrorMessage"
     >
@@ -23,8 +24,8 @@
                 icon="pi pi-refresh"
                 :disabled="isButtonDisabled"
                 :loading="isLoading"
-                @click="refresh"
-                :class="{ 'p-button-danger': error }"
+                @click="refreshData"
+                :class="{ 'p-button-danger': errorData && !isButtonDisabled }"
             />
         </div>
     </form-wrapper>
@@ -49,15 +50,15 @@ const emits = defineEmits<{
     (event: 'update:modelValue', value: EducationalOrganization): void
 }>()
 
-const isDisabled = computed(() => props.disabled || !props.municipalityId || !!error.value)
+const isDisabled = computed(() => props.disabled || !props.municipalityId || !!errorData.value)
 const isButtonDisabled = computed(() => props.disabled || !props.municipalityId)
 const isLoading = computed(() => !isDisabled.value && (props.loading || loadingData.value))
 
 const {
     data: organizations,
-    error: error,
+    error: errorData,
     pending: loadingData,
-    refresh: refresh
+    refresh: refreshData
 } = useFetch('/api/organizations/list', {
     query: { municipalityId: computed(() => props.municipalityId) },
     headers: useRequestHeaders() as HeadersInit,
