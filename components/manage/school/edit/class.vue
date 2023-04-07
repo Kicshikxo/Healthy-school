@@ -15,6 +15,7 @@
                 :errorMessage="selectedClassError"
                 :organization-id="data?.organizationId"
             />
+            <p-divider class="mt-1" />
             <div class="formgrid grid">
                 <form-input-number
                     label="Номер класса"
@@ -97,7 +98,7 @@ const { value: endYear, errorMessage: endYearError } = useField<Date>('end-year'
 watch(selectedClass, (value) => {
     if (!value) return
     number.value = value.number
-    liter.value = value.liter
+    liter.value = value.liter ?? ''
     const [start, end] = value.academicYear.split('-').map(Number)
     startYear.value = new Date(start, 0)
     endYear.value = new Date(end, 0)

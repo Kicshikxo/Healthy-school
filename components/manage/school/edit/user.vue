@@ -15,6 +15,7 @@
                 :errorMessage="selectedUserError"
                 :organization-id="data?.organizationId"
             />
+            <p-divider class="mt-1" />
             <form-input-dropdown
                 label="Роль"
                 placeholder="Выберите роль"

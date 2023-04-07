@@ -15,6 +15,7 @@
                 :errorMessage="selectedUserError"
                 :organization-id="data?.organizationId"
             />
+            <p-divider class="mt-1" />
             <div class="formgrid grid">
                 <form-input-password
                     label="Новый пароль"

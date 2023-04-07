@@ -22,6 +22,7 @@
                 :errorMessage="selectedStudentError"
                 :class-id="selectedClass?.id"
             />
+            <p-divider class="mt-1" />
             <form-select-class
                 label="Класс учащегося"
                 placeholder="Выберите класс учащегося"
