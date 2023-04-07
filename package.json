@@ -35,7 +35,7 @@
         "vue": "latest"
     },
     "devDependencies": {
-        "@nuxt/devtools": "^0.3.1",
+        "@nuxt/devtools": "^0.3.2",
         "@nuxt/image-edge": "^1.0.0-28008586.381b906",
         "@types/bcrypt": "^5.0.0",
         "@types/jsonwebtoken": "^9.0.1",
