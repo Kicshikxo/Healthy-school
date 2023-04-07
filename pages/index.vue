@@ -24,7 +24,7 @@
                         />
                         <form-select-organization
                             v-if="data?.role === Role.OPERATOR"
-                            placeholder="Выберите организацию"
+                            placeholder="Выберите школу"
                             v-model="selectedOrganization"
                             hideErrorMessage
                             :municipalityId="selectedMunicipality?.id"
@@ -35,7 +35,7 @@
                 </div>
             </template>
             <template #empty>
-                <div class="flex justify-content-center w-full">
+                <div class="flex justify-content-center w-full h-1rem">
                     <p-progress-bar v-if="loadingClasses" mode="indeterminate" class="w-full h-1rem" />
                     <div v-else>Классов нет...</div>
                 </div>
