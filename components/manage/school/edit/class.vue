@@ -40,6 +40,7 @@
                 <form-wrapper
                     label="Год начала учёбы"
                     inputId="add-class-start-year"
+                    :disabled="!selectedClass"
                     :errorMessage="startYearError"
                     class="col"
                 >
@@ -54,7 +55,13 @@
                         @hide="validateField('end-year')"
                     />
                 </form-wrapper>
-                <form-wrapper label="Год окончания учёбы" inputId="add-class-end-year" :errorMessage="endYearError" class="col">
+                <form-wrapper
+                    label="Год окончания учёбы"
+                    inputId="add-class-end-year"
+                    :disabled="!selectedClass"
+                    :errorMessage="endYearError"
+                    class="col"
+                >
                     <p-calendar
                         inputId="add-class-end-year"
                         v-model="endYear"
