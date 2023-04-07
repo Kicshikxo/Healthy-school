@@ -17,18 +17,22 @@ definePageMeta({
 const tabs = ref([
     {
         label: 'Обзор',
+        icon: 'pi pi-search',
         to: '/manage-school/overview'
     },
     {
         label: 'Добавление данных',
+        icon: 'pi pi-plus',
         to: '/manage-school/add'
     },
     {
         label: 'Редактирование данных',
+        icon: 'pi pi-pencil',
         to: '/manage-school/edit'
     },
     {
         label: 'Удаление данных',
+        icon: 'pi pi-trash',
         to: '/manage-school/remove'
     }
 ])

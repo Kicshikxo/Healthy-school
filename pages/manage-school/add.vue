@@ -15,14 +15,17 @@ definePageMeta({
 const tabs = ref([
     {
         label: 'Добавить пользователя',
+        icon: 'pi pi-user-plus',
         to: '/manage-school/add/user'
     },
     {
         label: 'Добавить класс',
+        icon: 'pi pi-book',
         to: '/manage-school/add/class'
     },
     {
         label: 'Добавить учащегося',
+        icon: 'pi pi-user',
         to: '/manage-school/add/student'
     }
 ])
