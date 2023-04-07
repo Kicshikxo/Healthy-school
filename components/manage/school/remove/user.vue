@@ -49,7 +49,7 @@ async function submit() {
                     method: 'DELETE',
                     body: { userId: selectedUser.value.id }
                 })
-                if (error.value) reject(new Error('Произошла ошибка удаления'))
+                if (error.value) return reject(new Error('Произошла ошибка удаления'))
                 resolve('Пользователь успешно удалён')
                 resetForm()
             },
