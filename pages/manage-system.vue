@@ -1,7 +1,7 @@
 <template>
     <div>
         <role-access role="OPERATOR">
-            <p-tab-menu :model="items" :exact="false" />
+            <p-tab-menu :model="tabs" :exact="false" />
             <nuxt-layout :name="false">
                 <nuxt-page />
             </nuxt-layout>
@@ -14,11 +14,26 @@ definePageMeta({
     title: 'Управление системой'
 })
 
-const items = ref([
+const tabs = ref([
     {
-        label: 'Пользователи',
-        icon: 'pi pi-fw pi-user',
-        to: '/manage-system/overview1'
+        label: 'Обзор',
+        icon: 'pi pi-search',
+        to: '/manage-system/overview'
+    },
+    {
+        label: 'Добавление данных',
+        icon: 'pi pi-plus',
+        to: '/manage-system/add'
+    },
+    {
+        label: 'Редактирование данных',
+        icon: 'pi pi-pencil',
+        to: '/manage-system/edit'
+    },
+    {
+        label: 'Удаление данных',
+        icon: 'pi pi-trash',
+        to: '/manage-system/remove'
     }
 ])
 </script>
