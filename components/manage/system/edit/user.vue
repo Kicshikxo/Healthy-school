@@ -1,0 +1,146 @@
+<template>
+    <manage-form
+        success-submit-summary="Успешное изменение"
+        error-submit-summary="Ошибка изменения"
+        submit-label="Изменить"
+        :on-submit="submit"
+        :on-cancel="resetForm"
+    >
+        <template #title> Редактирование пользователя </template>
+        <template #form>
+            <div class="formgrid grid">
+                <form-select-municipality
+                    label="Муниципалитет"
+                    placeholder="Выберите муниципалитет"
+                    v-model="selectedMunicipality"
+                    :error-message="selectedMunicipalityError"
+                    class="col"
+                />
+                <form-select-organization
+                    label="Школа"
+                    placeholder="Выберите школу"
+                    v-model="selectedOrganization"
+                    :error-message="selectedOrganizationError"
+                    :municipality-id="selectedMunicipality?.id"
+                    class="col"
+                />
+            </div>
+            <form-select-user
+                label="Пользователь"
+                placeholder="Выберите пользователя для редактирования"
+                v-model="selectedUser"
+                :errorMessage="selectedUserError"
+                :organization-id="selectedOrganization?.id"
+            />
+            <p-divider class="mt-1" />
+            <form-input-dropdown
+                label="Роль"
+                placeholder="Выберите роль"
+                v-model="role"
+                :disabled="!selectedUser"
+                :errorMessage="roleError"
+                :options="Object.keys(Role).filter(role => role !== Role.OPERATOR).map((role) => ({ label: localizeRole(role as Role), value: role }))"
+                optionLabel="label"
+                optionValue="value"
+            />
+            <form-multiselect-class
+                v-if="role === Role.CLASS_TEACHER"
+                label="Закреплённые классы"
+                placeholder="Выберите закреплённые классы"
+                v-model="assignedClasses"
+                :errorMessage="assignedClassesError"
+                :organizationId="selectedOrganization?.id"
+            />
+            <form-input-text
+                label="Фамилия"
+                placeholder="Введите фамилию"
+                v-model="secondName"
+                :disabled="!selectedUser"
+                :errorMessage="secondNameError"
+            />
+            <form-input-text
+                label="Имя"
+                placeholder="Введите имя"
+                v-model="firstName"
+                :disabled="!selectedUser"
+                :errorMessage="firstNameError"
+            />
+            <form-input-text
+                label="Отчество"
+                placeholder="Введите отчество"
+                v-model="middleName"
+                :disabled="!selectedUser"
+                :errorMessage="middleNameError"
+            />
+        </template>
+    </manage-form>
+</template>
+
+<script setup lang="ts">
+import { Class, ClassTeacher, EducationalOrganization, Municipality, Role, User } from '@prisma/client'
+import { useField, useForm } from 'vee-validate'
+
+const { resetForm, validate } = useForm()
+
+const { value: selectedMunicipality, errorMessage: selectedMunicipalityError } = useField<Municipality>(
+    'municipality',
+    validateMunicipality
+)
+const { value: selectedOrganization, errorMessage: selectedOrganizationError } = useField<EducationalOrganization>(
+    'organizationId',
+    validateOrganization
+)
+const { value: selectedUser, errorMessage: selectedUserError } = useField<
+    User & {
+        classes?: (ClassTeacher & {
+            class: Class
+        })[]
+    }
+>('user', (value) => {
+    if (!value) return 'Выберите пользователя'
+    return true
+})
+const { value: assignedClasses, errorMessage: assignedClassesError } = useField<Class[]>('assigned-classes', (value) => {
+    if (role.value !== Role.CLASS_TEACHER) return true
+    if (!value?.length) return 'Выберите закреплённые классы'
+    return true
+})
+const { value: role, errorMessage: roleError } = useField('role', validateRole)
+const { value: secondName, errorMessage: secondNameError } = useField('secondName', validateSecondName)
+const { value: firstName, errorMessage: firstNameError } = useField('firstName', validateFirstName)
+const { value: middleName, errorMessage: middleNameError } = useField('middleName', validateMiddleName)
+
+watch(selectedUser, (value) => {
+    if (!value) return
+    role.value = value.role
+    assignedClasses.value = value.classes?.map((classes) => classes.class) ?? []
+    secondName.value = value.secondName
+    firstName.value = value.firstName
+    middleName.value = value.middleName
+})
+
+async function submit() {
+    const { valid } = await validate()
+    if (!valid) {
+        throw new Error('Форма имеет ошибки заполнения')
+    }
+
+    const { error } = await useFetch('/api/users/edit', {
+        method: 'PATCH',
+        body: {
+            id: selectedUser.value.id,
+            role: role.value,
+            secondName: secondName.value,
+            firstName: firstName.value,
+            middleName: middleName.value,
+            assignedClasses: assignedClasses.value
+        } as User & { assignedClasses?: Class[] }
+    })
+    if (error.value) {
+        throw new Error(error.value.message)
+    }
+
+    resetForm()
+    return 'Пользователь успешно изменён'
+}
+</script>
