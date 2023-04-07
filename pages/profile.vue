@@ -19,7 +19,7 @@
                                 </div>
                             </div>
                             <div v-if="!errorOrganization" class="flex flex-column">
-                                <div class="text-500">Организация</div>
+                                <div class="text-500">Школа</div>
                                 <div class="flex align-items-end mt-2 text-700">
                                     {{ organization?.name }}
                                 </div>
