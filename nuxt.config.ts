@@ -19,7 +19,7 @@ export default defineNuxtConfig({
                     href: '/fonts/Rubik-Regular.woff2',
                     as: 'font',
                     type: 'font/woff2',
-                    crossorigin: ''
+                    crossorigin: 'anonymous'
                 }
             ]
         },
