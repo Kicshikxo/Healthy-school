@@ -1,4 +1,4 @@
-import { Gender, Role } from '@prisma/client'
+import { EducationalOrganization, Gender, Municipality, Role } from '@prisma/client'
 
 export const validateUsername = (username?: string) => {
     if (!username?.trim()) return 'Введите имя пользователя'
@@ -13,7 +13,7 @@ export const validatePassword = (password?: string) => {
     return true
 }
 
-export const validateRole = (role: Role) => {
+export const validateRole = (role?: Role) => {
     if (!role) return 'Выберите роль'
     if (
         !Object.keys(Role)
@@ -55,8 +55,8 @@ export const validateClassLiter = (liter?: string) => {
     return true
 }
 
-export const validateSnils = (snils: string) => {
-    if (!/^\d{3}-\d{3}-\d{3}\s\d{2}$/.test(snils)) return 'Неверный формат СНИЛСа'
+export const validateSnils = (snils?: string) => {
+    if (!snils || !/^\d{3}-\d{3}-\d{3}\s\d{2}$/.test(snils)) return 'Неверный формат СНИЛСа'
 
     const [value, checksum] = snils.split(' ').map((part) => parseInt(part.replace(/\D/g, '')))
     const sum = `${value}`.split('').reduce((acc, value, index) => acc + parseInt(value) * (9 - index), 0)
@@ -70,14 +70,24 @@ export const validateSnils = (snils: string) => {
     return true
 }
 
-export const validateGender = (gender: Gender) => {
+export const validateGender = (gender?: Gender) => {
     if (!gender) return 'Выберите пол'
     if (![Gender.MALE, Gender.FEMALE].includes(gender)) return 'Неверный пол'
     return true
 }
 
-export const validateBirthdate = (birthdate: Date) => {
+export const validateBirthdate = (birthdate?: Date) => {
     if (!birthdate) return 'Выберите дату рождения'
     if (birthdate > new Date()) return 'Дата рождения не может быть в будущем'
+    return true
+}
+
+export const validateMunicipality = (municipality?: Municipality) => {
+    if (!municipality) return 'Выберите муниципалитет'
+    return true
+}
+
+export const validateOrganization = (organization?: EducationalOrganization) => {
+    if (!organization) return 'Выберите школу'
     return true
 }
