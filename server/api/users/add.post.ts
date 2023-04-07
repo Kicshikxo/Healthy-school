@@ -1,7 +1,5 @@
-import { ActionType, Class, PrismaClient, Role, User } from '@prisma/client'
+import { ActionType, Class, Role, User } from '@prisma/client'
 import { hashSync } from 'bcrypt'
-
-const prisma = new PrismaClient()
 
 export default defineEventHandler(async (event) => {
     if (!checkRole(event, { roles: [Role.OPERATOR, Role.SCHOOL_OPERATOR] })) return

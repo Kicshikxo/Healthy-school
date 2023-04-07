@@ -1,4 +1,4 @@
-import { PrismaClient, Role } from '@prisma/client'
+import { Role } from '@prisma/client'
 import { hashSync } from 'bcrypt'
 import prompts from 'prompts'
 import { localizeRole } from '../../utils/localizeRole.js'
@@ -11,8 +11,6 @@ import {
     socialHealthOptions
 } from './data/index.js'
 import { proceedWithSpinner } from './utils.js'
-
-const prisma = new PrismaClient()
 
 async function main() {
     while (true) {

@@ -1,6 +1,4 @@
-import { ConclusionType, PrismaClient } from '@prisma/client'
-
-const prisma = new PrismaClient()
+import { ConclusionType } from '@prisma/client'
 
 export default defineEventHandler(async (event) => {
     const query = getQuery(event) as { type?: ConclusionType }

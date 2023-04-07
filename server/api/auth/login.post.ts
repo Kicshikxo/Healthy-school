@@ -1,9 +1,6 @@
-import { PrismaClient } from '@prisma/client'
 import { compare } from 'bcrypt'
 import crc32 from 'crc/crc32'
 import jwt from 'jsonwebtoken'
-
-const prisma = new PrismaClient()
 
 /**
  * @openapi

@@ -1,6 +1,4 @@
-import { ActionType, PrismaClient, Role, Student } from '@prisma/client'
-
-const prisma = new PrismaClient()
+import { ActionType, Role, Student } from '@prisma/client'
 
 export default defineEventHandler(async (event) => {
     if (!checkRole(event, { roles: [Role.OPERATOR, Role.SCHOOL_OPERATOR, Role.CLASS_TEACHER] })) return

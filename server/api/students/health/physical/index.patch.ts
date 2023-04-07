@@ -1,6 +1,4 @@
-import { PhysicalHealth, PhysicalHealthOption, PrismaClient, Role } from '@prisma/client'
-
-const prisma = new PrismaClient()
+import { PhysicalHealth, PhysicalHealthOption, Role } from '@prisma/client'
 
 export default defineEventHandler(async (event) => {
     if (!checkRole(event, { role: Role.PHYSICAL_EDUCATION_TEACHER })) return

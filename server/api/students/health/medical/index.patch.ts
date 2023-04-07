@@ -1,6 +1,4 @@
-import { MedicalHealth, MedicalHealthOption, PrismaClient, Role } from '@prisma/client'
-
-const prisma = new PrismaClient()
+import { MedicalHealth, MedicalHealthOption, Role } from '@prisma/client'
 
 export default defineEventHandler(async (event) => {
     if (!checkRole(event, { role: Role.HEALTH_WORKER })) return

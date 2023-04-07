@@ -1,6 +1,4 @@
-import { ActionType, PrismaClient, Role } from '@prisma/client'
-
-const prisma = new PrismaClient()
+import { ActionType, Role } from '@prisma/client'
 
 /**
  * @openapi

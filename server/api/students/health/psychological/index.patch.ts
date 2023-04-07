@@ -1,6 +1,4 @@
-import { PrismaClient, PsychologicalHealth, PsychologicalHealthOption, Role } from '@prisma/client'
-
-const prisma = new PrismaClient()
+import { PsychologicalHealth, PsychologicalHealthOption, Role } from '@prisma/client'
 
 export default defineEventHandler(async (event) => {
     if (!checkRole(event, { role: Role.PSYCHOLOGIST })) return

@@ -1,6 +1,4 @@
-import { PrismaClient, Role } from '@prisma/client'
-
-const prisma = new PrismaClient()
+import { Role } from '@prisma/client'
 
 export default defineEventHandler(async (event) => {
     if (!checkRole(event, { roles: [Role.OPERATOR, Role.SCHOOL_OPERATOR] })) return

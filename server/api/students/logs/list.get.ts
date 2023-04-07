@@ -7,7 +7,6 @@ import {
     PedagogueHealthOption,
     PedagogueTab,
     PedagogueType,
-    PrismaClient,
     PsychologicalHealthOption,
     PsychologicalType,
     Role,
@@ -15,8 +14,6 @@ import {
     SocialType,
     Student
 } from '@prisma/client'
-
-const prisma = new PrismaClient()
 
 export default defineEventHandler(async (event) => {
     if (!checkRole(event, { role: Role.OPERATOR })) return

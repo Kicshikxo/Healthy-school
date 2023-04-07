@@ -1,7 +1,5 @@
-import { ActionType, PrismaClient, Role } from '@prisma/client'
+import { ActionType, Role } from '@prisma/client'
 import { compareSync, hashSync } from 'bcrypt'
-
-const prisma = new PrismaClient()
 
 export default defineEventHandler(async (event) => {
     const tokenData = readTokenData(event)

@@ -1,6 +1,4 @@
-import { PrismaClient, Role, SocialHealth, SocialHealthOption } from '@prisma/client'
-
-const prisma = new PrismaClient()
+import { Role, SocialHealth, SocialHealthOption } from '@prisma/client'
 
 export default defineEventHandler(async (event) => {
     if (!checkRole(event, { role: Role.SOCIAL_PEDAGOGUE })) return
