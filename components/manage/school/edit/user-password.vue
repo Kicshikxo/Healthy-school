@@ -21,12 +21,15 @@
                     label="Новый пароль"
                     placeholder="Введите новый пароль"
                     v-model="newPassword"
+                    :disabled="!selectedUser"
                     :errorMessage="newPasswordError"
                     class="col"
-                /><form-input-password
+                />
+                <form-input-password
                     label="Повтор нового пароля"
                     placeholder="Повторите новый пароль"
                     v-model="repeatNewPassword"
+                    :disabled="!selectedUser"
                     :errorMessage="repeatNewPasswordError"
                     class="col"
                 />
