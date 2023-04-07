@@ -8,7 +8,7 @@
         class="p-datatable-lg h-fit"
     >
         <template #empty>
-            <div class="flex justify-content-center w-full">
+            <div class="flex justify-content-center w-full h-1rem">
                 <p-progress-bar v-if="loadingUsers" mode="indeterminate" class="w-full h-1rem" />
                 <div v-else>Пользователей нет...</div>
             </div>

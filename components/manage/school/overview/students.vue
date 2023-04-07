@@ -11,7 +11,7 @@
         class="p-datatable-lg"
     >
         <template #header>
-            <div class="flex justify-content-betweeb">
+            <div class="flex">
                 <form-select-class
                     placeholder="Выберите класс"
                     v-model="selectedClass"
@@ -22,7 +22,7 @@
             </div>
         </template>
         <template #empty>
-            <div class="flex justify-content-center w-full">
+            <div class="flex justify-content-center w-full h-1rem">
                 <p-progress-bar v-if="loadingStudents" mode="indeterminate" class="w-full h-1rem" />
                 <div v-else>Учащихся нет...</div>
             </div>
