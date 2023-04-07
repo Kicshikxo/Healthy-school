@@ -17,14 +17,17 @@ definePageMeta({
 const tabs = ref([
     {
         label: 'По региону',
+        icon: 'pi pi-map',
         to: '/statistics/municipality'
     },
     {
         label: 'По школе',
+        icon: 'pi pi-building',
         to: '/statistics/organization'
     },
     {
         label: 'По классу',
+        icon: 'pi pi-book',
         to: '/statistics/class'
     }
 ])
