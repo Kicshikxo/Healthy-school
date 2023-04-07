@@ -371,9 +371,9 @@ enum Role {
 }
 
 enum ActionType {
-    ADD
-    EDIT
-    REMOVE
+    CREATE
+    UPDATE
+    DELETE
     CHANGE_PASSWORD
 }
 

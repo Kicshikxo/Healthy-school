@@ -44,7 +44,7 @@ export default defineEventHandler(async (event) => {
             prisma.actionLog.create({
                 data: {
                     createdById: readTokenData(event)!.id,
-                    actionType: ActionType.REMOVE,
+                    actionType: ActionType.DELETE,
                     details: JSON.parse(
                         JSON.stringify({
                             action: 'removeStudent',
