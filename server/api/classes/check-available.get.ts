@@ -10,7 +10,7 @@ export default defineEventHandler(async (event) => {
         liter: string
         academicYear: string
         organizationId: string
-        skipId: string
+        skipId?: string
     }
 
     if (!query.number || !query.academicYear || !query.organizationId)
