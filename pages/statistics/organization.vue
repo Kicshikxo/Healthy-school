@@ -1,5 +1,5 @@
 <template>
-    <pdf-wrapper>
+    <pdf-wrapper ref="pdf">
         <div class="flex flex-column gap-2 p-5">
             <div class="grid">
                 <div class="col flex flex-column">
