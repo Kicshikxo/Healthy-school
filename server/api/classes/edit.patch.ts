@@ -1,11 +1,11 @@
-import { ActionType, Class, PrismaClient, Role } from '@prisma/client'
+import { ActionType, PrismaClient, Role } from '@prisma/client'
 
 const prisma = new PrismaClient()
 
 export default defineEventHandler(async (event) => {
     if (!checkRole(event, { roles: [Role.OPERATOR, Role.SCHOOL_OPERATOR] })) return
 
-    const body: Class = await readBody(event)
+    const body: { id: string; number: number; liter?: string; academicYear: string } = await readBody(event)
 
     if (!body.id || !body.number || !body.academicYear)
         return sendError(
@@ -31,7 +31,7 @@ export default defineEventHandler(async (event) => {
             prisma.actionLog.create({
                 data: {
                     createdById: readTokenData(event)!.id,
-                    actionType: ActionType.EDIT,
+                    actionType: ActionType.UPDATE,
                     details: JSON.parse(
                         JSON.stringify({
                             action: 'editClass',
