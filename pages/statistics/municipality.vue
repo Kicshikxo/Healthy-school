@@ -4,9 +4,10 @@
             <div class="grid">
                 <div class="col flex flex-column">
                     <form-select-municipality
-                        label="Муниципальное образование"
-                        placeholder="Выберите муниципальное образование"
+                        label="Муниципалитет"
+                        placeholder="Выберите муниципалитет"
                         v-model="municipalityLogs.selectedMunicipality"
+                        :hide-error-message="true"
                     />
                 </div>
                 <div class="flex flex-column w-16rem p-2">

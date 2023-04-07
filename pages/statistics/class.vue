@@ -4,16 +4,18 @@
             <div class="grid">
                 <div class="col flex flex-column">
                     <form-select-municipality
-                        label="Муниципальное образование"
-                        placeholder="Выберите муниципальное образование"
+                        label="Муниципалитет"
+                        placeholder="Выберите муниципалитет"
                         v-model="classLogs.selectedMunicipality"
+                        :hide-error-message="true"
                     />
 
                     <form-select-organization
-                        label="Образовательная огранизация"
-                        placeholder="Выберите образовательную организацию"
+                        label="Школа"
+                        placeholder="Выберите школу"
                         v-model="classLogs.selectedOrganization"
                         :municipality-id="classLogs.selectedMunicipality?.id"
+                        :hide-error-message="true"
                     />
 
                     <form-select-class
@@ -21,6 +23,7 @@
                         placeholder="Выберите класс"
                         v-model="classLogs.selectedClass"
                         :organization-id="classLogs.selectedOrganization?.id"
+                        :hide-error-message="true"
                     />
                 </div>
                 <div class="flex flex-column w-16rem p-2">
