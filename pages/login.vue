@@ -39,7 +39,7 @@
 import { useToast } from 'primevue/usetoast'
 import { useField, useForm } from 'vee-validate'
 
-const { resetForm, validate } = useForm()
+const { validate } = useForm()
 
 definePageMeta({
     title: 'Логин',
@@ -107,7 +107,6 @@ async function tryLogin() {
         })
     }
 
-    resetForm()
     loading.value = false
 }
 
