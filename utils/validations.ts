@@ -2,7 +2,7 @@ import { EducationalOrganization, Gender, Municipality, Role } from '@prisma/cli
 
 export const validateUsername = (username?: string) => {
     if (!username?.trim()) return 'Введите имя пользователя'
-    if (!/^[a-zA-Z0-9]+$/.test(username)) return 'Неверный формат имени пользователя'
+    if (!/^[a-zA-Z0-9-_]+$/.test(username)) return 'Неверный формат имени пользователя'
     return true
 }
 
