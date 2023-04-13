@@ -5,20 +5,11 @@ export default defineEventHandler(async (event) => {
 
     const query = getQuery(event) as { organizationId?: string }
 
-    if (!query.organizationId)
-        return sendError(
-            event,
-            createError({
-                statusCode: 400,
-                statusMessage: 'organizationId is not provided'
-            })
-        )
-
     return await prisma.actionLog.findMany({
         where: {
             createdBy: {
                 organization: {
-                    organizationId: query.organizationId
+                    organizationId: query.organizationId ?? readTokenData(event)?.organizationId
                 }
             }
         },
