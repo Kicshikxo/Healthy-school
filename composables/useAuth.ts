@@ -3,7 +3,6 @@ const signIn = async (options: SingInOptions): Promise<SignInResult> => {
 
     const { data, error } = await useFetch('/api/auth/login', {
         method: 'POST',
-        headers: useRequestHeaders() as HeadersInit,
         body: { username: options.username, password: options.password } as LoginData
     })
 
@@ -23,9 +22,7 @@ const signIn = async (options: SingInOptions): Promise<SignInResult> => {
 const signOut = async (options: SignOutOptions) => {
     const router = useRouter()
 
-    await useFetch('/api/auth/logout', {
-        headers: useRequestHeaders() as HeadersInit
-    })
+    await useFetch('/api/auth/logout')
     await getSession()
 
     if (options.redirectTo) {
@@ -36,9 +33,7 @@ const signOut = async (options: SignOutOptions) => {
 const getSession = async (): Promise<GetSessionResult> => {
     const { data: sessionData } = useAuthState()
 
-    const { data, error } = await useFetch('/api/auth/session', {
-        headers: useRequestHeaders() as HeadersInit
-    })
+    const { data, error } = await useFetch('/api/auth/session')
 
     sessionData.value = data.value
 

@@ -66,7 +66,6 @@ const {
     refresh: refreshData
 } = useFetch('/api/students/list', {
     query: { classId: computed(() => props.classId) },
-    headers: useRequestHeaders() as HeadersInit,
     immediate: !!props.classId
 })
 </script>

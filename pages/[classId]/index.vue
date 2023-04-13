@@ -76,9 +76,6 @@ const {
     refresh: refreshStudents,
     pending: loadingStudents
 } = useFetch('/api/students/list', {
-    headers: useRequestHeaders() as HeadersInit,
-    query: {
-        classId: currentClass.id
-    }
+    query: { classId: currentClass.id }
 })
 </script>

@@ -54,7 +54,6 @@ const {
     refresh: refreshUsers
 } = useFetch('/api/users/list', {
     query: { organizationId: computed(() => selectedOrganization.value?.id) },
-    headers: useRequestHeaders() as HeadersInit,
     immediate: !!selectedOrganization.value
 })
 </script>

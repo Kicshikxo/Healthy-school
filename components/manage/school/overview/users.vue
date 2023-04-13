@@ -33,7 +33,6 @@ const {
     pending: loadingUsers,
     refresh: refreshUsers
 } = useFetch('/api/users/list', {
-    query: { organizationId: data.value?.organizationId },
-    headers: useRequestHeaders() as HeadersInit
+    query: { organizationId: data.value?.organizationId }
 })
 </script>

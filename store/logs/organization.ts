@@ -25,7 +25,6 @@ export const useOrganizationLogsStore = defineStore('organizationLogs', () => {
                     date: endDate,
                     students: selectedOrganization.value
                         ? useFetch('/api/students/logs/list', {
-                              headers: useRequestHeaders() as HeadersInit,
                               query: {
                                   organizationId: computed(() => selectedOrganization.value?.id),
                                   endDate: endDate.toJSON()

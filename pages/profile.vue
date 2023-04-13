@@ -122,7 +122,6 @@ async function submit() {
 }
 
 const { data: organization, error: errorOrganization } = useFetch('/api/organizations/info', {
-    query: { organizationId: computed(() => data.value?.organizationId) },
-    headers: useRequestHeaders() as HeadersInit
+    query: { organizationId: computed(() => data.value?.organizationId) }
 })
 </script>

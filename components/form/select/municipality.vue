@@ -57,7 +57,5 @@ const {
     error: errorData,
     pending: loadingData,
     refresh: refreshData
-} = useFetch('/api/municipalities/list', {
-    headers: useRequestHeaders() as HeadersInit
-})
+} = useFetch('/api/municipalities/list')
 </script>

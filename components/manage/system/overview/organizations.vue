@@ -40,7 +40,6 @@ const {
     refresh: refreshOrganizations
 } = useFetch('/api/organizations/list', {
     query: { municipalityId: computed(() => selectedMunicipality.value?.id) },
-    headers: useRequestHeaders() as HeadersInit,
     immediate: !!selectedMunicipality.value
 })
 </script>

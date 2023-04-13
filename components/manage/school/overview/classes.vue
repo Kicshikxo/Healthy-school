@@ -30,7 +30,6 @@ const {
     pending: loadingClasses,
     refresh: refreshClasses
 } = useFetch('/api/classes/list', {
-    query: { organizationId: data.value?.organizationId },
-    headers: useRequestHeaders() as HeadersInit
+    query: { organizationId: data.value?.organizationId }
 })
 </script>

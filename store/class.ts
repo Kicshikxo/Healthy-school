@@ -15,7 +15,6 @@ export const useClassStore = defineStore('class', () => {
         pending: loading,
         refresh
     } = useFetch('/api/classes/info', {
-        headers: useRequestHeaders() as HeadersInit,
         query: { classId: id }
     })
 

@@ -41,7 +41,6 @@ export const useStudentStore = defineStore('student', () => {
         pending: loading,
         refresh
     } = useFetch('/api/students/info', {
-        headers: useRequestHeaders() as HeadersInit,
         query: { studentId: id },
         transform: (data) =>
             Object.assign({}, data, {

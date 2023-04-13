@@ -24,7 +24,6 @@ export const useMunicipalityLogsStore = defineStore('municipalityLogs', () => {
                     date: endDate,
                     students: selectedMunicipality.value
                         ? useFetch('/api/students/logs/list', {
-                              headers: useRequestHeaders() as HeadersInit,
                               query: {
                                   municipalityId: computed(() => selectedMunicipality.value?.id),
                                   endDate: endDate.toJSON()

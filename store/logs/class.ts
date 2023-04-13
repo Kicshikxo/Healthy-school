@@ -26,7 +26,6 @@ export const useClassLogsStore = defineStore('classLogs', () => {
                     date: endDate,
                     students: selectedClass.value
                         ? useFetch('/api/students/logs/list', {
-                              headers: useRequestHeaders() as HeadersInit,
                               query: {
                                   classId: computed(() => selectedClass.value?.id),
                                   endDate: endDate.toJSON()
