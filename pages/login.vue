@@ -92,13 +92,13 @@ async function tryLogin() {
         return
     }
 
-    const { error } = await signIn({
+    const { error, data } = await signIn({
         username: username.value,
         password: password.value,
         redirectTo: (route.query.redirectTo as string) ?? '/'
     })
 
-    if (error) {
+    if (error || !data) {
         toast.add({
             severity: 'error',
             summary: 'Ошибка авторизации',
