@@ -36,6 +36,15 @@
                     <span>Управление системой</span>
                 </nuxt-link>
             </role-access>
+            <role-access :roles="[Role.OPERATOR, Role.SCHOOL_OPERATOR]">
+                <nuxt-link
+                    to="/actions-logs"
+                    class="flex p-3 text-primary-100 hover:text-primary-50 hover:bg-primary-600 font-medium border-round transition-colors transition-duration-150 cursor-pointer no-underline"
+                >
+                    <i class="pi pi-database mr-2"></i>
+                    <span>Журнал действий</span>
+                </nuxt-link>
+            </role-access>
         </nav>
         <nav class="flex align-items-center">
             <div
@@ -59,6 +68,7 @@
 </template>
 
 <script setup lang="ts">
+import { Role } from '@prisma/client'
 import { MenuItem } from 'primevue/menuitem'
 
 const router = useRouter()
