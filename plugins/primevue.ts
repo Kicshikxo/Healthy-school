@@ -1,3 +1,5 @@
+import Accordion from 'primevue/accordion/Accordion.vue'
+import AccordionTab from 'primevue/accordiontab/AccordionTab.vue'
 import Button from 'primevue/button/Button.vue'
 import Calendar from 'primevue/calendar/Calendar.vue'
 import Card from 'primevue/card/Card.vue'
@@ -33,6 +35,8 @@ export default defineNuxtPlugin((nuxtApp) => {
     nuxtApp.vueApp.use(PrimeVue, { locale, ripple: true })
     nuxtApp.vueApp.use(ToastService)
     nuxtApp.vueApp.use(ConfirmationService)
+    nuxtApp.vueApp.component('p-accordion', Accordion)
+    nuxtApp.vueApp.component('p-accordion-tab', AccordionTab)
     nuxtApp.vueApp.component('p-button', Button)
     nuxtApp.vueApp.component('p-calendar', Calendar)
     nuxtApp.vueApp.component('p-card', Card)
