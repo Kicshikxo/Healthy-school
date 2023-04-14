@@ -9,7 +9,7 @@ export default defineEventHandler(async (event) => {
         where: {
             createdBy: {
                 organization: {
-                    organizationId: query.organizationId ?? readTokenData(event)?.organizationId
+                    organizationId: query.organizationId
                 }
             }
         },
