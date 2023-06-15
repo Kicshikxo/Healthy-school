@@ -15,14 +15,6 @@
                 <div class="flex justify-content-between align-items-center">
                     Список учащихся
                     <div class="flex gap-2">
-                        <role-access role="CLASS_TEACHER">
-                            <p-button
-                                label="Добавить"
-                                icon="pi pi-plus w-1rem"
-                                class="p-button-success"
-                                @click="showDialog = true"
-                            />
-                        </role-access>
                         <p-button
                             label="Обновить"
                             icon="pi pi-refresh w-1rem"
@@ -52,8 +44,6 @@
                 </template>
             </p-column>
         </p-data-table>
-
-        <dialog-add-student v-model:visible="showDialog" @added="refreshStudents" />
     </div>
 </template>
 
@@ -68,8 +58,6 @@ definePageMeta({
 const route = useRoute()
 const currentClass = useClassStore()
 currentClass.setId(parseUUID(route.params.classId as string))
-
-const showDialog = ref(false)
 
 const {
     data: students,
