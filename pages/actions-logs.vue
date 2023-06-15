@@ -2,7 +2,8 @@
     <div class="absolute w-full h-full">
         <p-data-table
             :value="logs"
-            :rowHover="!!logs?.length"
+            v-model:expandedRows="expandedRows"
+            :rowHover="false"
             :scrollable="true"
             scrollHeight="flex"
             dataKey="id"
@@ -45,29 +46,33 @@
                     <div v-else>Действий нет...</div>
                 </div>
             </template>
-            <p-column field="actionType" header="Тип действия" />
+            <p-column expander class="w-6rem" header="Детали" />
+            <p-column field="actionType" header="Тип операции" />
+            <p-column field="details.action" header="Тип действия" />
             <p-column v-if="data?.role === Role.OPERATOR" field="createdBy.organization.organization.name" header="Школа" />
-            <p-column field="createdBy" header="Инициатор">
+            <p-column field="createdBy" header="Инициатор действия">
                 <template #body="{ data }">
                     {{ data.createdBy.secondName }} {{ data.createdBy.firstName }} {{ data.createdBy.middleName }}
                 </template>
             </p-column>
-            <p-column field="details" header="Детали">
-                <template #body="{ data }">
-                    <p-accordion style="width: 32rem">
-                        <p-accordion-tab header="Детали">
-                            <pre style="white-space: pre-wrap; word-break: break-all">{{
-                                JSON.stringify(data.details, null, 2)
-                            }}</pre>
-                        </p-accordion-tab>
-                    </p-accordion>
-                </template>
-            </p-column>
-            <p-column field="createdAt" header="Дата создания">
+            <p-column field="createdAt" header="Дата действия">
                 <template #body="{ data }">
                     {{ new Date(data.createdAt).toLocaleString() }}
                 </template>
             </p-column>
+            <template #expansion="{ data: { details } }">
+                <div class="relative">
+                    <p-data-table v-stretch-parent :value="[details.data]" scrollable class="absolute max-w-full top-0">
+                        <template #header>Детали</template>
+                        <p-column
+                            v-for="key in Object.keys(details.data)"
+                            :field="key"
+                            :header="key"
+                            class="white-space-nowrap"
+                        />
+                    </p-data-table>
+                </div>
+            </template>
         </p-data-table>
     </div>
 </template>
@@ -84,6 +89,7 @@ const { data } = useAuthState()
 const selectedMunicipality = ref<Municipality>()
 const selectedOrganization = ref<EducationalOrganization>()
 const organizationId = ref<string>()
+const expandedRows = ref([])
 
 watchEffect(() => (organizationId.value = selectedOrganization.value?.id ?? data.value?.organizationId))
 
@@ -100,3 +106,10 @@ const {
     query: { organizationId: organizationId }
 })
 </script>
+
+<style>
+.p-datatable-row-expansion > td {
+    padding: 0 !important;
+    border-width: 0px !important;
+}
+</style>
