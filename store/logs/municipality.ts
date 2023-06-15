@@ -9,8 +9,8 @@ export const useMunicipalityLogsStore = defineStore('municipalityLogs', () => {
         Municipality & { _count: { organizations: number }; organizations: { classes: { _count: { students: number } }[] }[] }
     >()
 
-    const monthlyData = computed(() => {
-        return [
+    const monthlyData = computed(() =>
+        [
             ...Array(
                 selectedEndDate.value.getMonth() -
                     selectedStartDate.value.getMonth() +
@@ -22,18 +22,19 @@ export const useMunicipalityLogsStore = defineStore('municipalityLogs', () => {
                 const endDate = new Date(selectedEndDate.value.getFullYear(), selectedEndDate.value.getMonth() - index + 1, 1)
                 return {
                     date: endDate,
-                    students: selectedMunicipality.value
-                        ? useFetch('/api/students/logs/list', {
-                              query: {
-                                  municipalityId: computed(() => selectedMunicipality.value?.id),
-                                  endDate: endDate.toJSON()
-                              }
-                          }).data
-                        : ref(null)
+                    students: ref(
+                        useFetch('/api/students/logs/list', {
+                            key: `${selectedMunicipality.value?.id}${endDate.toJSON()}`,
+                            query: {
+                                organizationId: selectedMunicipality.value?.id,
+                                endDate: endDate.toJSON()
+                            }
+                        }).data.value ?? []
+                    )
                 }
             })
             .reverse()
-    })
+    )
 
     const monthlyCount = computed<
         {
@@ -45,9 +46,7 @@ export const useMunicipalityLogsStore = defineStore('municipalityLogs', () => {
             date: month.date,
             count: (Object.keys(ConclusionType) as ConclusionType[]).reduce((acc, type) => {
                 acc[type] = (Object.keys(HealthZone) as HealthZone[]).reduce((acc, healthZone) => {
-                    acc[healthZone] = (month.students.value ?? []).filter(
-                        (student) => student.healthZones[type] === healthZone
-                    ).length
+                    acc[healthZone] = month.students.value.filter((student) => student.healthZones[type] === healthZone).length
                     return acc
                 }, {} as { [key in HealthZone]: number })
                 return acc
