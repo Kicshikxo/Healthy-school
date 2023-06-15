@@ -1,6 +1,7 @@
 import { Role } from '@prisma/client'
 import { hashSync } from 'bcrypt'
 import prompts from 'prompts'
+import { prisma } from '../../server/utils/prisma.js'
 import { localizeRole } from '../../utils/localizeRole.js'
 import {
     conclusions,
