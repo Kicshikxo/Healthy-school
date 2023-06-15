@@ -6,9 +6,9 @@
             :reloadable="true"
             :on-reload="student.refresh"
             :printable="true"
-            :on-print="pdf?.print"
+            :on-print="() => pdf?.print({ title: pdfFileName })"
             :downloadble="true"
-            :on-download="pdf?.download"
+            :on-download="() => pdf?.download({ fileName: pdfFileName })"
         >
             <template #title> Индивидуальный здоровьесберегающий маршрут </template>
             <template #body>
@@ -37,6 +37,13 @@ import { PdfWrapper } from '#components'
 import { useStudentStore } from '~~/store/student'
 
 const student = useStudentStore()
+
+const pdfFileName = computed(
+    () =>
+        `${student.data?.secondName} ${student.data?.firstName} ${
+            student.data?.middleName
+        } здоровьесберегающий маршрут на ${new Date().toLocaleString('ru')}.pdf`
+)
 
 const pdf = ref<InstanceType<typeof PdfWrapper>>()
 </script>
