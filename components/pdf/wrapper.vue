@@ -50,22 +50,9 @@ function paginate() {
     }
 }
 
-onMounted(async () => {
-    pagesObserver.value = new MutationObserver(paginate)
-
-    pagesObserver.value.observe(pagesRoot.value as Node, {
-        characterData: true,
-        attributes: true,
-        childList: true,
-        subtree: true
-    })
-
-    await nextTick()
-    paginate()
-})
-onUnmounted(() => pagesObserver.value?.disconnect())
-
 async function print(options?: { title: string }) {
+    paginate()
+    await nextTick()
     loading.value = true
     const document = await pdf.create({
         title: options?.title,
@@ -77,6 +64,8 @@ async function print(options?: { title: string }) {
 }
 
 async function download(options?: { title?: string; fileName?: string }) {
+    paginate()
+    await nextTick()
     loading.value = true
     const document = await pdf.create({
         title: options?.title,
