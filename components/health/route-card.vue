@@ -54,16 +54,21 @@
                             </p-card>
                         </template>
                         <template v-if="conclusion.notes?.length">
-                            <p-card v-for="note in conclusion.notes" class="shadow-none text-white bg-transparent">
-                                <template #title>{{ note.title }}</template>
+                            <p-card
+                                v-for="note in conclusion.notes"
+                                class="shadow-none text-white"
+                                :class="sectionBackgroundClass[conclusion.healthZone]"
+                            >
+                                <template #title> {{ note.title }} </template>
                                 <template #content>
-                                    <p-chip
-                                        class="w-full p-2 text-gray-800"
-                                        :class="chipBackgroundClass[conclusion.healthZone]"
-                                        style="white-space: pre-line"
-                                    >
-                                        <health-zone-indicator :label="note.value" />
-                                    </p-chip>
+                                    <div class="flex flex-wrap gap-1">
+                                        <p-chip
+                                            class="w-full p-2 text-gray-800"
+                                            :class="chipBackgroundClass[conclusion.healthZone]"
+                                        >
+                                            <health-zone-indicator :label="note.value" />
+                                        </p-chip>
+                                    </div>
                                 </template>
                             </p-card>
                         </template>
