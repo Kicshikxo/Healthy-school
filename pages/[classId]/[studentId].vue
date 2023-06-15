@@ -19,6 +19,9 @@
         <role-access role="CLASS_TEACHER">
             <health-class-teacher />
         </role-access>
+        <role-access :roles="['OPERATOR', 'SCHOOL_OPERATOR']">
+            <health-route />
+        </role-access>
     </div>
 </template>
 
