@@ -3,6 +3,10 @@
     margin: 0;
 }
 
+body {
+    overflow: hidden;
+}
+
 :-webkit-autofill,
 :-webkit-autofill:hover,
 :-webkit-autofill:focus,
