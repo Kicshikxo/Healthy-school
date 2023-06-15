@@ -37,8 +37,6 @@ export const useClassLogsStore = defineStore('classLogs', () => {
             .reverse()
     })
 
-    watchEffect(() => monthlyData.value) // Лютый костыль для графика
-
     const monthlyCount = computed<
         {
             date: Date

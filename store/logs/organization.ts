@@ -36,8 +36,6 @@ export const useOrganizationLogsStore = defineStore('organizationLogs', () => {
             .reverse()
     })
 
-    watchEffect(() => monthlyData.value) // Лютый костыль для графика
-
     const monthlyCount = computed<
         {
             date: Date
