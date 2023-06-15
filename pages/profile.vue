@@ -32,7 +32,7 @@
                         label="Выйти"
                         icon="pi pi-sign-out"
                         class="p-button-danger p-button-text"
-                        @click="signOut({ redirectTo: '/login' })"
+                        @click="confirmSignOut"
                     />
                 </div>
             </div>
@@ -77,6 +77,7 @@
 </template>
 
 <script setup lang="ts">
+import { useConfirm } from 'primevue/useconfirm'
 import { useField, useForm } from 'vee-validate'
 
 definePageMeta({
@@ -86,6 +87,7 @@ definePageMeta({
 const { data } = useAuthState()
 const { signOut } = useAuth()
 const { resetForm, validate, setFieldError } = useForm()
+const confirm = useConfirm()
 
 const { value: currentPassword, errorMessage: currentPasswordError } = useField('currentPassword', validatePassword)
 const { value: newPassword, errorMessage: newPasswordError } = useField('newPassword', validatePassword)
@@ -119,6 +121,17 @@ async function submit() {
 
     resetForm()
     return 'Пароль успешно изменён'
+}
+
+function confirmSignOut() {
+    confirm.require({
+        header: 'Подтвердите действие',
+        message: 'Вы действительно хотите выйти?',
+        acceptClass: 'p-button-danger',
+        accept: async () => {
+            await signOut({ redirectTo: '/login' })
+        }
+    })
 }
 
 const { data: organization, error: errorOrganization } = useFetch('/api/organizations/info', {

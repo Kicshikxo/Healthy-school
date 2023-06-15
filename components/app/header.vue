@@ -70,10 +70,12 @@
 <script setup lang="ts">
 import { Role } from '@prisma/client'
 import { MenuItem } from 'primevue/menuitem'
+import { useConfirm } from 'primevue/useconfirm'
 
 const router = useRouter()
 const { signOut } = useAuth()
 const { data } = useAuthState()
+const confirm = useConfirm()
 
 const menu = ref()
 const menuItems = ref<MenuItem[]>([
@@ -92,11 +94,22 @@ const menuItems = ref<MenuItem[]>([
                 label: 'Выйти',
                 icon: 'pi pi-sign-out',
                 class: 'p-menuitem-red',
-                command: () => signOut({ redirectTo: '/login' })
+                command: confirmSignOut
             }
         ]
     }
 ])
+
+function confirmSignOut() {
+    confirm.require({
+        header: 'Подтвердите действие',
+        message: 'Вы действительно хотите выйти?',
+        acceptClass: 'p-button-danger',
+        accept: async () => {
+            await signOut({ redirectTo: '/login' })
+        }
+    })
+}
 </script>
 
 <style>
