@@ -23,15 +23,13 @@ export const useOrganizationLogsStore = defineStore('organizationLogs', () => {
                 const endDate = new Date(selectedEndDate.value.getFullYear(), selectedEndDate.value.getMonth() - index + 1, 1)
                 return {
                     date: endDate,
-                    students: ref(
-                        useFetch('/api/students/logs/list', {
-                            key: `${selectedOrganization.value?.id}${endDate.toJSON()}`,
-                            query: {
-                                organizationId: selectedOrganization.value?.id,
-                                endDate: endDate.toJSON()
-                            }
-                        }).data.value ?? []
-                    )
+                    students: useFetch('/api/students/logs/list', {
+                        key: `${selectedOrganization.value?.id}${endDate.toJSON()}`,
+                        query: {
+                            organizationId: selectedOrganization.value?.id,
+                            endDate: endDate.toJSON()
+                        }
+                    }).data
                 }
             })
             .reverse()
@@ -47,7 +45,9 @@ export const useOrganizationLogsStore = defineStore('organizationLogs', () => {
             date: month.date,
             count: (Object.keys(ConclusionType) as ConclusionType[]).reduce((acc, type) => {
                 acc[type] = (Object.keys(HealthZone) as HealthZone[]).reduce((acc, healthZone) => {
-                    acc[healthZone] = month.students.value.filter((student) => student.healthZones[type] === healthZone).length
+                    acc[healthZone] = (month.students.value ?? []).filter(
+                        (student) => student.healthZones[type] === healthZone
+                    ).length
                     return acc
                 }, {} as { [key in HealthZone]: number })
                 return acc
