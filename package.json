@@ -14,39 +14,36 @@
         "db:cli": "ts-node --esm prisma/cli/index.ts"
     },
     "dependencies": {
-        "@pinia/nuxt": "^0.4.8",
-        "@prisma/client": "^4.12.0",
+        "@pinia/nuxt": "^0.4.10",
+        "@prisma/client": "^4.14.0",
         "bcrypt": "^5.1.0",
-        "chart.js": "^4.2.1",
+        "chart.js": "^4.3.0",
         "crc": "^4.3.2",
         "html2canvas": "^1.4.1",
         "jsonwebtoken": "^9.0.0",
         "pdfmake": "^0.2.7",
-        "pinia": "^2.0.34",
+        "pinia": "^2.0.36",
         "primeflex": "^3.3.0",
         "primeicons": "^6.0.1",
-        "primevue": "^3.26.1",
+        "primevue": "^3.29.1",
         "short-uuid": "^4.2.2",
         "swagger-jsdoc": "^6.2.8",
-        "swagger-ui-dist": "^4.18.2",
-        "vee-validate": "^4.8.4"
-    },
-    "overrides": {
-        "vue": "latest"
+        "swagger-ui-dist": "^4.18.3",
+        "vee-validate": "^4.9.3"
     },
     "devDependencies": {
-        "@nuxt/devtools": "^0.4.0",
-        "@nuxt/image-edge": "^1.0.0-28020728.5df24eb",
+        "@nuxt/devtools": "^0.4.6",
+        "@nuxt/image-edge": "^1.0.0-28059208.2abef1b",
         "@types/bcrypt": "^5.0.0",
-        "@types/jsonwebtoken": "^9.0.1",
+        "@types/jsonwebtoken": "^9.0.2",
         "@types/pdfmake": "^0.2.2",
         "@types/prompts": "^2.4.4",
         "@types/swagger-jsdoc": "^6.0.1",
         "@types/swagger-ui-dist": "^3.30.1",
-        "nuxt": "^3.4.1",
+        "nuxt": "^3.5.3",
         "nuxt-lodash": "^2.4.1",
-        "ora": "^6.3.0",
-        "prisma": "^4.12.0",
+        "ora": "^6.3.1",
+        "prisma": "^4.14.0",
         "prompts": "^2.4.2",
         "ts-node": "^10.9.1"
     }
