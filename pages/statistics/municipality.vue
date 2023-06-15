@@ -27,7 +27,7 @@
                                 :loading="pdf?.loading"
                                 icon="pi pi-print"
                                 class="p-button-rounded p-button-secondary"
-                                @click="pdf?.print"
+                                @click="pdf?.print({ title: pdfFileName })"
                             />
                             <p-button
                                 :loading="pdf?.loading"
@@ -76,7 +76,7 @@ const conclusions = useConclusionsStore()
 const pdf = ref<InstanceType<typeof PdfWrapper>>()
 const pdfFileName = computed(
     () =>
-        `Статистика по региону ${monthName(
+        `Статистика по региону ${municipalityLogs.selectedMunicipality?.name} ${monthName(
             (municipalityLogs.monthlyCount.at(0)?.date ?? new Date()).getMonth() - 1
         )} ${municipalityLogs.monthlyCount.at(0)?.date.getFullYear()} - ${monthName(
             (municipalityLogs.monthlyCount.at(-1)?.date ?? new Date()).getMonth() - 1

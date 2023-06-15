@@ -43,7 +43,7 @@
                                 :loading="pdf?.loading"
                                 icon="pi pi-print"
                                 class="p-button-rounded p-button-secondary"
-                                @click="pdf?.print"
+                                @click="pdf?.print({title: pdfFileName})"
                             />
                             <p-button
                                 :loading="pdf?.loading"
@@ -77,10 +77,10 @@
 </template>
 
 <script setup lang="ts">
-import { PdfWrapper } from '#components'
-import { ConclusionType } from '@prisma/client'
-import { useConclusionsStore } from '~~/store/health/conclusions'
-import { useClassLogsStore } from '~~/store/logs/class'
+import { PdfWrapper } from '#components';
+import { ConclusionType } from '@prisma/client';
+import { useConclusionsStore } from '~~/store/health/conclusions';
+import { useClassLogsStore } from '~~/store/logs/class';
 
 definePageMeta({
     title: 'Статистика по классу'
@@ -92,7 +92,7 @@ const conclusions = useConclusionsStore()
 const pdf = ref<InstanceType<typeof PdfWrapper>>()
 const pdfFileName = computed(
     () =>
-        `Статистика по классу ${monthName(
+        `Статистика по классу ${classLogs.selectedClass?.number} ${classLogs.selectedClass?.liter ?? ''} ${monthName(
             (classLogs.monthlyCount.at(0)?.date ?? new Date()).getMonth() - 1
         )} ${classLogs.monthlyCount.at(0)?.date.getFullYear()} - ${monthName(
             (classLogs.monthlyCount.at(-1)?.date ?? new Date()).getMonth() - 1
