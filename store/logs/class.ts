@@ -11,7 +11,7 @@ export const useClassLogsStore = defineStore('classLogs', () => {
     const selectedOrganization = ref<EducationalOrganization & { classes: { id: string; _count: { students: number } }[] }>()
     const selectedClass = ref<Class & { _count: { students: number } }>()
 
-    const monthlyData = computed(() => {
+    function getMonthlyData() {
         return [
             ...Array(
                 selectedEndDate.value.getMonth() -
@@ -34,7 +34,10 @@ export const useClassLogsStore = defineStore('classLogs', () => {
                 }
             })
             .reverse()
-    })
+    }
+
+    const monthlyData = ref(getMonthlyData())
+    watch([selectedStartDate, selectedEndDate, selectedClass], () => (monthlyData.value = ref(getMonthlyData()).value))
 
     const monthlyCount = computed<
         {
@@ -46,7 +49,7 @@ export const useClassLogsStore = defineStore('classLogs', () => {
             date: month.date,
             count: (Object.keys(ConclusionType) as ConclusionType[]).reduce((acc, type) => {
                 acc[type] = (Object.keys(HealthZone) as HealthZone[]).reduce((acc, healthZone) => {
-                    acc[healthZone] = (month.students.value ?? []).filter(
+                    acc[healthZone] = (month.students ?? []).filter(
                         (student) => student.healthZones[type] === healthZone
                     ).length
                     return acc
