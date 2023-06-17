@@ -62,7 +62,7 @@
             </p-column>
             <template #expansion="{ data: { details } }">
                 <div class="relative">
-                    <p-data-table v-stretch-parent :value="[details.data]" scrollable class="absolute w-full">
+                    <p-data-table v-stretch-parent :value="[details.data]" scrollable class="absolute w-full max-w-full">
                         <template #header>Детали</template>
                         <p-column
                             v-for="key in Object.keys(details.data)"
