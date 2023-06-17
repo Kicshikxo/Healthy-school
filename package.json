@@ -33,7 +33,7 @@
     },
     "devDependencies": {
         "@nuxt/devtools": "^0.6.1",
-        "@nuxt/image-edge": "^1.0.0-rc.1-28115526.1a8c782",
+        "@nuxt/image-edge": "^1.0.0-rc.1-28116474.c4a8ff6",
         "@types/bcrypt": "^5.0.0",
         "@types/jsonwebtoken": "^9.0.2",
         "@types/pdfmake": "^0.2.2",
