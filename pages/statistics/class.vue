@@ -43,13 +43,13 @@
                                 :loading="pdf?.loading"
                                 icon="pi pi-print"
                                 class="p-button-rounded p-button-secondary"
-                                @click="pdf?.print({ title: pdfFileName })"
+                                @click="() => pdf?.print({ title: pdfFileName })"
                             />
                             <p-button
                                 :loading="pdf?.loading"
                                 icon="pi pi-file-pdf"
                                 class="p-button-rounded p-button-secondary"
-                                @click="pdf?.download({ fileName: pdfFileName })"
+                                @click="() => pdf?.download({ fileName: pdfFileName })"
                             />
                         </div>
                     </div>
@@ -96,7 +96,7 @@ const pdfFileName = computed(
             (classLogs.monthlyCount.at(0)?.date ?? new Date()).getMonth() - 1
         )} ${classLogs.monthlyCount.at(0)?.date.getFullYear()} - ${monthName(
             (classLogs.monthlyCount.at(-1)?.date ?? new Date()).getMonth() - 1
-        )} ${classLogs.monthlyCount.at(-1)?.date.getFullYear()}`
+        )} ${classLogs.monthlyCount.at(-1)?.date.getFullYear()}.pdf`
 )
 
 const activeConclusionTabIndex = ref<number>()
