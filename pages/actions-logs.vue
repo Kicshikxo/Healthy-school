@@ -8,6 +8,9 @@
             scrollHeight="flex"
             dataKey="id"
             responsiveLayout="scroll"
+            paginator
+            paginatorPosition="top"
+            :rows="20"
         >
             <template #header>
                 <div class="flex justify-content-between align-items-center">
