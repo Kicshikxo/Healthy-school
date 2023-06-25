@@ -23,7 +23,8 @@
         </template>
         <template #empty>
             <div class="flex justify-content-center w-full h-1rem">
-                <p-progress-bar v-if="loadingStudents" mode="indeterminate" class="w-full h-1rem" />
+                <div v-if="!selectedClass">Выберите класс</div>
+                <p-progress-bar v-else-if="loadingStudents" mode="indeterminate" class="w-full h-1rem" />
                 <div v-else>Учащихся нет...</div>
             </div>
         </template>

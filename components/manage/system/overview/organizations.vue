@@ -20,7 +20,8 @@
         </template>
         <template #empty>
             <div class="flex justify-content-center w-full h-1rem">
-                <p-progress-bar v-if="loadingOrganizations" mode="indeterminate" class="w-full h-1rem" />
+                <div v-if="!selectedMunicipality">Выберите муниципалитет</div>
+                <p-progress-bar v-else-if="loadingOrganizations" mode="indeterminate" class="w-full h-1rem" />
                 <div v-else>Школ нет...</div>
             </div>
         </template>
