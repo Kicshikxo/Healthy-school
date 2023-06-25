@@ -9,7 +9,6 @@
             dataKey="id"
             responsiveLayout="scroll"
             paginator
-            paginatorPosition="top"
             :rows="20"
         >
             <template #header>
