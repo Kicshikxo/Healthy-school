@@ -62,7 +62,7 @@
 </template>
 
 <script setup lang="ts">
-import { Class, Student } from '@prisma/client'
+import { Class, Gender, Student } from '@prisma/client'
 import { useField, useForm } from 'vee-validate'
 
 const { data } = useAuthState()
@@ -72,12 +72,16 @@ const { value: selectedClass, errorMessage: selectedClassError } = useField<Clas
     if (!value) return 'Выберите класс'
     return true
 })
-const { value: snils, errorMessage: snilsError } = useField('snils', validateSnils)
-const { value: secondName, errorMessage: secondNameError } = useField('secondName', validateSecondName)
-const { value: firstName, errorMessage: firstNameError } = useField('firstName', validateFirstName)
-const { value: middleName, errorMessage: middleNameError } = useField('middleName', validateMiddleName)
-const { value: gender, errorMessage: genderError } = useField('gender', validateGender)
-const { value: birthdate, errorMessage: birthdateError } = useField('birthdate', validateBirthdate)
+const { value: snils, errorMessage: snilsError } = useField<string>('snils', (value) => validateSnils(value))
+const { value: secondName, errorMessage: secondNameError } = useField<string>('secondName', (value) =>
+    validateSecondName(value)
+)
+const { value: firstName, errorMessage: firstNameError } = useField<string>('firstName', (value) => validateFirstName(value))
+const { value: middleName, errorMessage: middleNameError } = useField<string>('middleName', (value) =>
+    validateMiddleName(value)
+)
+const { value: gender, errorMessage: genderError } = useField<Gender>('gender', (value) => validateGender(value))
+const { value: birthdate, errorMessage: birthdateError } = useField<Date>('birthdate', (value) => validateBirthdate(value))
 
 async function submit() {
     const { valid } = await validate()

@@ -84,11 +84,11 @@ const { resetForm, validate } = useForm()
 
 const { value: selectedMunicipality, errorMessage: selectedMunicipalityError } = useField<Municipality>(
     'municipality',
-    validateMunicipality
+    (value) => validateMunicipality(value)
 )
 const { value: selectedOrganization, errorMessage: selectedOrganizationError } = useField<EducationalOrganization>(
     'organizationId',
-    validateOrganization
+    (value) => validateOrganization(value)
 )
 const { value: selectedUser, errorMessage: selectedUserError } = useField<
     User & {
@@ -100,15 +100,19 @@ const { value: selectedUser, errorMessage: selectedUserError } = useField<
     if (!value) return 'Выберите пользователя'
     return true
 })
-const { value: assignedClasses, errorMessage: assignedClassesError } = useField<Class[]>('assigned-classes', (value) => {
+const { value: assignedClasses, errorMessage: assignedClassesError } = useField<Class[]>('assignedClasses', (value) => {
     if (role.value !== Role.CLASS_TEACHER) return true
     if (!value?.length) return 'Выберите закреплённые классы'
     return true
 })
-const { value: role, errorMessage: roleError } = useField('role', validateRole)
-const { value: secondName, errorMessage: secondNameError } = useField('secondName', validateSecondName)
-const { value: firstName, errorMessage: firstNameError } = useField('firstName', validateFirstName)
-const { value: middleName, errorMessage: middleNameError } = useField('middleName', validateMiddleName)
+const { value: role, errorMessage: roleError } = useField<Role>('role', (value) => validateRole(value))
+const { value: secondName, errorMessage: secondNameError } = useField<string>('secondName', (value) =>
+    validateSecondName(value)
+)
+const { value: firstName, errorMessage: firstNameError } = useField<string>('firstName', (value) => validateFirstName(value))
+const { value: middleName, errorMessage: middleNameError } = useField<string>('middleName', (value) =>
+    validateMiddleName(value)
+)
 
 watch(selectedUser, (value) => {
     if (!value) return

@@ -75,23 +75,27 @@ import { useField, useForm } from 'vee-validate'
 const { data } = useAuthState()
 const { resetForm, validate, setFieldError } = useForm()
 
-const { value: role, errorMessage: roleError } = useField('role', validateRole)
-const { value: username, errorMessage: usernameError } = useField('username', validateUsername)
-const { value: password, errorMessage: passwordError } = useField('password', validatePassword)
-const { value: repeatPassword, errorMessage: repeatPasswordError } = useField('repeatPassword', (value?: string) => {
+const { value: role, errorMessage: roleError } = useField<Role>('role', (value) => validateRole(value))
+const { value: username, errorMessage: usernameError } = useField<string>('username', (value) => validateUsername(value))
+const { value: password, errorMessage: passwordError } = useField<string>('password', (value) => validatePassword(value))
+const { value: repeatPassword, errorMessage: repeatPasswordError } = useField<string>('repeatPassword', (value?: string) => {
     if (!value?.trim()) return 'Повторите пароль'
     if (value !== password.value) return 'Пароли не совпадают'
     if (value.length > 50) return 'Слишком длинный пароль'
     return true
 })
-const { value: assignedClasses, errorMessage: assignedClassesError } = useField<Class[]>('assigned-classes', (value) => {
+const { value: assignedClasses, errorMessage: assignedClassesError } = useField<Class[]>('assignedClasses', (value) => {
     if (role.value !== Role.CLASS_TEACHER) return true
     if (!value?.length) return 'Выберите закреплённые классы'
     return true
 })
-const { value: secondName, errorMessage: secondNameError } = useField('secondName', validateSecondName)
-const { value: firstName, errorMessage: firstNameError } = useField('firstName', validateFirstName)
-const { value: middleName, errorMessage: middleNameError } = useField('middleName', validateMiddleName)
+const { value: secondName, errorMessage: secondNameError } = useField<string>('secondName', (value) =>
+    validateSecondName(value)
+)
+const { value: firstName, errorMessage: firstNameError } = useField<string>('firstName', (value) => validateFirstName(value))
+const { value: middleName, errorMessage: middleNameError } = useField<string>('middleName', (value) =>
+    validateMiddleName(value)
+)
 
 async function submit() {
     const { valid } = await validate()

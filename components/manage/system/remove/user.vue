@@ -42,11 +42,11 @@ const { resetForm, validate } = useForm()
 
 const { value: selectedMunicipality, errorMessage: selectedMunicipalityError } = useField<Municipality>(
     'municipality',
-    validateMunicipality
+    (value) => validateMunicipality(value)
 )
 const { value: selectedOrganization, errorMessage: selectedOrganizationError } = useField<EducationalOrganization>(
     'organizationId',
-    validateOrganization
+    (value) => validateOrganization(value)
 )
 const { value: selectedUser, errorMessage: selectedUserError } = useField<User>('user', (value) => {
     if (!value) return 'Выберите пользователя'

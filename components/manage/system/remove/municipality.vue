@@ -28,7 +28,7 @@ const { resetForm, validate } = useForm()
 
 const { value: selectedMunicipality, errorMessage: selectedMunicipalityError } = useField<Municipality>(
     'municipality',
-    validateMunicipality
+    (value) => validateMunicipality(value)
 )
 
 async function submit() {

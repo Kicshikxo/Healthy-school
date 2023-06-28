@@ -34,7 +34,7 @@ const { resetForm, validate } = useForm()
 
 const { value: selectedMunicipality, errorMessage: selectedMunicipalityError } = useField<Municipality>(
     'municipality',
-    validateMunicipality
+    (value) => validateMunicipality(value)
 )
 const { value: name, errorMessage: nameError } = useField<string>('name', (value) => {
     if (!value) return 'Введите название школы'

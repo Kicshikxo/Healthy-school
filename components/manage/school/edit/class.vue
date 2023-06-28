@@ -89,8 +89,8 @@ const { value: selectedClass, errorMessage: selectedClassError } = useField<Clas
     if (!value) return 'Выберите класс'
     return true
 })
-const { value: number, errorMessage: numberError } = useField('number', validateClassNumber)
-const { value: liter, errorMessage: literError } = useField('liter', validateClassLiter)
+const { value: number, errorMessage: numberError } = useField<number>('number', (value) => validateClassNumber(value))
+const { value: liter, errorMessage: literError } = useField<string>('liter', (value) => validateClassLiter(value))
 const { value: startYear, errorMessage: startYearError } = useField<Date>('start-year', (value) => {
     if (!value) return 'Выберите год начала обучения'
     if (value > endYear.value) return 'Год начала обучения не может быть позже года конца обучения'

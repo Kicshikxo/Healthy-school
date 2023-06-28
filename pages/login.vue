@@ -56,13 +56,13 @@ const passwordInput = ref()
 
 const loading = ref(false)
 
-const { value: username, errorMessage: usernameError } = useField('username', (value?: string) => {
+const { value: username, errorMessage: usernameError } = useField<string>('username', (value?: string) => {
     if (!value?.trim()) return 'Введите имя пользователя'
     if (!/^[a-zA-Z0-9]+$/.test(value)) return 'Неверный формат имени пользователя'
     if (value.length > 50) return 'Слишком длинное имя пользователя'
     return true
 })
-const { value: password, errorMessage: passwordError } = useField('password', (value?: string) => {
+const { value: password, errorMessage: passwordError } = useField<string>('password', (value?: string) => {
     if (!value?.trim()) return 'Введите пароль'
     if (!/^[0-9a-zA-Z!@#$%^&*]+$/.test(value)) return 'Неверный формат пароля'
     if (value.length > 50) return 'Слишком длинный пароль'

@@ -89,14 +89,21 @@ const { signOut } = useAuth()
 const { resetForm, validate, setFieldError } = useForm()
 const confirm = useConfirm()
 
-const { value: currentPassword, errorMessage: currentPasswordError } = useField('currentPassword', validatePassword)
-const { value: newPassword, errorMessage: newPasswordError } = useField('newPassword', validatePassword)
-const { value: repeatNewPassword, errorMessage: repeatNewPasswordError } = useField('repeatPassword', (value?: string) => {
-    if (!value?.trim()) return 'Повторите пароль'
-    if (value !== newPassword.value) return 'Пароли не совпадают'
-    if (value.length > 50) return 'Слишком длинный пароль'
-    return true
-})
+const { value: currentPassword, errorMessage: currentPasswordError } = useField<string>('currentPassword', (value) =>
+    validatePassword(value)
+)
+const { value: newPassword, errorMessage: newPasswordError } = useField<string>('newPassword', (value) =>
+    validatePassword(value)
+)
+const { value: repeatNewPassword, errorMessage: repeatNewPasswordError } = useField<string>(
+    'repeatPassword',
+    (value?: string) => {
+        if (!value?.trim()) return 'Повторите пароль'
+        if (value !== newPassword.value) return 'Пароли не совпадают'
+        if (value.length > 50) return 'Слишком длинный пароль'
+        return true
+    }
+)
 
 async function submit() {
     const { valid } = await validate()
