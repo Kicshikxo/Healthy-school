@@ -29,7 +29,7 @@
         "short-uuid": "^4.2.2",
         "swagger-jsdoc": "^6.2.8",
         "swagger-ui-dist": "^5.1.0",
-        "vee-validate": "^4.10.3"
+        "vee-validate": "^4.10.5"
     },
     "devDependencies": {
         "@nuxt/devtools": "^0.6.6",
