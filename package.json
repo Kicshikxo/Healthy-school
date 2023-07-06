@@ -11,7 +11,7 @@
         "db:generate": "prisma generate",
         "db:push": "prisma db push",
         "db:deploy": "npm run db:generate && npm run db:push",
-        "db:cli": "ts-node --esm prisma/cli/index.ts"
+        "db:cli": "tsx prisma/cli/index.ts"
     },
     "dependencies": {
         "@pinia/nuxt": "^0.4.11",
@@ -45,6 +45,6 @@
         "ora": "^6.3.1",
         "prisma": "^4.16.2",
         "prompts": "^2.4.2",
-        "ts-node": "^10.9.1"
+        "tsx": "^3.12.7"
     }
 }
