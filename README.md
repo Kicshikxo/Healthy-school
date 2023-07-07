@@ -67,7 +67,7 @@
 1. Клонируйте репозиторий:
 
 ```sh
-git clone https://github.com/Kicshikxo/School-health.git
+git clone https://github.com/Kicshikxo/Healthy-school.git
 ```
 
 2. Установите NPM пакеты:
