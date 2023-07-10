@@ -34,6 +34,7 @@ export default defineNuxtConfig({
         'primeflex/primeflex.css',
 
         'assets/css/rubik.fontface.css',
+        'assets/css/dark-theme.css',
         'assets/css/main.css'
     ],
 
