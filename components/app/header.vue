@@ -47,6 +47,14 @@
             </role-access>
         </nav>
         <nav class="flex align-items-center">
+            <client-only>
+                <div
+                    class="flex p-3 text-primary-100 hover:text-primary-50 hover:bg-primary-700 font-medium border-round transition-colors transition-duration-150 cursor-pointer no-underline"
+                    @click="toggleColorMode"
+                >
+                    <i class="pi" :class="iconName"></i>
+                </div>
+            </client-only>
             <div
                 class="flex px-3 py-2 align-items-center hover:bg-primary-700 font-medium border-round transition-colors transition-duration-150 cursor-pointer no-underline"
                 @click="menu.toggle($event)"
@@ -76,6 +84,7 @@ const router = useRouter()
 const { signOut } = useAuth()
 const { data } = useAuthState()
 const confirm = useConfirm()
+const colorMode = useColorMode()
 
 const menu = ref()
 const menuItems = ref<MenuItem[]>([
@@ -99,6 +108,16 @@ const menuItems = ref<MenuItem[]>([
         ]
     }
 ])
+
+const colorModes = ref(['system', 'light', 'dark'])
+
+const iconName = computed(() => {
+    return { system: 'pi-desktop', light: 'pi-sun', dark: 'pi-moon' }[colorMode.preference] ?? 'pi-exclamation-triangle'
+})
+
+function toggleColorMode() {
+    colorMode.preference = colorModes.value.at((colorModes.value.indexOf(colorMode.preference) + 1) % colorModes.value.length)!
+}
 
 function confirmSignOut() {
     confirm.require({

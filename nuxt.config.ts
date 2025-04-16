@@ -38,7 +38,7 @@ export default defineNuxtConfig({
         'assets/css/main.css'
     ],
 
-    modules: ['@nuxt/image', '@nuxt/devtools', '@pinia/nuxt', 'nuxt-lodash'],
+    modules: ['@nuxt/image', '@nuxt/devtools', '@pinia/nuxt', 'nuxt-lodash', '@nuxtjs/color-mode'],
 
     vite: {
         resolve: {
